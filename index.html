@@ -2,16 +2,14 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#080817">
 <title>MAGIC-GAM</title>
-
 <style>
 *{box-sizing:border-box}
 body{
  margin:0;background:#080817;color:white;
  font-family:Arial,sans-serif;min-height:100vh;
- overflow-x:hidden;
 }
 body:before{
  content:"";position:fixed;inset:0;z-index:-1;
@@ -20,7 +18,7 @@ body:before{
  radial-gradient(circle at 90% 30%,#087bff45,transparent 40%),
  radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%);
 }
-button{font:inherit;cursor:pointer;color:white}
+button{font:inherit;color:white;cursor:pointer}
 header{
  display:flex;justify-content:space-between;
  align-items:center;padding:17px 15px;
@@ -33,7 +31,6 @@ header{
 .diamonds{
  border:1px solid #21cfff;border-radius:25px;
  padding:10px 14px;background:#07172c;
- box-shadow:0 0 15px #087bff55;
  color:#5deaff;font-weight:bold;
 }
 main{width:min(100% - 28px,460px);margin:auto}
@@ -64,21 +61,16 @@ h1{text-align:center;font-size:34px;font-style:italic}
  border-radius:18px;padding:13px;margin:12px 0;
 }
 .song{
- display:flex;align-items:center;gap:11px;
- width:100%;text-align:left;
- border:1px solid #267ac0;
+ display:flex;align-items:center;gap:11px;width:100%;
+ text-align:left;border:1px solid #267ac0;
  background:linear-gradient(110deg,#101d40,#21102e);
- border-radius:17px;padding:10px;
- margin:12px 0;
- box-shadow:0 0 12px #087bff33;
+ border-radius:17px;padding:10px;margin:12px 0;
 }
-.song:active{transform:scale(.98)}
 .cover{
  width:76px;height:76px;flex-shrink:0;
  border-radius:13px;display:grid;place-items:center;
  font-size:34px;
  background:linear-gradient(135deg,#f22b76,#2924a7,#08c9e8);
- box-shadow:0 0 14px #168dff66;
 }
 .song-info{flex:1;min-width:0}
 .song-info strong{font-size:14px}
@@ -92,85 +84,124 @@ h1{text-align:center;font-size:34px;font-style:italic}
 footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
 #records .panel{text-align:center}
 
-/* PIANO A PANTALLA COMPLETA */
+/* PIANO */
 #gameScreen.active{
  display:block;position:fixed;inset:0;z-index:20;
- width:100%;height:100dvh;max-width:none;
- margin:0;padding:10px 12px;
+ width:100%;height:100vh;height:100dvh;
+ max-width:none;margin:0;padding:0;
+ overflow:hidden;
  background:
  radial-gradient(circle at 10% 15%,#e8175430,transparent 40%),
  radial-gradient(circle at 90% 85%,#087bff45,transparent 45%),
  #080817;
- overflow:hidden;
 }
 body.game-open header,
 body.game-open main>section:not(#gameScreen),
 body.game-open footer{display:none!important}
 
-.game-top{
- display:flex;justify-content:space-between;
- align-items:center;padding:5px 0;
-}
-.game-score{font-size:22px;font-weight:bold;color:#65eaff}
-.game-stage{text-align:center;color:#ffd447;font-weight:bold}
-.game-song{text-align:center;color:#aab8d9;font-size:12px;margin:4px}
 #gameBoard{
- position:relative;width:100%;
- height:calc(100dvh - 205px);
- min-height:260px;max-height:650px;
+ position:absolute;inset:0;width:100%;height:100%;
  overflow:hidden;border:2px solid #244c91;
- border-radius:20px;
  background:
  radial-gradient(ellipse at 50% 100%,#31104d,#080d25 70%);
- box-shadow:inset 0 0 35px #087bff33,0 0 18px #087bff44;
+ box-shadow:inset 0 0 35px #087bff33;
  touch-action:none;
 }
 .lanes{
  position:absolute;inset:0;display:grid;
  grid-template-columns:repeat(4,1fr);
 }
-.lane{border-right:1px solid #378bff40;position:relative}
+.lane{
+ position:relative;
+ border-right:1px solid #378bff45;
+}
 .lane:last-child{border:0}
-.hit-line{
- position:absolute;left:0;right:0;
- bottom:58px;height:4px;background:#55eaff;
- box-shadow:0 0 12px #13cfff,0 0 25px #13cfff;
- z-index:3;
-}
+
+/* TECLAS CURVADAS */
 .tile{
- position:absolute;width:78%;height:76px;left:11%;
- top:-90px;border-radius:23px;
+ position:absolute;
+ width:84%;
+ left:8%;
+ height:clamp(125px,19vh,175px);
+ top:-200px;
+ border-radius:30px;
  background:linear-gradient(180deg,#172d65,#050b20);
- border:2px solid #21dfff;
- box-shadow:0 0 12px #00caff,inset 0 0 15px #1269d8;
+ border:3px solid #21dfff;
+ box-shadow:0 0 16px #00caff,inset 0 0 18px #1269d8;
 }
-.tile.color0{border-color:#ff3c92;box-shadow:0 0 13px #ff2589,inset 0 0 15px #a31159}
-.tile.color1{border-color:#20eaff}
-.tile.color2{border-color:#a45aff;box-shadow:0 0 13px #a45aff}
-.tile.color3{border-color:#2388ff}
-.lane.flash{background:#18cfff33}
-#tapArea{
- display:grid;grid-template-columns:repeat(4,1fr);
- gap:7px;margin-top:8px;
+.tile.color0{border-color:#ff3c92;box-shadow:0 0 16px #ff2589,inset 0 0 15px #a31159}
+.tile.color1{border-color:#20eaff;box-shadow:0 0 16px #20eaff}
+.tile.color2{border-color:#a45aff;box-shadow:0 0 16px #a45aff}
+.tile.color3{border-color:#2388ff;box-shadow:0 0 16px #2388ff}
+
+/* NOTAS LARGAS */
+.tile.long{
+ height:clamp(250px,39vh,360px);
+ border-radius:32px;
 }
-.tap{
- height:62px;border-radius:22px;
- border:2px solid #23dfff;
- background:linear-gradient(180deg,#142c59,#090d20);
- box-shadow:0 0 12px #078dff55;
- touch-action:manipulation;
+.tile.holding{
+ filter:brightness(1.6);
+ box-shadow:0 0 28px #ffffff99;
 }
-.tap:nth-child(1){border-color:#ff398d}
-.tap:nth-child(2){border-color:#23dfff}
-.tap:nth-child(3){border-color:#a45aff}
-.tap:nth-child(4){border-color:#287dff}
-.tap:active{background:#168edb;transform:scale(.96)}
-.game-message{
- text-align:center;min-height:20px;
- color:#63eaff;font-weight:bold;margin:6px 0;
- font-size:13px;
+.long-progress{
+ position:absolute;left:0;right:0;bottom:0;
+ height:0%;border-radius:0 0 28px 28px;
+ background:#ffffff45;
+ pointer-events:none;
 }
-.game-stats{text-align:center;color:#a9badb;font-size:11px;margin:5px}
+
+/* LÍNEA MÓVIL */
+.combo-line{
+ position:absolute;left:0;right:0;top:50%;
+ height:5px;z-index:5;pointer-events:none;
+ background:#55eaff;
+ box-shadow:0 0 12px #13cfff,0 0 28px #13cfff;
+}
+.combo-line:after{
+ content:"";position:absolute;left:0;right:0;top:-5px;
+ height:15px;background:#55eaff25;
+}
+#gameTop{
+ position:absolute;top:env(safe-area-inset-top,5px);
+ left:0;right:0;z-index:8;
+ display:flex;justify-content:space-between;
+ align-items:center;padding:10px 14px;
+ pointer-events:none;
+}
+#gameTop>*{pointer-events:auto}
+.game-score{font-size:23px;font-weight:bold;color:#65eaff}
+.pause{
+ border:1px solid #23dfff;background:#10152dcc;
+ color:#65eaff;border-radius:16px;padding:9px 14px;
+}
+#stageLabel{
+ position:absolute;top:65px;left:0;right:0;
+ text-align:center;color:#ffd447;font-weight:bold;
+ z-index:7;pointer-events:none;
+}
+#gameSong{
+ position:absolute;top:89px;left:0;right:0;
+ text-align:center;color:#aab8d9;font-size:12px;
+ z-index:7;pointer-events:none;
+}
+#comboDisplay{
+ position:absolute;top:118px;left:0;right:0;
+ z-index:7;text-align:center;color:#63eaff;
+ font-size:14px;font-weight:bold;pointer-events:none;
+ text-shadow:0 0 10px #00cfff;
+}
+#gameMessage{
+ position:absolute;bottom:18px;left:0;right:0;
+ z-index:7;text-align:center;color:#63eaff;
+ font-size:14px;font-weight:bold;pointer-events:none;
+}
+#perfect{
+ position:absolute;top:42%;left:0;right:0;
+ z-index:8;text-align:center;color:#ff426f;
+ font-size:25px;font-weight:1000;
+ text-shadow:0 0 15px #ff174d;
+ pointer-events:none;opacity:0;
+}
 #resultScreen{text-align:center}
 .result-stars{font-size:36px;color:#ffd447;letter-spacing:5px}
 </style>
@@ -185,20 +216,16 @@ body.game-open footer{display:none!important}
 
 <main>
 
-<!-- MENU PRINCIPAL -->
 <section id="home" class="screen active">
  <h1>MAGIC-GAM</h1>
  <p class="subtitle">TU RITMO. TU VELOCIDAD. TU RÉCORD.</p>
-
  <div style="text-align:center;font-size:105px;margin:40px 0;text-shadow:0 0 25px #14cfff">♫</div>
-
  <div class="menu">
   <button class="neon-btn play" onclick="showScreen('songs')">▶ JUGAR</button>
   <button class="neon-btn" onclick="showScreen('records')">🏆 RÉCORDS</button>
  </div>
 </section>
 
-<!-- LISTA DE CANCIONES -->
 <section id="songs" class="screen">
  <button class="back" onclick="showScreen('home')">← VOLVER</button>
  <h1>CANCIONES</h1>
@@ -221,22 +248,21 @@ body.game-open footer{display:none!important}
  Las demás canciones costarán 500 💎 cada una.
  La grabación original de Sunflower se añadirá cuando tengamos permiso para utilizarla.
  </p>
-
  <div class="panel">
   <strong>PRÓXIMAMENTE</strong>
-  <p class="small">Aquí aparecerán las nuevas canciones que agreguemos a MAGIC-GAM.</p>
+  <p class="small">Aquí aparecerán las nuevas canciones de MAGIC-GAM.</p>
   <p class="song-status">🔒 Canciones por desbloquear: 500 💎</p>
  </div>
 </section>
 
-<!-- JUEGO -->
 <section id="gameScreen" class="screen">
- <div class="game-top">
-  <button class="back" onclick="pauseGame()">Ⅱ PAUSA</button>
+ <div id="gameTop">
+  <button class="pause" onclick="pauseGame()">Ⅱ PAUSA</button>
   <div class="game-score" id="score">0</div>
  </div>
- <div class="game-stage" id="stageLabel">⭐ ETAPA 1</div>
- <p class="game-song" id="gameSong">SUNFLOWER · FÁCIL</p>
+
+ <div id="stageLabel">⭐ ETAPA 1</div>
+ <div id="gameSong">SUNFLOWER · FÁCIL</div>
 
  <div id="gameBoard">
   <div class="lanes">
@@ -245,25 +271,14 @@ body.game-open footer{display:none!important}
    <div class="lane"></div>
    <div class="lane"></div>
   </div>
-  <div class="hit-line"></div>
+  <div class="combo-line" id="comboLine"></div>
  </div>
 
- <div class="game-message" id="gameMessage">¡Toca las teclas al llegar abajo!</div>
-
- <div id="tapArea">
-  <button class="tap" data-lane="0"></button>
-  <button class="tap" data-lane="1"></button>
-  <button class="tap" data-lane="2"></button>
-  <button class="tap" data-lane="3"></button>
- </div>
-
- <div class="game-stats">
-  Aciertos: <span id="hits">0</span>
-  · Errores: <span id="misses">0</span>
- </div>
+ <div id="comboDisplay">COMBO x0</div>
+ <div id="perfect">PERFECT!</div>
+ <div id="gameMessage">¡Toca las teclas!</div>
 </section>
 
-<!-- RESULTADOS -->
 <section id="resultScreen" class="screen">
  <h1 id="resultTitle">PARTIDA TERMINADA</h1>
  <div class="result-stars" id="resultStars">☆☆☆</div>
@@ -276,7 +291,6 @@ body.game-open footer{display:none!important}
  <button class="neon-btn" onclick="showScreen('home')">MENÚ PRINCIPAL</button>
 </section>
 
-<!-- RÉCORDS -->
 <section id="records" class="screen">
  <button class="back" onclick="showScreen('home')">← VOLVER</button>
  <h1>🏆 RÉCORDS</h1>
@@ -296,9 +310,7 @@ const $=id=>document.getElementById(id);
 
 const defaultSave={
  diamonds:0,
- songs:{
-  sunflower:{stars:0,record:0,paidStars:[],extremePaid:false}
- }
+ songs:{sunflower:{stars:0,record:0,paidStars:[],extremePaid:false}}
 };
 
 let saved;
@@ -316,40 +328,33 @@ function save(){
  localStorage.setItem("magicGamSave",JSON.stringify(saved));
  updateUI();
 }
-
 function updateUI(){
+ const d=saved.songs.sunflower;
  $("diamondCount").textContent=saved.diamonds;
- const data=saved.songs.sunflower;
- $("stars-sunflower").textContent=
-  "★".repeat(data.stars)+"☆".repeat(3-data.stars);
- $("record-sunflower").textContent=data.record;
- $("recordPage").textContent=data.record;
- $("recordStars").textContent=
-  "★".repeat(data.stars)+"☆".repeat(3-data.stars);
+ $("stars-sunflower").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);
+ $("record-sunflower").textContent=d.record;
+ $("recordPage").textContent=d.record;
+ $("recordStars").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);
 }
-
 function showScreen(id){
  stopGame();
  document.body.classList.remove("game-open");
  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
  $(id).classList.add("active");
- window.scrollTo(0,0);
  updateUI();
 }
 
-let currentSong="sunflower";
-let running=false,tiles=[],score=0,hits=0,misses=0;
+let running=false,tiles=[],score=0,hits=0,misses=0,combo=0;
 let stage=0,stageHits=0,extreme=false;
 let lastTime=0,lastSpawn=0,animation=0;
 let speed=190,spawnEvery=850;
+let activeHold=null,perfectTimer=null;
 
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
+const line=$("comboLine");
 
-function selectSong(song){
- currentSong=song;
- startGame();
-}
+function selectSong(song){startGame()}
 
 function startGame(){
  stopGame();
@@ -358,16 +363,16 @@ function startGame(){
  $("gameScreen").classList.add("active");
 
  tiles=[];lanes.forEach(l=>l.innerHTML="");
- score=0;hits=0;misses=0;
+ score=0;hits=0;misses=0;combo=0;
  stage=0;stageHits=0;extreme=false;
- speed=190;spawnEvery=850;
+ speed=190;spawnEvery=850;activeHold=null;
 
  $("score").textContent="0";
- $("hits").textContent="0";
- $("misses").textContent="0";
  $("stageLabel").textContent="⭐ ETAPA 1";
  $("gameSong").textContent="SUNFLOWER · FÁCIL";
- $("gameMessage").textContent="¡Comienza!";
+ $("comboDisplay").textContent="COMBO x0";
+ $("gameMessage").textContent="¡Toca las teclas!";
+ line.style.top="50%";
 
  running=true;
  lastTime=performance.now();
@@ -378,19 +383,32 @@ function startGame(){
 function stopGame(){
  running=false;
  if(animation)cancelAnimationFrame(animation);
+ activeHold=null;
 }
 
 function spawnTile(){
  const lane=Math.floor(Math.random()*4);
+ const isLong=Math.random()<.22;
  const tile=document.createElement("div");
- tile.className="tile color"+lane;
+ tile.className="tile color"+lane+(isLong?" long":"");
+ if(isLong){
+  const progress=document.createElement("div");
+  progress.className="long-progress";
+  tile.appendChild(progress);
+ }
  lanes[lane].appendChild(tile);
- tiles.push({el:tile,lane,y:-90});
+ tiles.push({
+  el:tile,lane,y:-380,
+  long:isLong,
+  holding:false,
+  holdPointer:null,
+  holdStart:0,
+  progress:0
+ });
 }
 
 function loop(now){
  if(!running)return;
-
  const dt=Math.min((now-lastTime)/1000,.05);
  lastTime=now;
  const height=board.clientHeight;
@@ -405,92 +423,142 @@ function loop(now){
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
 
-  if(t.y>height-30){
+  if(t.holding){
+   const lineY=parseFloat(line.style.top)||height*.5;
+   const duration=Math.max(1,t.el.offsetHeight/speed*1000);
+   t.progress=Math.min(100,((now-t.holdStart)/duration)*100);
+   const p=t.el.querySelector(".long-progress");
+   if(p)p.style.height=t.progress+"%";
+
+   if(t.y>lineY){
+    t.el.remove();
+    tiles.splice(i,1);
+    completeHit();
+    activeHold=null;
+    continue;
+   }
+  }
+
+  if(t.y>height+30){
    t.el.remove();
    tiles.splice(i,1);
-   misses++;
-   $("misses").textContent=misses;
-
-   if(misses>=5){
-    finishGame(false);
-    return;
-   }
+   if(t.holding)activeHold=null;
+   miss("¡TECLA PERDIDA!");
+   if(misses>=5){finishGame(false);return;}
   }
  }
  animation=requestAnimationFrame(loop);
 }
 
-function tapLane(lane){
- if(!running)return;
+function showPerfect(){
+ const p=$("perfect");
+ p.style.opacity="1";
+ clearTimeout(perfectTimer);
+ perfectTimer=setTimeout(()=>p.style.opacity="0",350);
+}
 
- const target=board.clientHeight-58-38;
- let best=-1,distance=Infinity;
+function completeHit(){
+ hits++;stageHits++;combo++;
+ score+=50;
+ $("score").textContent=score;
+ $("comboDisplay").textContent="COMBO x"+combo;
+ $("gameMessage").textContent=combo>1?"¡COMBO! +50":"¡PERFECT! +50";
+ showPerfect();
+ checkStage();
+}
 
- tiles.forEach((t,i)=>{
-  if(t.lane===lane){
-   const d=Math.abs((t.y+38)-target);
-   if(d<distance){distance=d;best=i;}
+function miss(message){
+ combo=0;
+ misses++;
+ $("comboDisplay").textContent="COMBO x0";
+ $("gameMessage").textContent=message;
+ if(misses>=5)finishGame(false);
+}
+
+function boardDown(e){
+ if(!running||activeHold)return;
+ e.preventDefault();
+
+ const rect=board.getBoundingClientRect();
+ const x=e.clientX-rect.left;
+ const y=e.clientY-rect.top;
+ const lane=Math.max(0,Math.min(3,Math.floor(x/(rect.width/4))));
+ const laneWidth=rect.width/4;
+ const localX=x-lane*laneWidth;
+
+ /* La línea se mueve al lugar exacto del toque */
+ line.style.top=y+"px";
+
+ let chosen=null;
+ for(const t of tiles){
+  const h=t.el.offsetHeight;
+  const insideY=y>=t.y&&y<=t.y+h;
+  const insideX=localX>=laneWidth*.07&&localX<=laneWidth*.93;
+  if(t.lane===lane&&insideY&&insideX){
+   chosen=t;break;
   }
- });
+ }
 
- lanes[lane].classList.add("flash");
- setTimeout(()=>lanes[lane].classList.remove("flash"),90);
+ if(!chosen){
+  miss("¡COMBO REINICIADO!");
+  return;
+ }
 
- if(best>=0&&distance<100){
-  tiles[best].el.remove();
-  tiles.splice(best,1);
-  hits++;stageHits++;
-  score+=Math.max(50,150-Math.floor(distance));
-  $("score").textContent=score;
-  $("hits").textContent=hits;
-  $("gameMessage").textContent="¡BIEN!";
-  checkStage();
+ if(chosen.long){
+  chosen.holding=true;
+  chosen.holdPointer=e.pointerId;
+  chosen.holdStart=performance.now();
+  chosen.el.classList.add("holding");
+  activeHold=chosen;
+  board.setPointerCapture(e.pointerId);
+  $("gameMessage").textContent="¡MANTÉN PRESIONADO!";
  }else{
-  misses++;
-  $("misses").textContent=misses;
-  $("gameMessage").textContent="¡Intenta de nuevo!";
-  if(misses>=5)finishGame(false);
+  chosen.el.remove();
+  tiles=tiles.filter(t=>t!==chosen);
+  completeHit();
  }
 }
 
-document.querySelectorAll(".tap").forEach(btn=>{
- btn.addEventListener("pointerdown",e=>{
-  e.preventDefault();
-  tapLane(Number(btn.dataset.lane));
- });
-});
+function boardUp(e){
+ if(!activeHold)return;
+ if(activeHold.holdPointer!==e.pointerId)return;
+
+ const t=activeHold;
+ if(t.el.isConnected){
+  t.el.remove();
+  tiles=tiles.filter(x=>x!==t);
+ }
+ activeHold=null;
+ miss("¡SUELTASTE LA TECLA LARGA!");
+}
+
+board.addEventListener("pointerdown",boardDown,{passive:false});
+board.addEventListener("pointerup",boardUp);
+board.addEventListener("pointercancel",boardUp);
 
 function checkStage(){
  if(stageHits<12)return;
  stageHits=0;
-
- const data=saved.songs[currentSong];
+ const data=saved.songs.sunflower;
 
  if(stage<3){
   stage++;
-
   if(stage>data.stars)data.stars=stage;
-
   if(!data.paidStars.includes(stage)){
    saved.diamonds+=50;
    data.paidStars.push(stage);
   }
-
   speed+=65;
   spawnEvery=Math.max(350,spawnEvery-100);
-
   $("stageLabel").textContent="⭐".repeat(stage)+" ETAPA "+(stage+1);
   $("gameMessage").textContent="¡ESTRELLA CONSEGUIDA! +50 💎";
   save();
-
  }else if(!extreme){
   extreme=true;
   speed+=115;
   spawnEvery=330;
-
   $("stageLabel").textContent="🔥 MODO EXTREMO";
   $("gameMessage").textContent="¡MODO EXTREMO! ¡MÁS RÁPIDO!";
-
  }else{
   finishGame(true);
  }
@@ -498,10 +566,8 @@ function checkStage(){
 
 function finishGame(extremeWon){
  stopGame();
-
- const data=saved.songs[currentSong];
+ const data=saved.songs.sunflower;
  if(score>data.record)data.record=score;
-
  let reward=0;
 
  if(extremeWon&&!data.extremePaid){
@@ -509,17 +575,11 @@ function finishGame(extremeWon){
   data.extremePaid=true;
   reward=200;
  }
-
  save();
 
- $("resultTitle").textContent=
-  extremeWon?"¡EXTREMO COMPLETADO!":"PARTIDA TERMINADA";
-
- $("resultStars").textContent=
-  "★".repeat(stage)+"☆".repeat(3-stage);
-
+ $("resultTitle").textContent=extremeWon?"¡EXTREMO COMPLETADO!":"PARTIDA TERMINADA";
+ $("resultStars").textContent="★".repeat(stage)+"☆".repeat(3-stage);
  $("resultScore").textContent=score;
-
  $("resultReward").textContent=reward?
   "¡Ganaste 200 diamantes adicionales! 💎":
   "Sigue jugando para mejorar tu puntuación.";
@@ -531,24 +591,19 @@ function finishGame(extremeWon){
 
 function pauseGame(){
  if(!running)return;
-
  stopGame();
-
  const resume=confirm("Partida pausada. ¿Quieres continuar?");
-
  if(resume){
   running=true;
   lastTime=performance.now();
   lastSpawn=lastTime;
   animation=requestAnimationFrame(loop);
  }else{
-  document.body.classList.remove("game-open");
   showScreen("songs");
  }
 }
 
 updateUI();
 </script>
-
 </body>
 </html>
