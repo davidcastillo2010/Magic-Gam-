@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -62,53 +61,65 @@ h1{text-align:center;font-size:34px;font-style:italic}
 }
 .panel{
  background:#10152d;border:1px solid #344b82;
- border-radius:18px;padding:15px;margin:13px 0;
+ border-radius:18px;padding:13px;margin:12px 0;
 }
 .song{
- display:flex;align-items:center;gap:12px;
+ display:flex;align-items:center;gap:11px;
+ width:100%;text-align:left;
+ border:1px solid #267ac0;
+ background:linear-gradient(110deg,#101d40,#21102e);
+ border-radius:17px;padding:10px;
+ margin:12px 0;
+ box-shadow:0 0 12px #087bff33;
 }
+.song:active{transform:scale(.98)}
 .cover{
  width:76px;height:76px;flex-shrink:0;
- border-radius:13px;
- display:grid;place-items:center;font-size:34px;
+ border-radius:13px;display:grid;place-items:center;
+ font-size:34px;
  background:linear-gradient(135deg,#f22b76,#2924a7,#08c9e8);
  box-shadow:0 0 14px #168dff66;
 }
 .song-info{flex:1;min-width:0}
-.song-info strong{font-size:15px}
+.song-info strong{font-size:14px}
 .small{font-size:11px;color:#aab8d9;margin-top:5px}
 .stars{color:#ffd447;letter-spacing:3px;margin-top:5px}
-.difficulty{
- display:grid;grid-template-columns:1fr 1fr;gap:10px;
- margin-top:14px;
-}
-.difficulty button{
- padding:13px 5px;border-radius:14px;
- background:#111b38;border:1px solid #2865aa;
- font-weight:bold;
-}
-.difficulty button.selected{
- border:2px solid #23eaff;
- color:#62edff;box-shadow:0 0 12px #00bfff88;
-}
+.song-status{font-size:11px;color:#54dcff}
 .notice{
  color:#a9badb;font-size:12px;line-height:1.5;
  text-align:center;margin:15px 0;
 }
 footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
+#records .panel{text-align:center}
 
-/* JUEGO */
-#gameScreen{width:100%;max-width:460px;margin:auto}
+/* PIANO A PANTALLA COMPLETA */
+#gameScreen.active{
+ display:block;position:fixed;inset:0;z-index:20;
+ width:100%;height:100dvh;max-width:none;
+ margin:0;padding:10px 12px;
+ background:
+ radial-gradient(circle at 10% 15%,#e8175430,transparent 40%),
+ radial-gradient(circle at 90% 85%,#087bff45,transparent 45%),
+ #080817;
+ overflow:hidden;
+}
+body.game-open header,
+body.game-open main>section:not(#gameScreen),
+body.game-open footer{display:none!important}
+
 .game-top{
  display:flex;justify-content:space-between;
- align-items:center;padding:10px 0;
+ align-items:center;padding:5px 0;
 }
 .game-score{font-size:22px;font-weight:bold;color:#65eaff}
 .game-stage{text-align:center;color:#ffd447;font-weight:bold}
+.game-song{text-align:center;color:#aab8d9;font-size:12px;margin:4px}
 #gameBoard{
- position:relative;width:100%;height:min(67vh,570px);
- min-height:380px;overflow:hidden;
- border:2px solid #244c91;border-radius:20px;
+ position:relative;width:100%;
+ height:calc(100dvh - 205px);
+ min-height:260px;max-height:650px;
+ overflow:hidden;border:2px solid #244c91;
+ border-radius:20px;
  background:
  radial-gradient(ellipse at 50% 100%,#31104d,#080d25 70%);
  box-shadow:inset 0 0 35px #087bff33,0 0 18px #087bff44;
@@ -118,37 +129,32 @@ footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
  position:absolute;inset:0;display:grid;
  grid-template-columns:repeat(4,1fr);
 }
-.lane{
- border-right:1px solid #378bff40;
- position:relative;
-}
+.lane{border-right:1px solid #378bff40;position:relative}
 .lane:last-child{border:0}
 .hit-line{
  position:absolute;left:0;right:0;
- bottom:65px;height:4px;
- background:#55eaff;
+ bottom:58px;height:4px;background:#55eaff;
  box-shadow:0 0 12px #13cfff,0 0 25px #13cfff;
  z-index:3;
 }
 .tile{
- position:absolute;width:78%;height:76px;
- left:11%;top:-90px;
- border-radius:22px;
+ position:absolute;width:78%;height:76px;left:11%;
+ top:-90px;border-radius:23px;
  background:linear-gradient(180deg,#172d65,#050b20);
  border:2px solid #21dfff;
- box-shadow:0 0 12px #00caff, inset 0 0 15px #1269d8;
+ box-shadow:0 0 12px #00caff,inset 0 0 15px #1269d8;
 }
-.tile:nth-child(4n+1){border-color:#ff3c92;box-shadow:0 0 13px #ff2589,inset 0 0 15px #a31159}
-.tile:nth-child(4n+2){border-color:#20eaff}
-.tile:nth-child(4n+3){border-color:#a45aff;box-shadow:0 0 13px #a45aff}
-.tile:nth-child(4n){border-color:#2388ff}
+.tile.color0{border-color:#ff3c92;box-shadow:0 0 13px #ff2589,inset 0 0 15px #a31159}
+.tile.color1{border-color:#20eaff}
+.tile.color2{border-color:#a45aff;box-shadow:0 0 13px #a45aff}
+.tile.color3{border-color:#2388ff}
 .lane.flash{background:#18cfff33}
 #tapArea{
  display:grid;grid-template-columns:repeat(4,1fr);
- gap:7px;margin-top:9px;
+ gap:7px;margin-top:8px;
 }
 .tap{
- height:65px;border-radius:18px;
+ height:62px;border-radius:22px;
  border:2px solid #23dfff;
  background:linear-gradient(180deg,#142c59,#090d20);
  box-shadow:0 0 12px #078dff55;
@@ -160,12 +166,13 @@ footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
 .tap:nth-child(4){border-color:#287dff}
 .tap:active{background:#168edb;transform:scale(.96)}
 .game-message{
- text-align:center;min-height:28px;
- color:#63eaff;font-weight:bold;margin:8px 0;
+ text-align:center;min-height:20px;
+ color:#63eaff;font-weight:bold;margin:6px 0;
+ font-size:13px;
 }
+.game-stats{text-align:center;color:#a9badb;font-size:11px;margin:5px}
 #resultScreen{text-align:center}
 .result-stars{font-size:36px;color:#ffd447;letter-spacing:5px}
-.hidden{display:none!important}
 </style>
 </head>
 
@@ -178,40 +185,47 @@ footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
 
 <main>
 
-<!-- MENU -->
+<!-- MENU PRINCIPAL -->
 <section id="home" class="screen active">
  <h1>MAGIC-GAM</h1>
  <p class="subtitle">TU RITMO. TU VELOCIDAD. TU RÉCORD.</p>
+
  <div style="text-align:center;font-size:105px;margin:40px 0;text-shadow:0 0 25px #14cfff">♫</div>
+
  <div class="menu">
   <button class="neon-btn play" onclick="showScreen('songs')">▶ JUGAR</button>
-  <button class="neon-btn" onclick="showScreen('songs')">🎵 CANCIONES</button>
   <button class="neon-btn" onclick="showScreen('records')">🏆 RÉCORDS</button>
-  <button class="neon-btn" onclick="showScreen('rewards')">⭐ MIS ESTRELLAS</button>
  </div>
 </section>
 
-<!-- CANCIONES -->
+<!-- LISTA DE CANCIONES -->
 <section id="songs" class="screen">
  <button class="back" onclick="showScreen('home')">← VOLVER</button>
  <h1>CANCIONES</h1>
- <div class="panel song">
+ <p class="subtitle">ELIGE TU CANCIÓN</p>
+
+ <button class="song" onclick="selectSong('sunflower')">
   <div class="cover">🌻</div>
   <div class="song-info">
    <strong>SUNFLOWER</strong>
    <div class="small">Post Malone y Swae Lee</div>
-   <div class="stars" id="songStars">☆☆☆</div>
-   <div class="small">Récord: <span id="songRecord">0</span></div>
+   <div class="stars" id="stars-sunflower">☆☆☆</div>
+   <div class="small">Récord: <span id="record-sunflower">0</span></div>
    <div class="small">Dificultad inicial: FÁCIL</div>
   </div>
-  <span style="color:#54dcff;font-size:12px">GRATIS</span>
- </div>
- <p class="notice">La grabación original de Sunflower se añadirá cuando tengamos permiso para utilizarla. Por ahora jugaremos con un ritmo de prueba.</p>
- <button class="neon-btn play" onclick="startGame()">▶ JUGAR SUNFLOWER</button>
+  <span class="song-status">GRATIS</span>
+ </button>
+
+ <p class="notice">
+ La primera canción está desbloqueada gratis.
+ Las demás canciones costarán 500 💎 cada una.
+ La grabación original de Sunflower se añadirá cuando tengamos permiso para utilizarla.
+ </p>
+
  <div class="panel">
-  <strong>OTRAS CANCIONES</strong>
-  <p class="small">Cada canción adicional costará 500 💎.</p>
-  <div class="small">🔒 Próximamente</div>
+  <strong>PRÓXIMAMENTE</strong>
+  <p class="small">Aquí aparecerán las nuevas canciones que agreguemos a MAGIC-GAM.</p>
+  <p class="song-status">🔒 Canciones por desbloquear: 500 💎</p>
  </div>
 </section>
 
@@ -222,22 +236,31 @@ footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
   <div class="game-score" id="score">0</div>
  </div>
  <div class="game-stage" id="stageLabel">⭐ ETAPA 1</div>
- <p class="subtitle" id="gameDifficulty">SUNFLOWER · FÁCIL</p>
+ <p class="game-song" id="gameSong">SUNFLOWER · FÁCIL</p>
+
  <div id="gameBoard">
-  <div class="lanes" id="lanes">
-   <div class="lane"></div><div class="lane"></div>
-   <div class="lane"></div><div class="lane"></div>
+  <div class="lanes">
+   <div class="lane"></div>
+   <div class="lane"></div>
+   <div class="lane"></div>
+   <div class="lane"></div>
   </div>
   <div class="hit-line"></div>
  </div>
+
  <div class="game-message" id="gameMessage">¡Toca las teclas al llegar abajo!</div>
+
  <div id="tapArea">
   <button class="tap" data-lane="0"></button>
   <button class="tap" data-lane="1"></button>
   <button class="tap" data-lane="2"></button>
   <button class="tap" data-lane="3"></button>
  </div>
- <p class="notice">Aciertos: <span id="hits">0</span> · Errores: <span id="misses">0</span></p>
+
+ <div class="game-stats">
+  Aciertos: <span id="hits">0</span>
+  · Errores: <span id="misses">0</span>
+ </div>
 </section>
 
 <!-- RESULTADOS -->
@@ -253,30 +276,15 @@ footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
  <button class="neon-btn" onclick="showScreen('home')">MENÚ PRINCIPAL</button>
 </section>
 
-<!-- RECORDS -->
+<!-- RÉCORDS -->
 <section id="records" class="screen">
  <button class="back" onclick="showScreen('home')">← VOLVER</button>
  <h1>🏆 RÉCORDS</h1>
  <div class="panel">
-  <strong>Sunflower</strong>
+  <strong>SUNFLOWER</strong>
   <h2 id="recordPage">0</h2>
-  <span class="small">Mejor puntuación</span>
- </div>
-</section>
-
-<!-- RECOMPENSAS -->
-<section id="rewards" class="screen">
- <button class="back" onclick="showScreen('home')">← VOLVER</button>
- <h1>⭐ MIS ESTRELLAS</h1>
- <div class="panel">
-  <h2 id="totalStars">0 ⭐</h2>
-  <p class="small">Estrellas conseguidas</p>
-  <hr style="border-color:#344b82">
-  <p>⭐ 1 estrella = 50 💎</p>
-  <p>⭐⭐ 2 estrellas = 100 💎 acumulados</p>
-  <p>⭐⭐⭐ 3 estrellas = 150 💎 acumulados</p>
-  <p>🔥 Extremo completado = 200 💎 adicionales</p>
-  <p>🎵 Desbloquear canción = 500 💎</p>
+  <span class="small">MEJOR PUNTUACIÓN</span>
+  <div class="stars" id="recordStars">☆☆☆</div>
  </div>
 </section>
 
@@ -286,32 +294,50 @@ footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
 <script>
 const $=id=>document.getElementById(id);
 
-let saved=JSON.parse(localStorage.getItem("magicGamSave")||"{}");
+const defaultSave={
+ diamonds:0,
+ songs:{
+  sunflower:{stars:0,record:0,paidStars:[],extremePaid:false}
+ }
+};
+
+let saved;
+try{
+ saved=JSON.parse(localStorage.getItem("magicGamSave"))||defaultSave;
+}catch(e){saved=defaultSave}
+
 saved.diamonds=saved.diamonds||0;
-saved.stars=saved.stars||0;
-saved.record=saved.record||0;
-saved.paid=saved.paid||[false,false,false,false];
-saved.extremePaid=!!saved.extremePaid;
+saved.songs=saved.songs||{};
+saved.songs.sunflower=saved.songs.sunflower||{
+ stars:0,record:0,paidStars:[],extremePaid:false
+};
 
 function save(){
  localStorage.setItem("magicGamSave",JSON.stringify(saved));
  updateUI();
 }
+
 function updateUI(){
  $("diamondCount").textContent=saved.diamonds;
- $("songRecord").textContent=saved.record;
- $("recordPage").textContent=saved.record;
- $("totalStars").textContent=saved.stars+" ⭐";
- $("songStars").textContent="★".repeat(saved.stars)+"☆".repeat(3-saved.stars);
+ const data=saved.songs.sunflower;
+ $("stars-sunflower").textContent=
+  "★".repeat(data.stars)+"☆".repeat(3-data.stars);
+ $("record-sunflower").textContent=data.record;
+ $("recordPage").textContent=data.record;
+ $("recordStars").textContent=
+  "★".repeat(data.stars)+"☆".repeat(3-data.stars);
 }
+
 function showScreen(id){
  stopGame();
+ document.body.classList.remove("game-open");
  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
  $(id).classList.add("active");
  window.scrollTo(0,0);
  updateUI();
 }
 
+let currentSong="sunflower";
 let running=false,tiles=[],score=0,hits=0,misses=0;
 let stage=0,stageHits=0,extreme=false;
 let lastTime=0,lastSpawn=0,animation=0;
@@ -320,70 +346,101 @@ let speed=190,spawnEvery=850;
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
 
+function selectSong(song){
+ currentSong=song;
+ startGame();
+}
+
 function startGame(){
- showScreen("gameScreen");
- tiles=[];score=0;hits=0;misses=0;
+ stopGame();
+ document.body.classList.add("game-open");
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ $("gameScreen").classList.add("active");
+
+ tiles=[];lanes.forEach(l=>l.innerHTML="");
+ score=0;hits=0;misses=0;
  stage=0;stageHits=0;extreme=false;
  speed=190;spawnEvery=850;
+
  $("score").textContent="0";
  $("hits").textContent="0";
  $("misses").textContent="0";
  $("stageLabel").textContent="⭐ ETAPA 1";
- $("gameDifficulty").textContent="SUNFLOWER · FÁCIL";
+ $("gameSong").textContent="SUNFLOWER · FÁCIL";
  $("gameMessage").textContent="¡Comienza!";
+
  running=true;
- lastTime=performance.now();lastSpawn=lastTime;
+ lastTime=performance.now();
+ lastSpawn=lastTime;
  animation=requestAnimationFrame(loop);
 }
+
 function stopGame(){
  running=false;
  if(animation)cancelAnimationFrame(animation);
 }
+
 function spawnTile(){
  const lane=Math.floor(Math.random()*4);
  const tile=document.createElement("div");
- tile.className="tile";
- tile.style.top="-90px";
+ tile.className="tile color"+lane;
  lanes[lane].appendChild(tile);
  tiles.push({el:tile,lane,y:-90});
 }
+
 function loop(now){
  if(!running)return;
+
  const dt=Math.min((now-lastTime)/1000,.05);
  lastTime=now;
  const height=board.clientHeight;
+
  if(now-lastSpawn>spawnEvery){
-  spawnTile();lastSpawn=now;
+  spawnTile();
+  lastSpawn=now;
  }
+
  for(let i=tiles.length-1;i>=0;i--){
   const t=tiles[i];
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
-  if(t.y>height-35){
-   t.el.remove();tiles.splice(i,1);
+
+  if(t.y>height-30){
+   t.el.remove();
+   tiles.splice(i,1);
    misses++;
    $("misses").textContent=misses;
-   if(misses>=5){finishGame(false);return;}
+
+   if(misses>=5){
+    finishGame(false);
+    return;
+   }
   }
  }
  animation=requestAnimationFrame(loop);
 }
+
 function tapLane(lane){
  if(!running)return;
- const height=board.clientHeight;
- const target=height-65-38;
+
+ const target=board.clientHeight-58-38;
  let best=-1,distance=Infinity;
+
  tiles.forEach((t,i)=>{
   if(t.lane===lane){
    const d=Math.abs((t.y+38)-target);
    if(d<distance){distance=d;best=i;}
   }
  });
+
  lanes[lane].classList.add("flash");
  setTimeout(()=>lanes[lane].classList.remove("flash"),90);
+
  if(best>=0&&distance<100){
-  tiles[best].el.remove();tiles.splice(best,1);
-  hits++;stageHits++;score+=Math.max(50,150-Math.floor(distance));
+  tiles[best].el.remove();
+  tiles.splice(best,1);
+  hits++;stageHits++;
+  score+=Math.max(50,150-Math.floor(distance));
   $("score").textContent=score;
   $("hits").textContent=hits;
   $("gameMessage").textContent="¡BIEN!";
@@ -395,61 +452,103 @@ function tapLane(lane){
   if(misses>=5)finishGame(false);
  }
 }
+
 document.querySelectorAll(".tap").forEach(btn=>{
  btn.addEventListener("pointerdown",e=>{
-  e.preventDefault();tapLane(Number(btn.dataset.lane));
+  e.preventDefault();
+  tapLane(Number(btn.dataset.lane));
  });
 });
+
 function checkStage(){
  if(stageHits<12)return;
  stageHits=0;
+
+ const data=saved.songs[currentSong];
+
  if(stage<3){
   stage++;
-  saved.stars=Math.max(saved.stars,stage);
-  if(!saved.paid[stage-1]){
-   saved.diamonds+=50;saved.paid[stage-1]=true;
+
+  if(stage>data.stars)data.stars=stage;
+
+  if(!data.paidStars.includes(stage)){
+   saved.diamonds+=50;
+   data.paidStars.push(stage);
   }
-  speed+=65;spawnEvery=Math.max(350,spawnEvery-100);
+
+  speed+=65;
+  spawnEvery=Math.max(350,spawnEvery-100);
+
   $("stageLabel").textContent="⭐".repeat(stage)+" ETAPA "+(stage+1);
   $("gameMessage").textContent="¡ESTRELLA CONSEGUIDA! +50 💎";
   save();
+
  }else if(!extreme){
-  extreme=true;speed+=115;spawnEvery=330;
+  extreme=true;
+  speed+=115;
+  spawnEvery=330;
+
   $("stageLabel").textContent="🔥 MODO EXTREMO";
   $("gameMessage").textContent="¡MODO EXTREMO! ¡MÁS RÁPIDO!";
+
  }else{
   finishGame(true);
  }
 }
+
 function finishGame(extremeWon){
  stopGame();
- if(score>saved.record)saved.record=score;
+
+ const data=saved.songs[currentSong];
+ if(score>data.record)data.record=score;
+
  let reward=0;
- if(extremeWon&&!saved.extremePaid){
-  saved.diamonds+=200;saved.extremePaid=true;reward=200;
+
+ if(extremeWon&&!data.extremePaid){
+  saved.diamonds+=200;
+  data.extremePaid=true;
+  reward=200;
  }
+
  save();
- $("resultTitle").textContent=extremeWon?"¡EXTREMO COMPLETADO!":"PARTIDA TERMINADA";
- $("resultStars").textContent="★".repeat(stage)+"☆".repeat(3-stage);
+
+ $("resultTitle").textContent=
+  extremeWon?"¡EXTREMO COMPLETADO!":"PARTIDA TERMINADA";
+
+ $("resultStars").textContent=
+  "★".repeat(stage)+"☆".repeat(3-stage);
+
  $("resultScore").textContent=score;
+
  $("resultReward").textContent=reward?
   "¡Ganaste 200 diamantes adicionales! 💎":
   "Sigue jugando para mejorar tu puntuación.";
- showScreen("resultScreen");
+
+ document.body.classList.remove("game-open");
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ $("resultScreen").classList.add("active");
 }
+
 function pauseGame(){
  if(!running)return;
+
  stopGame();
- $("gameMessage").textContent="Partida pausada";
+
  const resume=confirm("Partida pausada. ¿Quieres continuar?");
+
  if(resume){
-  running=true;lastTime=performance.now();
-  lastSpawn=lastTime;animation=requestAnimationFrame(loop);
+  running=true;
+  lastTime=performance.now();
+  lastSpawn=lastTime;
+  animation=requestAnimationFrame(loop);
  }else{
-  finishGame(false);
+  document.body.classList.remove("game-open");
+  showScreen("songs");
  }
 }
+
 updateUI();
 </script>
+
 </body>
 </html>
