@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080817">
+<title>MAGIC-GAM</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ min-height:100vh;
+ background:#080817;
+ color:white;
+ font-family:Arial,sans-serif;
+ overflow-x:hidden;
+}
+body:before{
+ content:"";
+ position:fixed;
+ inset:0;
+ background:
+ radial-gradient(circle at 15% 20%,#ed174b35,transparent 35%),
+ radial-gradient(circle at 85% 35%,#087bff45,transparent 38%),
+ radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%);
+ z-index:-1;
+}
+button{font:inherit;cursor:pointer}
+header{
+ display:flex;justify-content:space-between;
+ align-items:center;padding:18px 16px;
+}
+.logo{
+ font-size:27px;font-weight:1000;font-style:italic;
+ background:linear-gradient(90deg,#20eaff,#fff,#ff315e);
+ background-clip:text;color:transparent;
+ text-shadow:0 0 20px #168cff65;
+}
+.diamonds{
+ border:1px solid #21cfff;
+ border-radius:25px;padding:10px 14px;
+ background:#07172c;
+ box-shadow:0 0 15px #087bff55;
+ font-weight:bold;color:#5deaff;
+}
+main{
+ width:min(100% - 30px,460px);
+ margin:20px auto 40px;
+ text-align:center;
+}
+h1{
+ font-size:38px;font-weight:1000;font-style:italic;
+ margin:25px 0 8px;
+}
+.subtitle{color:#aab8d9;font-size:14px}
+.music-logo{
+ width:170px;height:170px;margin:35px auto;
+ border-radius:50%;
+ display:grid;place-items:center;
+ font-size:85px;
+ background:radial-gradient(circle,#132d65,#080817 70%);
+ border:4px solid #16cfff;
+ box-shadow:0 0 20px #08aaff,0 0 55px #9d25ff55,
+ inset 0 0 25px #e51c7c55;
+}
+.menu{
+ display:grid;gap:15px;margin-top:30px;
+}
+.neon-btn{
+ width:100%;padding:17px;
+ border-radius:22px;
+ border:2px solid #19d9ff;
+ background:linear-gradient(100deg,#10275b,#17102e,#44102c);
+ color:white;font-size:18px;font-weight:bold;
+ box-shadow:0 0 13px #078dff66;
+ transition:.2s;
+}
+.neon-btn:active{transform:scale(.97)}
+.play{
+ font-size:23px;padding:20px;
+ border-color:#ff3c80;
+ background:linear-gradient(100deg,#092e69,#30104d,#a40d49);
+ box-shadow:0 0 20px #f12c8177;
+}
+.screen{display:none}
+.screen.active{display:block}
+.back{
+ background:transparent;border:1px solid #22cfff;
+ color:#6beaff;border-radius:15px;padding:10px 18px;
+ margin:10px 0 20px;
+}
+.panel{
+ background:#10152d;
+ border:1px solid #344b82;
+ border-radius:20px;padding:18px;
+ margin:15px 0;text-align:left;
+}
+.song{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:10px;
+}
+.song-icon{
+ width:55px;height:55px;border-radius:15px;
+ display:grid;place-items:center;
+ background:linear-gradient(135deg,#0758a9,#9b155f);
+ font-size:27px;flex-shrink:0;
+}
+.song-info{flex:1}
+.song-info strong{display:block;margin-bottom:6px}
+.small{font-size:12px;color:#9eafd0}
+.locked{color:#54dcff;font-weight:bold}
+.difficulty{
+ display:grid;grid-template-columns:1fr 1fr;gap:10px;
+ margin-top:15px;
+}
+.difficulty button{
+ padding:15px 5px;border-radius:15px;
+ background:#111b38;color:white;
+ border:1px solid #2865aa;font-weight:bold;
+}
+.difficulty button.selected{
+ border:2px solid #23eaff;
+ box-shadow:0 0 15px #00bfff88;
+ color:#62edff;
+}
+.notice{
+ color:#a9badb;font-size:12px;
+ line-height:1.5;text-align:center;margin-top:20px;
+}
+footer{
+ color:#60749c;font-size:11px;margin:35px 0 15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">MAGIC-GAM</div>
+ <div class="diamonds">💎 <span id="diamonds">0</span></div>
+</header>
+
+<main>
+
+<section id="home" class="screen active">
+ <h1>MAGIC-GAM</h1>
+ <div class="subtitle">TU RITMO. TU VELOCIDAD. TU RÉCORD.</div>
+
+ <div class="music-logo">♫</div>
+
+ <div class="menu">
+  <button class="neon-btn play" onclick="showScreen('songs')">
+   ▶ JUGAR
+  </button>
+  <button class="neon-btn" onclick="showScreen('songs')">
+   🎵 CANCIONES
+  </button>
+  <button class="neon-btn" onclick="showScreen('records')">
+   🏆 RÉCORDS
+  </button>
+  <button class="neon-btn" onclick="showScreen('rewards')">
+   ⭐ MIS ESTRELLAS
+  </button>
+ </div>
+</section>
+
+<section id="songs" class="screen">
+ <button class="back" onclick="showScreen('home')">← VOLVER</button>
+ <h1>CANCIONES</h1>
+ <p class="subtitle">ELIGE TU CANCIÓN</p>
+
+ <div class="panel song">
+  <div class="song-icon">🎵</div>
+  <div class="song-info">
+   <strong>Sunflower</strong>
+   <span class="small">Post Malone y Swae Lee</span>
+   <div class="small">Primera canción · Gratis</div>
+  </div>
+  <span class="locked">GRATIS</span>
+ </div>
+
+ <p class="notice">
+ La canción Sunflower está prevista para el lanzamiento.
+ Necesitaremos la licencia correspondiente para incluir su audio.
+ </p>
+
+ <div class="panel">
+  <strong>ELIGE LA DIFICULTAD</strong>
+  <div class="difficulty">
+   <button class="selected" onclick="chooseDifficulty(this,'Fácil')">🟢 FÁCIL</button>
+   <button onclick="chooseDifficulty(this,'Medio')">🔵 MEDIO</button>
+   <button onclick="chooseDifficulty(this,'Difícil')">🟣 DIFÍCIL</button>
+   <button onclick="chooseDifficulty(this,'Extremo')">🔴 EXTREMO</button>
+  </div>
+  <p class="notice" id="selectedDifficulty">Dificultad elegida: Fácil</p>
+ </div>
+
+ <button class="neon-btn play" onclick="alert('El piano musical se añadirá en la siguiente etapa del desarrollo.')">
+  ▶ COMENZAR
+ </button>
+
+ <h2>🔒 OTRAS CANCIONES</h2>
+ <div class="panel song">
+  <div class="song-icon">🎹</div>
+  <div class="song-info">
+   <strong>Próxima canción</strong>
+   <span class="small">Canción por agregar</span>
+  </div>
+  <span class="locked">💎 500</span>
+ </div>
+</section>
+
+<section id="records" class="screen">
+ <button class="back" onclick="showScreen('home')">← VOLVER</button>
+ <h1>🏆 RÉCORDS</h1>
+ <div class="panel">
+  <strong>Tu mejor puntuación</strong>
+  <h2 id="bestScore">0</h2>
+  <span class="small">Las puntuaciones se activarán con el juego.</span>
+ </div>
+</section>
+
+<section id="rewards" class="screen">
+ <button class="back" onclick="showScreen('home')">← VOLVER</button>
+ <h1>⭐ MIS ESTRELLAS</h1>
+ <div class="panel">
+  <h2>0 ⭐</h2>
+  <p class="small">Aquí aparecerán tus estrellas y recompensas.</p>
+ </div>
+ <div class="panel">
+  <strong>RECOMPENSAS</strong>
+  <p>⭐ 1 estrella = 50 💎</p>
+  <p>⭐⭐ 2 estrellas = 100 💎</p>
+  <p>⭐⭐⭐ 3 estrellas = 150 💎</p>
+  <p>🔥 Modo Extremo completado = 200 💎</p>
+  <p>🎵 Desbloquear canción = 500 💎</p>
+ </div>
+</section>
+
+<footer>MAGIC-GAM · JUEGA CON EL RITMO</footer>
+</main>
+
+<script>
+function showScreen(id){
+ document.querySelectorAll('.screen').forEach(s=>{
+  s.classList.remove('active');
+ });
+ document.getElementById(id).classList.add('active');
+ window.scrollTo(0,0);
+}
+
+function chooseDifficulty(button,name){
+ document.querySelectorAll('.difficulty button').forEach(b=>{
+  b.classList.remove('selected');
+ });
+ button.classList.add('selected');
+ document.getElementById('selectedDifficulty').textContent=
+  'Dificultad elegida: '+name;
+}
+</script>
+
+</body>
+</html>
