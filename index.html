@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,41 +9,94 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080817;color:white;font-family:Arial,sans-serif;min-height:100vh}
-body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 10% 20%,#ed174b35,transparent 35%),radial-gradient(circle at 90% 30%,#087bff45,transparent 40%),radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%)}
+body{
+ margin:0;background:#080817;color:white;
+ font-family:Arial,sans-serif;min-height:100vh
+}
+body:before{
+ content:"";position:fixed;inset:0;z-index:-1;
+ background:
+ radial-gradient(circle at 10% 20%,#ed174b35,transparent 35%),
+ radial-gradient(circle at 90% 30%,#087bff45,transparent 40%),
+ radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%)
+}
 button{font:inherit;color:white;cursor:pointer}
-header{display:flex;justify-content:space-between;align-items:center;padding:17px 15px}
-.logo{font-size:25px;font-weight:1000;font-style:italic;background:linear-gradient(90deg,#20eaff,#fff,#ff315e);background-clip:text;color:transparent}
-.diamonds{border:1px solid #21cfff;border-radius:25px;padding:10px 14px;background:#07172c;color:#5deaff;font-weight:bold}
+header{
+ display:flex;justify-content:space-between;
+ align-items:center;padding:17px 15px
+}
+.logo{
+ font-size:25px;font-weight:1000;font-style:italic;
+ background:linear-gradient(90deg,#20eaff,#fff,#ff315e);
+ background-clip:text;color:transparent
+}
+.diamonds{
+ border:1px solid #21cfff;border-radius:25px;
+ padding:10px 14px;background:#07172c;
+ color:#5deaff;font-weight:bold
+}
 main{width:min(100% - 28px,460px);margin:auto}
 .screen{display:none}
 .screen.active{display:block}
 h1{text-align:center;font-size:34px;font-style:italic}
 .subtitle{text-align:center;color:#aab8d9;font-size:13px}
 .menu{display:grid;gap:14px;margin:28px 0}
-.neon-btn{width:100%;padding:17px;border-radius:22px;border:2px solid #19d9ff;background:linear-gradient(100deg,#10275b,#17102e,#44102c);font-size:18px;font-weight:bold;box-shadow:0 0 13px #078dff66;margin:5px 0}
-.play{border-color:#ff3c80;background:linear-gradient(100deg,#092e69,#30104d,#a40d49);box-shadow:0 0 20px #f12c8177}
-.back{background:transparent;border:1px solid #22cfff;color:#6beaff;border-radius:15px;padding:10px 18px;margin:10px 0}
-.panel{background:#10152d;border:1px solid #344b82;border-radius:18px;padding:13px;margin:12px 0}
-.song{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:1px solid #267ac0;background:linear-gradient(110deg,#101d40,#21102e);border-radius:17px;padding:10px;margin:12px 0}
-.cover{width:76px;height:76px;flex-shrink:0;border-radius:13px;display:grid;place-items:center;font-size:34px;background:linear-gradient(135deg,#f22b76,#2924a7,#08c9e8)}
+.neon-btn{
+ width:100%;padding:17px;border-radius:22px;
+ border:2px solid #19d9ff;
+ background:linear-gradient(100deg,#10275b,#17102e,#44102c);
+ font-size:18px;font-weight:bold;
+ box-shadow:0 0 13px #078dff66;margin:5px 0
+}
+.play{
+ border-color:#ff3c80;
+ background:linear-gradient(100deg,#092e69,#30104d,#a40d49);
+ box-shadow:0 0 20px #f12c8177
+}
+.back{
+ background:transparent;border:1px solid #22cfff;
+ color:#6beaff;border-radius:15px;padding:10px 18px;margin:10px 0
+}
+.panel{
+ background:#10152d;border:1px solid #344b82;
+ border-radius:18px;padding:13px;margin:12px 0
+}
+.song{
+ display:flex;align-items:center;gap:11px;width:100%;
+ text-align:left;border:1px solid #267ac0;
+ background:linear-gradient(110deg,#101d40,#21102e);
+ border-radius:17px;padding:10px;margin:12px 0
+}
+.cover{
+ width:76px;height:76px;flex-shrink:0;border-radius:13px;
+ display:grid;place-items:center;font-size:34px;
+ background:linear-gradient(135deg,#f22b76,#2924a7,#08c9e8)
+}
 .song-info{flex:1;min-width:0}
 .song-info strong{font-size:14px}
 .small{font-size:11px;color:#aab8d9;margin-top:5px}
 .stars{color:#ffd447;letter-spacing:3px;margin-top:5px}
 .song-status{font-size:11px;color:#54dcff}
-.notice{color:#a9badb;font-size:12px;line-height:1.5;text-align:center;margin:15px 0}
+.notice{
+ color:#a9badb;font-size:12px;line-height:1.5;
+ text-align:center;margin:15px 0
+}
 footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
-#records .panel{text-align:center}
 
-/* PANTALLA DE JUEGO */
+/* PANTALLA DEL JUEGO */
 #gameScreen.active{
  display:block;position:fixed;inset:0;z-index:20;
- width:100%;height:100vh;height:100dvh;max-width:none;
- margin:0;padding:0;overflow:hidden;
- background:radial-gradient(circle at 10% 15%,#e8175430,transparent 40%),radial-gradient(circle at 90% 85%,#087bff45,transparent 45%),#080817
+ width:100%;height:100vh;height:100dvh;
+ max-width:none;margin:0;padding:0;overflow:hidden;
+ background:
+ radial-gradient(circle at 10% 15%,#e8175430,transparent 40%),
+ radial-gradient(circle at 90% 85%,#087bff45,transparent 45%),
+ #080817
 }
-body.game-open header,body.game-open main>section:not(#gameScreen),body.game-open footer{display:none!important}
+body.game-open header,
+body.game-open main>section:not(#gameScreen),
+body.game-open footer{display:none!important}
+
 #gameBoard{
  position:absolute;inset:0;width:100%;height:100%;
  overflow:hidden;border:2px solid #244c91;
@@ -50,18 +104,22 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
  box-shadow:inset 0 0 35px #087bff33;
  touch-action:none
 }
-.lanes{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr)}
+.lanes{
+ position:absolute;inset:0;
+ display:grid;grid-template-columns:repeat(4,1fr)
+}
 .lane{position:relative;border-right:1px solid #378bff45}
 .lane:last-child{border:0}
 
-/* TECLAS */
+/* TECLAS NORMALES */
 .tile{
  position:absolute;width:84%;left:8%;
- height:clamp(145px,22vh,190px);top:-300px;
- border-radius:34px;background:linear-gradient(180deg,#172d65,#050b20);
+ height:clamp(145px,19vh,180px);
+ top:-300px;border-radius:34px;
+ background:linear-gradient(180deg,#172d65,#050b20);
  border:3px solid #21dfff;
  box-shadow:0 0 16px #00caff,inset 0 0 18px #1269d8;
- transition:opacity .12s,filter .12s
+ touch-action:none
 }
 .tile.color0{border-color:#ff3c92;box-shadow:0 0 16px #ff2589,inset 0 0 15px #a31159}
 .tile.color1{border-color:#20eaff;box-shadow:0 0 16px #20eaff,inset 0 0 15px #1269d8}
@@ -70,54 +128,110 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 
 /* TECLAS LARGAS */
 .tile.long{
- height:clamp(270px,40vh,370px);
- border-radius:36px;display:flex;flex-direction:column;
- align-items:center;justify-content:center;gap:10px
+ height:clamp(270px,38vh,350px);
+ border-radius:36px;display:flex;
+ flex-direction:column;align-items:center;
+ justify-content:center;gap:10px
 }
-.long-arrows{color:#65f4ff;font-size:34px;line-height:.75;font-weight:900;text-shadow:0 0 12px #00dfff}
-.long-label{color:#d9fbff;font-size:15px;font-weight:900;text-shadow:0 0 12px #00dfff}
+.long-arrows{
+ color:#65f4ff;font-size:34px;line-height:.75;
+ font-weight:900;text-shadow:0 0 12px #00dfff
+}
+.long-label{
+ color:#d9fbff;font-size:15px;
+ font-weight:900;text-shadow:0 0 12px #00dfff
+}
 .long-hand{font-size:34px;filter:drop-shadow(0 0 8px #00eaff)}
-.tile.holding{filter:brightness(1.65);box-shadow:0 0 30px #ffffffaa}
-.long-progress{position:absolute;left:0;right:0;bottom:0;height:0%;border-radius:0 0 30px 30px;background:#ffffff45;pointer-events:none}
+.tile.holding{
+ filter:brightness(1.7);
+ box-shadow:0 0 30px #ffffffaa
+}
+.long-progress{
+ position:absolute;left:0;right:0;bottom:0;
+ height:0%;border-radius:0 0 30px 30px;
+ background:#ffffff45;pointer-events:none
+}
 
-/* TECLA YA TOCADA: DESAPARECE, PERO SIGUE EN LA SECUENCIA */
-.tile.touched{opacity:0;filter:brightness(2);pointer-events:none}
-.tile.long.holding{opacity:.25}
-
-/* LÍNEA FIJA DE COMBO */
+/* LÍNEA DE COMBO: 10% MÁS ABAJO */
 .combo-line{
- position:absolute;left:0;right:0;top:60%;height:6px;z-index:5;
- pointer-events:none;background:#55eaff;
+ position:absolute;left:0;right:0;top:70%;
+ height:6px;z-index:5;pointer-events:none;
+ background:#55eaff;
  box-shadow:0 0 12px #13cfff,0 0 28px #13cfff
 }
 .combo-line:after{
- content:"";position:absolute;left:0;right:0;top:-6px;
- height:18px;background:#55eaff25
+ content:"";position:absolute;left:0;right:0;
+ top:-6px;height:18px;background:#55eaff25
 }
 
+/* INFORMACIÓN */
 #gameTop{
  position:absolute;top:env(safe-area-inset-top,5px);
- left:0;right:0;z-index:8;display:flex;
- justify-content:space-between;align-items:center;
- padding:10px 14px;pointer-events:none
+ left:0;right:0;z-index:8;
+ display:flex;justify-content:space-between;
+ align-items:center;padding:10px 14px;
+ pointer-events:none
 }
 #gameTop>*{pointer-events:auto}
 .game-score{font-size:25px;font-weight:bold;color:#65eaff}
-.pause{border:1px solid #23dfff;background:#10152dcc;color:#65eaff;border-radius:18px;padding:10px 15px}
-#stageLabel{position:absolute;top:65px;left:0;right:0;text-align:center;color:#ffd447;font-weight:bold;z-index:7;pointer-events:none}
-#gameSong{position:absolute;top:90px;left:0;right:0;text-align:center;color:#aab8d9;font-size:13px;z-index:7;pointer-events:none}
-#comboDisplay{position:absolute;top:125px;left:0;right:0;z-index:7;text-align:center;color:#63eaff;font-size:17px;font-weight:bold;pointer-events:none;text-shadow:0 0 10px #00cfff}
-
-#starProgress{
- position:absolute;top:153px;left:0;right:0;z-index:8;
- display:flex;justify-content:center;gap:17px;pointer-events:none
+.pause{
+ border:1px solid #23dfff;background:#10152dcc;
+ color:#65eaff;border-radius:18px;padding:10px 15px
 }
-.progress-star{font-size:27px;color:#66708b;text-shadow:none;transition:.25s}
-.progress-star.lit{color:#ffd447;text-shadow:0 0 8px #ffbd24,0 0 20px #ff9d00;transform:scale(1.12)}
+#stageLabel{
+ position:absolute;top:65px;left:0;right:0;
+ text-align:center;color:#ffd447;
+ font-weight:bold;z-index:7;pointer-events:none
+}
+#gameSong{
+ position:absolute;top:90px;left:0;right:0;
+ text-align:center;color:#aab8d9;
+ font-size:13px;z-index:7;pointer-events:none
+}
+#comboDisplay{
+ position:absolute;top:125px;left:0;right:0;
+ z-index:7;text-align:center;color:#63eaff;
+ font-size:17px;font-weight:bold;
+ pointer-events:none;text-shadow:0 0 10px #00cfff
+}
+#starProgress{
+ position:absolute;top:153px;left:0;right:0;
+ z-index:8;display:flex;justify-content:center;
+ gap:17px;pointer-events:none
+}
+.progress-star{font-size:27px;color:#66708b;transition:.25s}
+.progress-star.lit{
+ color:#ffd447;text-shadow:0 0 8px #ffbd24,0 0 20px #ff9d00;
+ transform:scale(1.12)
+}
+#gameMessage{
+ position:absolute;bottom:22px;left:0;right:0;
+ z-index:7;text-align:center;color:#63eaff;
+ font-size:16px;font-weight:bold;pointer-events:none
+}
+#perfect{
+ position:absolute;top:43%;left:0;right:0;
+ z-index:8;text-align:center;color:#ff426f;
+ font-size:27px;font-weight:1000;
+ text-shadow:0 0 15px #ff174d;
+ pointer-events:none;opacity:0;
+ transform:scale(.8);
+ transition:opacity .08s,transform .08s
+}
 
-#gameMessage{position:absolute;bottom:22px;left:0;right:0;z-index:7;text-align:center;color:#63eaff;font-size:16px;font-weight:bold;pointer-events:none}
-#perfect{position:absolute;top:43%;left:0;right:0;z-index:8;text-align:center;color:#ff426f;font-size:27px;font-weight:1000;text-shadow:0 0 15px #ff174d;pointer-events:none;opacity:0}
+/* PAUSA */
+#pauseOverlay{
+ display:none;position:absolute;inset:0;z-index:30;
+ background:#050817ef;place-items:center;padding:25px
+}
+.pause-card{
+ width:100%;max-width:340px;text-align:center;
+ background:#111a38;border:1px solid #28dfff;
+ border-radius:24px;padding:25px;
+ box-shadow:0 0 25px #078dff66
+}
 
+/* RESULTADOS */
 #resultScreen{text-align:center}
 .result-stars{font-size:36px;color:#ffd447;letter-spacing:5px}
 #resultScore{font-size:42px;color:#65eaff}
@@ -126,16 +240,20 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 </head>
 
 <body>
+
 <header>
  <div class="logo">MAGIC-GAM</div>
  <div class="diamonds">💎 <span id="diamondCount">0</span></div>
 </header>
 
 <main>
+
 <section id="home" class="screen active">
  <h1>MAGIC-GAM</h1>
  <p class="subtitle">TU RITMO. TU VELOCIDAD. TU RÉCORD.</p>
+
  <div style="text-align:center;font-size:105px;margin:40px 0;text-shadow:0 0 25px #14cfff">♫</div>
+
  <div class="menu">
   <button class="neon-btn play" onclick="showScreen('songs')">▶ JUGAR</button>
   <button class="neon-btn" onclick="showScreen('records')">🏆 RÉCORDS</button>
@@ -159,7 +277,11 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
   <span class="song-status">GRATIS</span>
  </button>
 
- <p class="notice">La primera canción está desbloqueada gratis. Las demás canciones costarán 500 💎 cada una. La grabación original de Sunflower se añadirá cuando tengamos permiso para utilizarla.</p>
+ <p class="notice">
+  La primera canción está desbloqueada gratis.
+  Las demás canciones costarán 500 💎 cada una.
+  La grabación original de Sunflower se añadirá cuando tengamos permiso para utilizarla.
+ </p>
 
  <div class="panel">
   <strong>PRÓXIMAMENTE</strong>
@@ -169,6 +291,7 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 </section>
 
 <section id="gameScreen" class="screen">
+
  <div id="gameTop">
   <button class="pause" onclick="pauseGame()">Ⅱ PAUSA</button>
   <div class="game-score" id="score">0</div>
@@ -191,21 +314,33 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
    <div class="lane"></div>
    <div class="lane"></div>
   </div>
-  <div class="combo-line" id="comboLine"></div>
+  <div class="combo-line"></div>
  </div>
 
  <div id="perfect">PERFECT!</div>
  <div id="gameMessage">¡Toca las teclas!</div>
+
+ <div id="pauseOverlay">
+  <div class="pause-card">
+   <h1>PAUSA</h1>
+   <p class="subtitle">Tu partida está detenida.</p>
+   <button class="neon-btn play" onclick="resumeGame()">▶ CONTINUAR</button>
+   <button class="neon-btn" onclick="showScreen('home')">⌂ SALIR AL MENÚ</button>
+  </div>
+ </div>
+
 </section>
 
 <section id="resultScreen" class="screen">
  <h1 id="resultTitle">PARTIDA TERMINADA</h1>
  <div class="result-stars" id="resultStars">☆☆☆</div>
+
  <div class="panel">
   <h2 id="resultScore">0</h2>
   <p class="small">PUNTUACIÓN FINAL</p>
   <p id="resultReward">¡Buen intento!</p>
  </div>
+
  <div class="result-buttons">
   <button class="neon-btn play" onclick="startGame()">↻ VOLVER A JUGAR</button>
   <button class="neon-btn" onclick="showScreen('home')">⌂ MENÚ PRINCIPAL</button>
@@ -215,6 +350,7 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 <section id="records" class="screen">
  <button class="back" onclick="showScreen('home')">← VOLVER</button>
  <h1>🏆 RÉCORDS</h1>
+
  <div class="panel">
   <strong>SUNFLOWER</strong>
   <h2 id="recordPage">0</h2>
@@ -224,11 +360,13 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 </section>
 
 <footer>MAGIC-GAM · JUEGA CON EL RITMO</footer>
+
 </main>
 
 <script>
 const $=id=>document.getElementById(id);
 
+/* GUARDADO */
 const defaultSave={
  diamonds:0,
  songs:{
@@ -242,18 +380,24 @@ const defaultSave={
 };
 
 let saved;
+
 try{
  saved=JSON.parse(localStorage.getItem("magicGamSave"))||defaultSave;
 }catch(e){
  saved=JSON.parse(JSON.stringify(defaultSave));
 }
 
-saved.diamonds=saved.diamonds||0;
+saved.diamonds=Number(saved.diamonds)||0;
 saved.songs=saved.songs||{};
 saved.songs.sunflower=saved.songs.sunflower||{
  stars:0,record:0,paidStars:[],extremePaid:false
 };
-saved.songs.sunflower.paidStars=saved.songs.sunflower.paidStars||[];
+
+const songSave=saved.songs.sunflower;
+songSave.stars=Math.max(0,Math.min(3,Number(songSave.stars)||0));
+songSave.record=Number(songSave.record)||0;
+songSave.paidStars=Array.isArray(songSave.paidStars)?songSave.paidStars:[];
+songSave.extremePaid=!!songSave.extremePaid;
 
 function save(){
  try{
@@ -273,17 +417,22 @@ function updateUI(){
 
 function showScreen(id){
  stopGame();
+ $("pauseOverlay").style.display="none";
  document.body.classList.remove("game-open");
- document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+
+ document.querySelectorAll(".screen").forEach(s=>{
+  s.classList.remove("active");
+ });
+
  $(id).classList.add("active");
  updateUI();
 }
 
-/* VARIABLES DE PARTIDA */
+/* VARIABLES DEL JUEGO */
 let running=false;
+let paused=false;
 let tiles=[];
 let score=0;
-let hits=0;
 let combo=0;
 let starsEarned=0;
 let stageHits=0;
@@ -292,48 +441,46 @@ let superDifficult=false;
 let lastTime=0;
 let lastSpawn=0;
 let animation=0;
-let speed=190;
-let spawnEvery=1050;
+let speed=210;
+let spawnEvery=950;
 let activeHold=null;
-let perfectTimer=null;
 let lastLane=-1;
+let perfectTimer=null;
 
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
-const line=$("comboLine");
 
-/* INICIO */
+/* INICIAR */
 function selectSong(song){
  startGame();
-}
-
-function updateStars(){
- for(let i=1;i<=3;i++){
-  $("star"+i).classList.toggle("lit",i<=starsEarned);
- }
 }
 
 function startGame(){
  stopGame();
 
  document.body.classList.add("game-open");
- document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
- $("gameScreen").classList.add("active");
 
- tiles=[];
+ document.querySelectorAll(".screen").forEach(s=>{
+  s.classList.remove("active");
+ });
+
+ $("gameScreen").classList.add("active");
+ $("pauseOverlay").style.display="none";
+
  lanes.forEach(l=>l.innerHTML="");
+ tiles=[];
 
  score=0;
- hits=0;
  combo=0;
  starsEarned=0;
  stageHits=0;
  superDifficult=false;
 
- speed=190;
- spawnEvery=1050;
+ speed=210;
+ spawnEvery=950;
  activeHold=null;
  lastLane=-1;
+ paused=false;
 
  $("score").textContent="0";
  $("stageLabel").textContent="⭐ ETAPA 1";
@@ -341,8 +488,8 @@ function startGame(){
  $("comboDisplay").textContent="COMBO x0";
  $("gameMessage").textContent="¡Toca las teclas!";
  $("perfect").style.opacity="0";
+ $("perfect").style.transform="scale(.8)";
 
- line.style.top="60%";
  updateStars();
 
  running=true;
@@ -354,6 +501,7 @@ function startGame(){
 
 function stopGame(){
  running=false;
+ paused=false;
 
  if(animation){
   cancelAnimationFrame(animation);
@@ -361,6 +509,12 @@ function stopGame(){
 
  animation=0;
  activeHold=null;
+}
+
+function updateStars(){
+ for(let i=1;i<=3;i++){
+  $("star"+i).classList.toggle("lit",i<=starsEarned);
+ }
 }
 
 /* CREAR TECLAS */
@@ -373,7 +527,7 @@ function spawnTile(){
 
  lastLane=lane;
 
- const isLong=Math.random()<.23;
+ const isLong=Math.random()<.20;
  const tile=document.createElement("div");
 
  tile.className="tile color"+lane+(isLong?" long":"");
@@ -399,31 +553,78 @@ function spawnTile(){
 
  lanes[lane].appendChild(tile);
 
+ const tileHeight=tile.offsetHeight;
+
  tiles.push({
   el:tile,
   lane:lane,
-  y:-400,
+  y:-tileHeight-10,
+  height:tileHeight,
   long:isLong,
   touched:false,
   holding:false,
   holdPointer:null,
-  holdStart:0,
-  progress:0,
-  completed:false
+  startBottom:-10
  });
 }
 
-/* MOVIMIENTO Y EVALUACIÓN */
-function loop(now){
- if(!running)return;
+/* EFECTO PERFECT INMEDIATO */
+function showPerfect(){
+ const p=$("perfect");
 
- const dt=Math.min((now-lastTime)/1000,.05);
+ p.style.opacity="1";
+ p.style.transform="scale(1.15)";
+
+ clearTimeout(perfectTimer);
+
+ perfectTimer=setTimeout(()=>{
+  p.style.opacity="0";
+  p.style.transform="scale(.8)";
+ },450);
+}
+
+/* COMBO Y PROGRESO */
+function registerCombo(){
+ combo++;
+ $("comboDisplay").textContent="COMBO x"+combo;
+ showPerfect();
+}
+
+/* ACIERTO NORMAL: PUNTOS INMEDIATOS */
+function scoreNormalTile(){
+ score+=50;
+ stageHits++;
+
+ $("score").textContent=score;
+ $("gameMessage").textContent="¡PERFECT! +50";
+
+ registerCombo();
+ checkStage();
+}
+
+/* ACIERTO DE TECLA LARGA */
+function scoreLongTile(){
+ score+=100;
+ stageHits++;
+
+ $("score").textContent=score;
+ $("gameMessage").textContent="¡TECLA LARGA COMPLETADA! +100";
+
+ registerCombo();
+ checkStage();
+}
+
+/* BUCLE PRINCIPAL */
+function loop(now){
+ if(!running||paused)return;
+
+ const dt=Math.min((now-lastTime)/1000,.04);
  lastTime=now;
 
- const height=board.clientHeight;
- const lineY=height*.60;
+ const boardHeight=board.clientHeight;
+ const lineY=boardHeight*.70;
 
- if(now-lastSpawn>spawnEvery){
+ if(now-lastSpawn>=spawnEvery){
   spawnTile();
   lastSpawn=now;
  }
@@ -434,55 +635,42 @@ function loop(now){
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
 
+  const bottom=t.y+t.height;
+
   /* PROGRESO DE TECLA LARGA */
-  if(t.holding){
-   const duration=Math.max(1,t.el.offsetHeight/speed*1000);
-   t.progress=Math.min(100,((now-t.holdStart)/duration)*100);
+  if(t.long&&t.holding){
+   const totalDistance=Math.max(1,lineY-t.startBottom);
+   const traveled=bottom-t.startBottom;
+   const percent=Math.max(0,Math.min(100,traveled/totalDistance*100));
 
-   const p=t.el.querySelector(".long-progress");
-   if(p)p.style.height=t.progress+"%";
+   const progress=t.el.querySelector(".long-progress");
+   if(progress)progress.style.height=percent+"%";
   }
 
-  /* CUANDO LA TECLA LLEGA A LA LÍNEA */
-  const tileBottom=t.y+t.el.offsetHeight;
+  /*
+   * LA LÍNEA NO ES UNA BARRERA PARA TECLAS NORMALES.
+   * LAS TECLAS NORMALES PUEDEN PASARLA.
+   */
 
-  if(tileBottom>=lineY){
-   if(!t.touched){
-    finishGame(false,"¡NO TOCASTE LA TECLA!");
-    return;
-   }
-
-   if(t.long&&!t.completed){
-    if(t.holding){
-     t.completed=true;
-     t.holding=false;
-
-     if(t.el.isConnected)t.el.remove();
-     tiles.splice(i,1);
-
-     if(activeHold===t)activeHold=null;
-
-     completeHit();
-     continue;
-    }
-   }else if(!t.long&&!t.completed){
-    t.completed=true;
-
-    if(t.el.isConnected)t.el.remove();
-    tiles.splice(i,1);
-
-    completeHit();
-    continue;
-   }
-  }
-
-  /* SEGURIDAD: UNA TECLA NO PUEDE QUEDARSE FUERA */
-  if(t.y>height+30){
+  /* TECLA LARGA COMPLETADA AL PASAR SU RECORRIDO */
+  if(t.long&&t.holding&&t.y>=lineY){
    if(t.el.isConnected)t.el.remove();
+
    tiles.splice(i,1);
 
    if(activeHold===t)activeHold=null;
 
+   scoreLongTile();
+
+   if(!running)return;
+   continue;
+  }
+
+  /*
+   * SOLO SE PIERDE SI LA TECLA NO TOCADA
+   * LLEGA AL FONDO DE LA PANTALLA.
+   */
+  if(t.y>=boardHeight){
    finishGame(false,"¡TECLA PERDIDA!");
    return;
   }
@@ -491,40 +679,13 @@ function loop(now){
  animation=requestAnimationFrame(loop);
 }
 
-/* EFECTO PERFECT */
-function showPerfect(){
- const p=$("perfect");
- p.style.opacity="1";
-
- clearTimeout(perfectTimer);
-
- perfectTimer=setTimeout(()=>{
-  p.style.opacity="0";
- },350);
-}
-
-/* REGISTRAR ACIERTO Y COMBO */
-function completeHit(){
- hits++;
- stageHits++;
- combo++;
- score+=50;
-
- $("score").textContent=score;
- $("comboDisplay").textContent="COMBO x"+combo;
- $("gameMessage").textContent=combo>1?"¡COMBO! +50":"¡PERFECT! +50";
-
- showPerfect();
- checkStage();
-}
-
-/* TOCAR UNA TECLA EN CUALQUIER PARTE */
+/* DETECTAR TOQUE */
 function boardDown(e){
- if(!running)return;
+ if(!running||paused)return;
 
  e.preventDefault();
 
- /* No se puede empezar otra tecla mientras se mantiene una larga */
+ /* No iniciar otra tecla mientras se mantiene una larga */
  if(activeHold)return;
 
  let chosen=null;
@@ -546,21 +707,21 @@ function boardDown(e){
   }
  }
 
- /* TOCAR FUERA DE TODAS LAS TECLAS = PERDER */
+ /* TOCAR FUERA DE UNA TECLA = PERDER */
  if(!chosen){
   finishGame(false,"¡TOCASTE FUERA DE UNA TECLA!");
   return;
  }
 
- /* LA TECLA QUEDA MARCADA COMO TOCADA */
  chosen.touched=true;
 
  if(chosen.long){
-  /* TECLA LARGA: SE MANTIENE PRESIONADA */
+  /* TECLA LARGA: MANTENER PRESIONADO */
   chosen.holding=true;
   chosen.holdPointer=e.pointerId;
-  chosen.holdStart=performance.now();
-  chosen.el.classList.add("holding","touched");
+  chosen.startBottom=chosen.y+chosen.height;
+
+  chosen.el.classList.add("holding");
 
   activeHold=chosen;
 
@@ -569,15 +730,22 @@ function boardDown(e){
   }catch(err){}
 
   $("gameMessage").textContent="¡MANTÉN PRESIONADO!";
- }else{
-  /* TECLA NORMAL: DESAPARECE, PERO ESPERA A LA LÍNEA */
-  chosen.el.classList.add("touched");
+  showPerfect();
 
-  $("gameMessage").textContent="¡BIEN! ESPERA EL COMBO";
+ }else{
+  /*
+   * TECLA NORMAL:
+   * DESAPARECE Y SUMA PUNTOS INMEDIATAMENTE.
+   */
+  if(chosen.el.isConnected)chosen.el.remove();
+
+  tiles=tiles.filter(t=>t!==chosen);
+
+  scoreNormalTile();
  }
 }
 
-/* SOLTAR EL DEDO */
+/* SOLTAR TECLA LARGA */
 function boardUp(e){
  if(!activeHold)return;
 
@@ -585,10 +753,7 @@ function boardUp(e){
 
  const t=activeHold;
 
- /* Si se suelta antes de llegar a la línea, falla */
- if(t.el.isConnected){
-  t.el.remove();
- }
+ if(t.el.isConnected)t.el.remove();
 
  tiles=tiles.filter(x=>x!==t);
  activeHold=null;
@@ -622,8 +787,8 @@ function checkStage(){
 
   updateStars();
 
-  speed+=55;
-  spawnEvery=Math.max(700,spawnEvery-90);
+  speed+=45;
+  spawnEvery=Math.max(650,spawnEvery-75);
 
   $("stageLabel").textContent="⭐ ESTRELLA "+starsEarned+" DE 3";
   $("gameMessage").textContent="¡ESTRELLA CONSEGUIDA! +50 💎";
@@ -631,12 +796,12 @@ function checkStage(){
   if(starsEarned===3){
    superDifficult=true;
 
-   speed+=130;
-   spawnEvery=620;
+   speed+=100;
+   spawnEvery=600;
 
    $("stageLabel").textContent="🔥 SÚPER DIFÍCIL";
    $("gameSong").textContent="SUNFLOWER · SÚPER DIFÍCIL";
-   $("gameMessage").textContent="¡LAS 3 ESTRELLAS! ¡COMIENZA SÚPER DIFÍCIL!";
+   $("gameMessage").textContent="¡COMIENZA SÚPER DIFÍCIL!";
   }
 
   save();
@@ -646,7 +811,7 @@ function checkStage(){
  }
 }
 
-/* RESULTADOS */
+/* TERMINAR PARTIDA */
 function finishGame(won,message){
  if(!running)return;
 
@@ -679,6 +844,7 @@ function finishGame(won,message){
   ?"¡Ganaste 200 diamantes adicionales! 💎"
   :"¡Sigue practicando para superar tu récord!";
 
+ $("pauseOverlay").style.display="none";
  document.body.classList.remove("game-open");
 
  document.querySelectorAll(".screen").forEach(s=>{
@@ -690,20 +856,33 @@ function finishGame(won,message){
 
 /* PAUSA */
 function pauseGame(){
- if(!running)return;
+ if(!running||paused)return;
 
- stopGame();
-
- const resume=confirm("Partida pausada. ¿Quieres continuar?");
-
- if(resume){
-  running=true;
-  lastTime=performance.now();
-  lastSpawn=lastTime;
-  animation=requestAnimationFrame(loop);
- }else{
-  showScreen("home");
+ if(activeHold){
+  $("gameMessage").textContent="¡COMPLETA LA TECLA LARGA PRIMERO!";
+  return;
  }
+
+ paused=true;
+
+ if(animation){
+  cancelAnimationFrame(animation);
+ }
+
+ animation=0;
+ $("pauseOverlay").style.display="grid";
+}
+
+function resumeGame(){
+ if(!paused)return;
+
+ paused=false;
+ $("pauseOverlay").style.display="none";
+
+ lastTime=performance.now();
+ lastSpawn=performance.now();
+
+ animation=requestAnimationFrame(loop);
 }
 
 updateUI();
