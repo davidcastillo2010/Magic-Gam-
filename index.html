@@ -61,25 +61,8 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 #stageLabel{position:absolute;top:75px;left:0;right:0;text-align:center;color:#ffd447;font-weight:bold;z-index:7;pointer-events:none}
 #gameSong{position:absolute;top:100px;left:0;right:0;text-align:center;color:#aab8d9;font-size:13px;z-index:7;pointer-events:none}
 
-/* ANIMACIÓN EXCLUSIVA DE COMBO */
+/* COMBO ESTÁTICO, SIN ANIMACIONES */
 #comboDisplay{position:absolute;top:130px;left:0;right:0;z-index:11;text-align:center;color:#63eaff;font-size:22px;font-weight:1000;pointer-events:none;text-shadow:0 0 10px #00cfff}
-#comboDisplay.combo-pop{animation:comboPop .38s cubic-bezier(.15,.85,.25,1.35)}
-@keyframes comboPop{
- 0%{transform:scale(.55);filter:brightness(1);text-shadow:0 0 5px #00cfff}
- 45%{transform:scale(1.55);filter:brightness(2);text-shadow:0 0 12px #fff,0 0 28px #00eaff,0 0 45px #008cff}
- 70%{transform:scale(.90);filter:brightness(1.5)}
- 100%{transform:scale(1);filter:brightness(1);text-shadow:0 0 10px #00cfff}
-}
-
-/* RECOMPENSA DE DIAMANTES: ANIMACIÓN INDEPENDIENTE Y LIGERA */
-#diamondRewardLayer{position:absolute;top:195px;left:0;right:0;z-index:12;display:flex;flex-direction:column;align-items:center;gap:5px;pointer-events:none}
-.diamond-reward{font-size:23px;font-weight:1000;color:#62f5ff;text-align:center;text-shadow:0 0 8px #00dfff,0 0 20px #087bff;will-change:transform,opacity;animation:diamondRewardPop .65s ease-out both}
-@keyframes diamondRewardPop{
- 0%{opacity:0;transform:translate3d(0,12px,0) scale(.85)}
- 20%{opacity:1;transform:translate3d(0,0,0) scale(1.08)}
- 70%{opacity:1;transform:translate3d(0,-8px,0) scale(1)}
- 100%{opacity:0;transform:translate3d(0,-25px,0) scale(.96)}
-}
 
 #starProgress{position:absolute;top:158px;left:0;right:0;z-index:8;display:flex;justify-content:center;gap:17px;pointer-events:none}
 .progress-star{font-size:27px;color:#66708b;transition:.25s}
@@ -147,8 +130,6 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
  <div id="stageLabel">⭐ PRIMERA ESTRELLA</div>
  <div id="gameSong">SUNFLOWER · FÁCIL</div>
  <div id="comboDisplay">COMBO x0</div>
-
- <div id="diamondRewardLayer"></div>
 
  <div id="starProgress">
   <span class="progress-star" id="star1">★</span>
@@ -260,10 +241,6 @@ let running=false,paused=false,tiles=[],score=0,combo=0,starsEarned=0,stageHits=
 let lastTime=0,lastSpawn=0,animation=0,speed=210,spawnEvery=950;
 let activeHold=null,lastLane=-1,feedbackTimer=null;
 
-/* RECOMPENSA: 10 DIAMANTES CADA 5,000 PUNTOS */
-let nextDiamondReward=5000;
-let bonusDiamondsEarned=0;
-
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
 
@@ -297,15 +274,10 @@ function startGame(){
  lastLane=-1;
  paused=false;
 
- nextDiamondReward=5000;
- bonusDiamondsEarned=0;
- $("diamondRewardLayer").innerHTML="";
-
  $("score").textContent="0";
  $("stageLabel").textContent="⭐ PRIMERA ESTRELLA";
  $("gameSong").textContent="SUNFLOWER · FÁCIL";
  $("comboDisplay").textContent="COMBO x0";
- $("comboDisplay").classList.remove("combo-pop");
  $("gameMessage").textContent="";
  hideFeedback();
  updateStars();
@@ -330,7 +302,7 @@ function updateStars(){
  }
 }
 
-/* PERFECTO Y TARDADO SIN REBOTE */
+/* MENSAJES PERFECTO Y TARDADO SIN REBOTE */
 function showFeedback(type,message){
  const box=$("feedback");
  clearTimeout(feedbackTimer);
@@ -345,59 +317,23 @@ function hideFeedback(){
  $("feedback").style.opacity="0";
 }
 
-/* ANIMACIÓN EXCLUSIVA DEL COMBO */
-function animateCombo(){
- const box=$("comboDisplay");
- box.classList.remove("combo-pop");
- void box.offsetWidth;
- box.classList.add("combo-pop");
-}
-
-/* ANIMACIÓN INDEPENDIENTE DE LA RECOMPENSA */
-function showDiamondReward(){
- const layer=$("diamondRewardLayer");
- const popup=document.createElement("div");
-
- popup.className="diamond-reward";
- popup.textContent="+10 DIAMANTES 💎";
-
- layer.appendChild(popup);
-
- popup.addEventListener("animationend",()=>{
-  popup.remove();
- },{once:true});
-}
-
-/* COMBO PROGRESIVO */
+/* COMBO ESTÁTICO, SIN ANIMACIÓN */
 function registerCombo(){
  combo++;
  $("comboDisplay").textContent="COMBO x"+combo;
- animateCombo();
  showFeedback("perfect","¡PERFECTO!");
 }
 
 function registerLate(){
  combo=0;
  $("comboDisplay").textContent="COMBO x0";
- $("comboDisplay").classList.remove("combo-pop");
  showFeedback("late","TARDADO");
 }
 
+/* LA TECLA DEBE ESTAR CRUZANDO LA LÍNEA DEL 70% */
 function isTileCrossingLine(t){
  const lineY=board.clientHeight*.70;
  return t.y<=lineY && t.y+t.height>=lineY;
-}
-
-/* COMPROBAR CADA META DE 5,000 PUNTOS */
-function checkDiamondReward(){
- while(score>=nextDiamondReward){
-  saved.diamonds+=10;
-  bonusDiamondsEarned+=10;
-  nextDiamondReward+=5000;
-
-  showDiamondReward();
-  save();
- }
 }
 
 /* COMBO PROGRESIVO: X3, X9, X27... */
@@ -415,11 +351,7 @@ function calculatePoints(perfect,extra=0){
 
  points=Math.round(points);
  score+=points;
-
  $("score").textContent=formatNumber(score);
-
- checkDiamondReward();
-
  return points;
 }
 
@@ -512,6 +444,7 @@ function loop(now){
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
 
+  /* TECLA LARGA: PUEDE SER PERFECTA AL CRUZAR LA LÍNEA */
   if(t.long&&t.holding){
    if(isTileCrossingLine(t))t.perfect=true;
 
@@ -655,8 +588,7 @@ function finishGame(message){
  $("resultStars").textContent="★".repeat(starsEarned)+"☆".repeat(3-starsEarned);
  $("resultScore").textContent=formatNumber(score);
  $("resultReward").textContent=
-  "Diamantes por estrellas: "+formatNumber(starsEarned*50)+
-  " 💎 | Diamantes extra por puntos: "+formatNumber(bonusDiamondsEarned)+" 💎";
+  "Diamantes obtenidos por estrellas: "+formatNumber(starsEarned*50)+" 💎";
 
  $("pauseOverlay").style.display="none";
  document.body.classList.remove("game-open");
