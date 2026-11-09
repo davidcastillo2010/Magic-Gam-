@@ -220,7 +220,6 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 const provider=new GoogleAuthProvider();
-let currentUser=null;
 
 const message=(text)=>{
  const el=document.getElementById("accountMessage");
@@ -283,7 +282,6 @@ window.copyPlayerId=async function(){
 };
 
 onAuthStateChanged(auth,async(user)=>{
- currentUser=user;
  const login=document.getElementById("googleLogin");
  const logout=document.getElementById("googleLogout");
  const details=document.getElementById("accountDetails");
@@ -350,6 +348,27 @@ function formatNumber(value){
  return numberFormat.format(Math.round(value));
 }
 
+/* Abrevia récords históricos muy grandes para que no desborden la pantalla. */
+function formatRecord(value){
+ value=Math.round(Number(value)||0);
+ if(value<1000000)return formatNumber(value);
+
+ const units=[
+  {value:1e15,suffix:"Q"},
+  {value:1e12,suffix:"T"},
+  {value:1e9,suffix:"B"},
+  {value:1e6,suffix:"M"}
+ ];
+
+ for(const unit of units){
+  if(value>=unit.value){
+   const shortValue=(value/unit.value).toFixed(2).replace(/\.?0+$/,"");
+   return shortValue+unit.suffix;
+  }
+ }
+ return formatNumber(value);
+}
+
 function save(){
  try{
   localStorage.setItem("magicGamSave",JSON.stringify(saved));
@@ -361,8 +380,8 @@ function updateUI(){
  const d=saved.songs.sunflower;
  $("diamondCount").textContent=formatNumber(saved.diamonds);
  $("stars-sunflower").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);
- $("record-sunflower").textContent=formatNumber(d.record);
- $("recordPage").textContent=formatNumber(d.record);
+ $("record-sunflower").textContent=formatRecord(d.record);
+ $("recordPage").textContent=formatRecord(d.record);
  $("recordStars").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);
 }
 
@@ -381,10 +400,11 @@ let activeHold=null,lastLane=-1,feedbackTimer=null;
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
 
+/* Nuevos puntos base: 2, 3 y 4 según las estrellas conseguidas. */
 function getBasePoints(){
- if(starsEarned===0)return 13;
- if(starsEarned===1)return 31;
- return 46;
+ if(starsEarned===0)return 2;
+ if(starsEarned===1)return 3;
+ return 4;
 }
 
 function selectSong(song){
@@ -466,16 +486,23 @@ function isTileCrossingLine(t){
  return t.y<=lineY && t.y+t.height>=lineY;
 }
 
+/* Combo reducido y limitado: x1=1.2, x2=1.4... máximo x2. */
+function getComboMultiplier(){
+ return Math.min(2,1+(combo*.2));
+}
+
 function calculatePoints(perfect,extra=0){
  const base=getBasePoints();
  let points;
+
  if(perfect){
   registerCombo();
-  points=base*Math.pow(3,combo)+extra;
+  points=base*getComboMultiplier()+extra;
  }else{
   registerLate();
   points=base+extra;
  }
+
  points=Math.round(points);
  score+=points;
  $("score").textContent=formatNumber(score);
@@ -489,11 +516,11 @@ function scoreNormalTile(perfect){
 }
 
 function scoreLongTile(perfect,completed){
- const extra=completed?25:0;
+ const extra=completed?2:0;
  calculatePoints(perfect,extra);
  stageHits++;
  $("gameMessage").textContent=completed
-  ?"¡TECLA LARGA COMPLETADA! +25 EXTRA"
+  ?"¡TECLA LARGA COMPLETADA! +2 EXTRA"
   :"¡TECLA LARGA VÁLIDA!";
  checkStage();
 }
@@ -632,6 +659,7 @@ function checkStage(){
   const data=saved.songs.sunflower;
   if(starsEarned>data.stars)data.stars=starsEarned;
 
+  /* Cada estrella se paga una sola vez: 50 diamantes. */
   if(!data.paidStars.includes(starsEarned)){
    saved.diamonds+=50;
    data.paidStars.push(starsEarned);
