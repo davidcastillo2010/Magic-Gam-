@@ -302,7 +302,6 @@ function updateStars(){
  }
 }
 
-/* MENSAJES PERFECTO Y TARDADO SIN REBOTE */
 function showFeedback(type,message){
  const box=$("feedback");
  clearTimeout(feedbackTimer);
@@ -330,13 +329,11 @@ function registerLate(){
  showFeedback("late","TARDADO");
 }
 
-/* LA TECLA DEBE ESTAR CRUZANDO LA LÍNEA DEL 70% */
 function isTileCrossingLine(t){
  const lineY=board.clientHeight*.70;
  return t.y<=lineY && t.y+t.height>=lineY;
 }
 
-/* COMBO PROGRESIVO: X3, X9, X27... */
 function calculatePoints(perfect,extra=0){
  const base=getBasePoints();
  let points;
@@ -361,7 +358,6 @@ function scoreNormalTile(perfect){
  checkStage();
 }
 
-/* TECLA LARGA: BONO +25 */
 function scoreLongTile(perfect,completed){
  const extra=completed?25:0;
  calculatePoints(perfect,extra);
@@ -375,7 +371,7 @@ function scoreLongTile(perfect,completed){
  checkStage();
 }
 
-/* CREAR TECLAS */
+/* SOLO 2% DE PROBABILIDAD DE TECLA LARGA */
 function spawnTile(){
  let lane=Math.floor(Math.random()*4);
 
@@ -384,7 +380,7 @@ function spawnTile(){
  }
  lastLane=lane;
 
- const isLong=Math.random()<.20;
+ const isLong=Math.random()<0.02;
  const tile=document.createElement("div");
  tile.className="tile color"+lane+(isLong?" long":"");
 
@@ -425,7 +421,6 @@ function spawnTile(){
  });
 }
 
-/* BUCLE PRINCIPAL */
 function loop(now){
  if(!running||paused)return;
 
@@ -444,7 +439,6 @@ function loop(now){
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
 
-  /* TECLA LARGA: PUEDE SER PERFECTA AL CRUZAR LA LÍNEA */
   if(t.long&&t.holding){
    if(isTileCrossingLine(t))t.perfect=true;
 
@@ -475,7 +469,6 @@ function loop(now){
  animation=requestAnimationFrame(loop);
 }
 
-/* DETECTAR TOQUE */
 function boardDown(e){
  if(!running||paused)return;
  e.preventDefault();
@@ -525,7 +518,6 @@ function boardDown(e){
  }
 }
 
-/* SOLTAR TECLA LARGA: CUALQUIER DURACIÓN ES VÁLIDA */
 function boardUp(e){
  if(!activeHold)return;
  if(activeHold.holdPointer!==e.pointerId)return;
@@ -574,7 +566,6 @@ function checkStage(){
  }
 }
 
-/* TERMINAR PARTIDA */
 function finishGame(message){
  if(!running)return;
  stopGame();
@@ -597,7 +588,6 @@ function finishGame(message){
  $("resultScreen").classList.add("active");
 }
 
-/* PAUSA */
 function pauseGame(){
  if(!running||paused)return;
 
