@@ -61,7 +61,7 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 #stageLabel{position:absolute;top:75px;left:0;right:0;text-align:center;color:#ffd447;font-weight:bold;z-index:7;pointer-events:none}
 #gameSong{position:absolute;top:100px;left:0;right:0;text-align:center;color:#aab8d9;font-size:13px;z-index:7;pointer-events:none}
 
-/* LA ANIMACIÓN ESTÁ SOLAMENTE EN COMBO */
+/* ANIMACIÓN EXCLUSIVA DE COMBO */
 #comboDisplay{position:absolute;top:130px;left:0;right:0;z-index:11;text-align:center;color:#63eaff;font-size:22px;font-weight:1000;pointer-events:none;text-shadow:0 0 10px #00cfff}
 #comboDisplay.combo-pop{animation:comboPop .38s cubic-bezier(.15,.85,.25,1.35)}
 @keyframes comboPop{
@@ -71,12 +71,22 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
  100%{transform:scale(1);filter:brightness(1);text-shadow:0 0 10px #00cfff}
 }
 
+/* RECOMPENSA DE DIAMANTES: ANIMACIÓN INDEPENDIENTE Y LIGERA */
+#diamondRewardLayer{position:absolute;top:195px;left:0;right:0;z-index:12;display:flex;flex-direction:column;align-items:center;gap:5px;pointer-events:none}
+.diamond-reward{font-size:23px;font-weight:1000;color:#62f5ff;text-align:center;text-shadow:0 0 8px #00dfff,0 0 20px #087bff;will-change:transform,opacity;animation:diamondRewardPop .65s ease-out both}
+@keyframes diamondRewardPop{
+ 0%{opacity:0;transform:translate3d(0,12px,0) scale(.85)}
+ 20%{opacity:1;transform:translate3d(0,0,0) scale(1.08)}
+ 70%{opacity:1;transform:translate3d(0,-8px,0) scale(1)}
+ 100%{opacity:0;transform:translate3d(0,-25px,0) scale(.96)}
+}
+
 #starProgress{position:absolute;top:158px;left:0;right:0;z-index:8;display:flex;justify-content:center;gap:17px;pointer-events:none}
 .progress-star{font-size:27px;color:#66708b;transition:.25s}
 .progress-star.lit{color:#ffd447;text-shadow:0 0 8px #ffbd24,0 0 20px #ff9d00;transform:scale(1.12)}
 #gameMessage{position:absolute;bottom:22px;left:0;right:0;z-index:7;text-align:center;color:#63eaff;font-size:16px;font-weight:bold;pointer-events:none}
 
-/* PERFECTO Y TARDADO SIN ANIMACIÓN DE REBOTE */
+/* PERFECTO Y TARDADO SIN REBOTE */
 #feedback{position:absolute;top:42%;left:0;right:0;z-index:9;text-align:center;font-size:29px;font-weight:1000;pointer-events:none;opacity:0;transition:opacity .12s;text-shadow:0 0 15px currentColor}
 #feedback.perfect{color:#ff426f}
 #feedback.late{color:#ffd447}
@@ -137,11 +147,15 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
  <div id="stageLabel">⭐ PRIMERA ESTRELLA</div>
  <div id="gameSong">SUNFLOWER · FÁCIL</div>
  <div id="comboDisplay">COMBO x0</div>
+
+ <div id="diamondRewardLayer"></div>
+
  <div id="starProgress">
   <span class="progress-star" id="star1">★</span>
   <span class="progress-star" id="star2">★</span>
   <span class="progress-star" id="star3">★</span>
  </div>
+
  <div id="gameBoard">
   <div class="lanes">
    <div class="lane"></div><div class="lane"></div>
@@ -149,8 +163,10 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
   </div>
   <div class="combo-line"></div>
  </div>
+
  <div id="feedback"></div>
  <div id="gameMessage"></div>
+
  <div id="pauseOverlay">
   <div class="pause-card">
    <h1>PAUSA</h1>
@@ -244,10 +260,13 @@ let running=false,paused=false,tiles=[],score=0,combo=0,starsEarned=0,stageHits=
 let lastTime=0,lastSpawn=0,animation=0,speed=210,spawnEvery=950;
 let activeHold=null,lastLane=-1,feedbackTimer=null;
 
+/* RECOMPENSA: 10 DIAMANTES CADA 5,000 PUNTOS */
+let nextDiamondReward=5000;
+let bonusDiamondsEarned=0;
+
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
 
-/* PUNTOS BASE FINALES: ENTEROS */
 function getBasePoints(){
  if(starsEarned===0)return 13;
  if(starsEarned===1)return 31;
@@ -278,6 +297,10 @@ function startGame(){
  lastLane=-1;
  paused=false;
 
+ nextDiamondReward=5000;
+ bonusDiamondsEarned=0;
+ $("diamondRewardLayer").innerHTML="";
+
  $("score").textContent="0";
  $("stageLabel").textContent="⭐ PRIMERA ESTRELLA";
  $("gameSong").textContent="SUNFLOWER · FÁCIL";
@@ -307,7 +330,7 @@ function updateStars(){
  }
 }
 
-/* MENSAJES PERFECTO Y TARDADO SIN ANIMACIÓN DE REBOTE */
+/* PERFECTO Y TARDADO SIN REBOTE */
 function showFeedback(type,message){
  const box=$("feedback");
  clearTimeout(feedbackTimer);
@@ -330,6 +353,21 @@ function animateCombo(){
  box.classList.add("combo-pop");
 }
 
+/* ANIMACIÓN INDEPENDIENTE DE LA RECOMPENSA */
+function showDiamondReward(){
+ const layer=$("diamondRewardLayer");
+ const popup=document.createElement("div");
+
+ popup.className="diamond-reward";
+ popup.textContent="+10 DIAMANTES 💎";
+
+ layer.appendChild(popup);
+
+ popup.addEventListener("animationend",()=>{
+  popup.remove();
+ },{once:true});
+}
+
 /* COMBO PROGRESIVO */
 function registerCombo(){
  combo++;
@@ -345,10 +383,21 @@ function registerLate(){
  showFeedback("late","TARDADO");
 }
 
-/* LA TECLA DEBE ESTAR CRUZANDO LA LÍNEA DEL 70% */
 function isTileCrossingLine(t){
  const lineY=board.clientHeight*.70;
  return t.y<=lineY && t.y+t.height>=lineY;
+}
+
+/* COMPROBAR CADA META DE 5,000 PUNTOS */
+function checkDiamondReward(){
+ while(score>=nextDiamondReward){
+  saved.diamonds+=10;
+  bonusDiamondsEarned+=10;
+  nextDiamondReward+=5000;
+
+  showDiamondReward();
+  save();
+ }
 }
 
 /* COMBO PROGRESIVO: X3, X9, X27... */
@@ -366,7 +415,11 @@ function calculatePoints(perfect,extra=0){
 
  points=Math.round(points);
  score+=points;
+
  $("score").textContent=formatNumber(score);
+
+ checkDiamondReward();
+
  return points;
 }
 
@@ -380,6 +433,7 @@ function scoreNormalTile(perfect){
 function scoreLongTile(perfect,completed){
  const extra=completed?25:0;
  calculatePoints(perfect,extra);
+
  stageHits++;
 
  $("gameMessage").textContent=completed
@@ -458,7 +512,6 @@ function loop(now){
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
 
-  /* TECLA LARGA: PUEDE SER PERFECTA AL CRUZAR LA LÍNEA */
   if(t.long&&t.holding){
    if(isTileCrossingLine(t))t.perfect=true;
 
@@ -601,7 +654,9 @@ function finishGame(message){
  $("resultTitle").textContent=message||"PARTIDA TERMINADA";
  $("resultStars").textContent="★".repeat(starsEarned)+"☆".repeat(3-starsEarned);
  $("resultScore").textContent=formatNumber(score);
- $("resultReward").textContent="Diamantes obtenidos durante la partida: "+formatNumber(starsEarned*50)+" 💎";
+ $("resultReward").textContent=
+  "Diamantes por estrellas: "+formatNumber(starsEarned*50)+
+  " 💎 | Diamantes extra por puntos: "+formatNumber(bonusDiamondsEarned)+" 💎";
 
  $("pauseOverlay").style.display="none";
  document.body.classList.remove("game-open");
