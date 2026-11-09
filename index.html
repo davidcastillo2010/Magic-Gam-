@@ -196,129 +196,153 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 <footer>MAGIC-GAM · JUEGA CON EL RITMO</footer>
 </main>
 
-<!-- Firebase Authentication y Firestore -->
+<!-- FIREBASE: INICIO DE SESIÓN Y PERFIL -->
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
 import {
- getAuth,GoogleAuthProvider,signInWithRedirect,getRedirectResult,
- onAuthStateChanged,signOut
+ getAuth, GoogleAuthProvider, signInWithPopup,
+ onAuthStateChanged, signOut, setPersistence, browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import {
- getFirestore,doc,getDoc,setDoc,serverTimestamp
+ getFirestore, doc, getDoc, setDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
-const firebaseConfig={
- apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv40iIzwRZg",
- authDomain:"magic-gam.firebaseapp.com",
- projectId:"magic-gam",
- storageBucket:"magic-gam.firebasestorage.app",
- messagingSenderId:"751178083554",
- appId:"1:751178083554:web:bc52c2bf8167eaeadcc2bb"
+const firebaseConfig = {
+ apiKey: "AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv40iIzwRZg",
+ authDomain: "magic-gam.firebaseapp.com",
+ projectId: "magic-gam",
+ storageBucket: "magic-gam.firebasestorage.app",
+ messagingSenderId: "751178083554",
+ appId: "1:751178083554:web:bc52c2bf8167eaeadcc2bb"
 };
 
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-const provider=new GoogleAuthProvider();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-const message=(text)=>{
- const el=document.getElementById("accountMessage");
- if(el)el.textContent=text;
+auth.languageCode = "es";
+provider.setCustomParameters({prompt:"select_account"});
+
+const message = (text) => {
+ const el = document.getElementById("accountMessage");
+ if (el) el.textContent = text;
 };
 
-async function createOrLoadPlayer(user){
- const playerRef=doc(db,"players",user.uid);
- const existing=await getDoc(playerRef);
+function showAuthError(error) {
+ console.error("MAGIC-GAM Firebase:", error);
+ const code = error?.code || "error-desconocido";
+ const errors = {
+  "auth/unauthorized-domain":"Este dominio no está autorizado en Firebase Authentication.",
+  "auth/operation-not-allowed":"El acceso con Google no está habilitado.",
+  "auth/popup-blocked":"Chrome bloqueó la ventana de Google. Permite las ventanas emergentes.",
+  "auth/popup-closed-by-user":"Cerraste la ventana de Google antes de terminar.",
+  "auth/network-request-failed":"No hay conexión estable. Comprueba Internet.",
+  "auth/cancelled-popup-request":"Ya existe una ventana de inicio de sesión abierta.",
+  "permission-denied":"Google conectó, pero Firestore rechazó guardar el perfil.",
+  "unavailable":"Firebase no está disponible en este momento. Inténtalo más tarde."
+ };
+ message("Error ("+code+"): "+(errors[code] || error?.message || code));
+ const state = document.getElementById("accountState");
+ if (state) state.textContent = "No se pudo completar la operación.";
+}
 
- if(!existing.exists()){
-  const playerId="MG-"+user.uid;
+async function createOrLoadPlayer(user) {
+ const playerRef = doc(db,"players",user.uid);
+ const existing = await getDoc(playerRef);
+
+ if (!existing.exists()) {
+  const playerId = "MG-"+user.uid;
   await setDoc(playerRef,{
-   playerId:playerId,
-   displayName:user.displayName||"Jugador",
+   playerId,
+   displayName:user.displayName || "Jugador",
    createdAt:serverTimestamp(),
    accountType:"google"
   });
-  return {
-   playerId,
-   displayName:user.displayName||"Jugador"
-  };
+  return {playerId,displayName:user.displayName || "Jugador"};
  }
 
- const data=existing.data();
+ const data = existing.data();
+ if (!data.playerId) throw new Error("El perfil existente no tiene un ID de jugador.");
  return {
   playerId:data.playerId,
-  displayName:data.displayName||user.displayName||"Jugador"
+  displayName:data.displayName || user.displayName || "Jugador"
  };
 }
 
-window.loginGoogle=async function(){
- message("Conectando con Google...");
- try{
-  await signInWithRedirect(auth,provider);
- }catch(error){
-  console.error(error);
-  message("No se pudo iniciar sesión. Comprueba tu conexión e inténtalo de nuevo.");
+async function displayPlayer(user) {
+ const login = document.getElementById("googleLogin");
+ const logout = document.getElementById("googleLogout");
+ const details = document.getElementById("accountDetails");
+ const state = document.getElementById("accountState");
+
+ if (!user) {
+  login.style.display = "block";
+  logout.style.display = "none";
+  details.style.display = "none";
+  state.textContent = "Modo invitado. No has iniciado sesión.";
+  return;
+ }
+
+ login.style.display = "none";
+ logout.style.display = "block";
+ state.textContent = "Google conectado. Preparando tu perfil...";
+
+ try {
+  const player = await createOrLoadPlayer(user);
+  document.getElementById("accountName").textContent = player.displayName;
+  document.getElementById("playerId").textContent = player.playerId;
+  details.style.display = "block";
+  state.textContent = "✓ Cuenta conectada con Google";
+  message("Tu cuenta MAGIC-GAM está lista.");
+ } catch(error) {
+  showAuthError(error);
+  state.textContent = "Google conectado, pero falta guardar tu perfil.";
+ }
+}
+
+window.loginGoogle = async function() {
+ const button = document.getElementById("googleLogin");
+ button.disabled = true;
+ button.textContent = "CONECTANDO...";
+ message("Abriendo el inicio de sesión de Google...");
+
+ try {
+  await setPersistence(auth,browserLocalPersistence);
+  await signInWithPopup(auth,provider);
+ } catch(error) {
+  showAuthError(error);
+ } finally {
+  button.disabled = false;
+  button.textContent = "🔐 CONTINUAR CON GOOGLE";
  }
 };
 
-window.logoutGoogle=async function(){
- try{
+window.logoutGoogle = async function() {
+ try {
   await signOut(auth);
   message("Sesión cerrada.");
- }catch(error){
-  console.error(error);
-  message("No se pudo cerrar la sesión.");
+ } catch(error) {
+  showAuthError(error);
  }
 };
 
-window.copyPlayerId=async function(){
- const id=document.getElementById("playerId").textContent;
- try{
+window.copyPlayerId = async function() {
+ const id = document.getElementById("playerId").textContent;
+ try {
   await navigator.clipboard.writeText(id);
   message("¡ID copiado!");
- }catch(error){
+ } catch(error) {
   message("No se pudo copiar. Puedes seleccionar el ID manualmente.");
  }
 };
 
 onAuthStateChanged(auth,async(user)=>{
- const login=document.getElementById("googleLogin");
- const logout=document.getElementById("googleLogout");
- const details=document.getElementById("accountDetails");
- const state=document.getElementById("accountState");
-
- if(!user){
-  login.style.display="block";
-  logout.style.display="none";
-  details.style.display="none";
-  state.textContent="Modo invitado. No has iniciado sesión.";
-  return;
- }
-
- login.style.display="none";
- logout.style.display="block";
- state.textContent="Verificando tu cuenta...";
-
- try{
-  const player=await createOrLoadPlayer(user);
-  document.getElementById("accountName").textContent=player.displayName;
-  document.getElementById("playerId").textContent=player.playerId;
-  details.style.display="block";
-  state.textContent="✓ Cuenta conectada con Google";
-  message("Tu cuenta MAGIC-GAM está lista.");
- }catch(error){
-  console.error(error);
-  state.textContent="No se pudo cargar tu perfil.";
-  message("Revisa las reglas de Firestore y tu conexión.");
- }
-});
-
-getRedirectResult(auth).catch(error=>{
- console.error(error);
- message("No se pudo completar el inicio de sesión.");
+ await displayPlayer(user);
 });
 </script>
 
+<!-- JUEGO Y GUARDADO LOCAL -->
 <script>
 const $=id=>document.getElementById(id);
 const numberFormat=new Intl.NumberFormat("en-US");
@@ -348,18 +372,15 @@ function formatNumber(value){
  return numberFormat.format(Math.round(value));
 }
 
-/* Abrevia récords históricos muy grandes para que no desborden la pantalla. */
 function formatRecord(value){
  value=Math.round(Number(value)||0);
  if(value<1000000)return formatNumber(value);
-
  const units=[
   {value:1e15,suffix:"Q"},
   {value:1e12,suffix:"T"},
   {value:1e9,suffix:"B"},
   {value:1e6,suffix:"M"}
  ];
-
  for(const unit of units){
   if(value>=unit.value){
    const shortValue=(value/unit.value).toFixed(2).replace(/\.?0+$/,"");
@@ -400,7 +421,7 @@ let activeHold=null,lastLane=-1,feedbackTimer=null;
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
 
-/* Nuevos puntos base: 2, 3 y 4 según las estrellas conseguidas. */
+/* Puntos base: 2, 3 y 4 según las estrellas conseguidas. */
 function getBasePoints(){
  if(starsEarned===0)return 2;
  if(starsEarned===1)return 3;
@@ -486,7 +507,6 @@ function isTileCrossingLine(t){
  return t.y<=lineY && t.y+t.height>=lineY;
 }
 
-/* Combo reducido y limitado: x1=1.2, x2=1.4... máximo x2. */
 function getComboMultiplier(){
  return Math.min(2,1+(combo*.2));
 }
@@ -659,7 +679,6 @@ function checkStage(){
   const data=saved.songs.sunflower;
   if(starsEarned>data.stars)data.stars=starsEarned;
 
-  /* Cada estrella se paga una sola vez: 50 diamantes. */
   if(!data.paidStars.includes(starsEarned)){
    saved.diamonds+=50;
    data.paidStars.push(starsEarned);
