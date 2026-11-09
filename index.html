@@ -8,61 +8,23 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#080817;color:white;font-family:Arial,sans-serif;min-height:100vh}
-body:before{
- content:"";position:fixed;inset:0;z-index:-1;
- background:
- radial-gradient(circle at 10% 20%,#ed174b35,transparent 35%),
- radial-gradient(circle at 90% 30%,#087bff45,transparent 40%),
- radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%)
-}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 10% 20%,#ed174b35,transparent 35%),radial-gradient(circle at 90% 30%,#087bff45,transparent 40%),radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%)}
 button{font:inherit;color:white;cursor:pointer}
 header{display:flex;justify-content:space-between;align-items:center;padding:17px 15px}
-.logo{
- font-size:25px;font-weight:1000;font-style:italic;
- background:linear-gradient(90deg,#20eaff,#fff,#ff315e);
- background-clip:text;color:transparent
-}
-.diamonds{
- border:1px solid #21cfff;border-radius:25px;
- padding:10px 14px;background:#07172c;color:#5deaff;font-weight:bold
-}
+.logo{font-size:25px;font-weight:1000;font-style:italic;background:linear-gradient(90deg,#20eaff,#fff,#ff315e);background-clip:text;color:transparent}
+.diamonds{border:1px solid #21cfff;border-radius:25px;padding:10px 14px;background:#07172c;color:#5deaff;font-weight:bold}
 main{width:min(100% - 28px,460px);margin:auto}
 .screen{display:none}
 .screen.active{display:block}
 h1{text-align:center;font-size:34px;font-style:italic}
 .subtitle{text-align:center;color:#aab8d9;font-size:13px}
 .menu{display:grid;gap:14px;margin:28px 0}
-.neon-btn{
- width:100%;padding:17px;border-radius:22px;
- border:2px solid #19d9ff;
- background:linear-gradient(100deg,#10275b,#17102e,#44102c);
- font-size:18px;font-weight:bold;
- box-shadow:0 0 13px #078dff66;margin:5px 0
-}
-.play{
- border-color:#ff3c80;
- background:linear-gradient(100deg,#092e69,#30104d,#a40d49);
- box-shadow:0 0 20px #f12c8177
-}
-.back{
- background:transparent;border:1px solid #22cfff;
- color:#6beaff;border-radius:15px;padding:10px 18px;margin:10px 0
-}
-.panel{
- background:#10152d;border:1px solid #344b82;
- border-radius:18px;padding:13px;margin:12px 0
-}
-.song{
- display:flex;align-items:center;gap:11px;width:100%;
- text-align:left;border:1px solid #267ac0;
- background:linear-gradient(110deg,#101d40,#21102e);
- border-radius:17px;padding:10px;margin:12px 0
-}
-.cover{
- width:76px;height:76px;flex-shrink:0;border-radius:13px;
- display:grid;place-items:center;font-size:34px;
- background:linear-gradient(135deg,#f22b76,#2924a7,#08c9e8)
-}
+.neon-btn{width:100%;padding:17px;border-radius:22px;border:2px solid #19d9ff;background:linear-gradient(100deg,#10275b,#17102e,#44102c);font-size:18px;font-weight:bold;box-shadow:0 0 13px #078dff66;margin:5px 0}
+.play{border-color:#ff3c80;background:linear-gradient(100deg,#092e69,#30104d,#a40d49);box-shadow:0 0 20px #f12c8177}
+.back{background:transparent;border:1px solid #22cfff;color:#6beaff;border-radius:15px;padding:10px 18px;margin:10px 0}
+.panel{background:#10152d;border:1px solid #344b82;border-radius:18px;padding:13px;margin:12px 0}
+.song{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:1px solid #267ac0;background:linear-gradient(110deg,#101d40,#21102e);border-radius:17px;padding:10px;margin:12px 0}
+.cover{width:76px;height:76px;flex-shrink:0;border-radius:13px;display:grid;place-items:center;font-size:34px;background:linear-gradient(135deg,#f22b76,#2924a7,#08c9e8)}
 .song-info{flex:1;min-width:0}
 .song-info strong{font-size:14px}
 .small{font-size:11px;color:#aab8d9;margin-top:5px}
@@ -71,154 +33,51 @@ h1{text-align:center;font-size:34px;font-style:italic}
 .notice{color:#a9badb;font-size:12px;line-height:1.5;text-align:center;margin:15px 0}
 footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
 
-/* PANTALLA DEL JUEGO */
-#gameScreen.active{
- display:block;position:fixed;inset:0;z-index:20;
- width:100%;height:100vh;height:100dvh;
- max-width:none;margin:0;padding:0;overflow:hidden;
- background:
- radial-gradient(circle at 10% 15%,#e8175430,transparent 40%),
- radial-gradient(circle at 90% 85%,#087bff45,transparent 45%),
- #080817
-}
-body.game-open header,
-body.game-open main>section:not(#gameScreen),
-body.game-open footer{display:none!important}
-#gameBoard{
- position:absolute;inset:0;width:100%;height:100%;
- overflow:hidden;border:2px solid #244c91;
- background:radial-gradient(ellipse at 50% 100%,#31104d,#080d25 70%);
- box-shadow:inset 0 0 35px #087bff33;
- touch-action:none
-}
+#gameScreen.active{display:block;position:fixed;inset:0;z-index:20;width:100%;height:100vh;height:100dvh;max-width:none;margin:0;padding:0;overflow:hidden;background:radial-gradient(circle at 10% 15%,#e8175430,transparent 40%),radial-gradient(circle at 90% 85%,#087bff45,transparent 45%),#080817}
+body.game-open header,body.game-open main>section:not(#gameScreen),body.game-open footer{display:none!important}
+#gameBoard{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;border:2px solid #244c91;background:radial-gradient(ellipse at 50% 100%,#31104d,#080d25 70%);box-shadow:inset 0 0 35px #087bff33;touch-action:none}
 .lanes{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr)}
 .lane{position:relative;border-right:1px solid #378bff45}
 .lane:last-child{border:0}
-
-/* TECLAS */
-.tile{
- position:absolute;width:84%;left:8%;
- height:clamp(145px,19vh,180px);top:-300px;
- border-radius:34px;background:linear-gradient(180deg,#172d65,#050b20);
- border:3px solid #21dfff;
- box-shadow:0 0 16px #00caff,inset 0 0 18px #1269d8;
- touch-action:none
-}
+.tile{position:absolute;width:84%;left:8%;height:clamp(145px,19vh,180px);top:-300px;border-radius:34px;background:linear-gradient(180deg,#172d65,#050b20);border:3px solid #21dfff;box-shadow:0 0 16px #00caff,inset 0 0 18px #1269d8;touch-action:none}
 .tile.color0{border-color:#ff3c92;box-shadow:0 0 16px #ff2589,inset 0 0 15px #a31159}
 .tile.color1{border-color:#20eaff;box-shadow:0 0 16px #20eaff,inset 0 0 15px #1269d8}
 .tile.color2{border-color:#a45aff;box-shadow:0 0 16px #a45aff,inset 0 0 15px #6524a9}
 .tile.color3{border-color:#2388ff;box-shadow:0 0 16px #2388ff,inset 0 0 15px #1254bd}
-
-/* TECLAS LARGAS */
-.tile.long{
- height:clamp(270px,38vh,350px);
- border-radius:36px;display:flex;flex-direction:column;
- align-items:center;justify-content:center;gap:10px
-}
-.long-arrows{
- color:#65f4ff;font-size:34px;line-height:.75;
- font-weight:900;text-shadow:0 0 12px #00dfff
-}
+.tile.long{height:clamp(270px,38vh,350px);border-radius:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.long-arrows{color:#65f4ff;font-size:34px;line-height:.75;font-weight:900;text-shadow:0 0 12px #00dfff}
 .long-label{color:#d9fbff;font-size:15px;font-weight:900;text-shadow:0 0 12px #00dfff}
 .long-hand{font-size:34px;filter:drop-shadow(0 0 8px #00eaff)}
 .tile.holding{filter:brightness(1.7);box-shadow:0 0 30px #ffffffaa}
-.long-progress{
- position:absolute;left:0;right:0;bottom:0;height:0%;
- border-radius:0 0 30px 30px;background:#ffffff45;pointer-events:none
-}
-
-/* LÍNEA DE COMBO */
-.combo-line{
- position:absolute;left:0;right:0;top:70%;height:6px;z-index:5;
- pointer-events:none;background:#55eaff;
- box-shadow:0 0 12px #13cfff,0 0 28px #13cfff
-}
-.combo-line:after{
- content:"";position:absolute;left:0;right:0;top:-6px;
- height:18px;background:#55eaff25
-}
-
-/* INFORMACIÓN */
-#gameTop{
- position:absolute;top:env(safe-area-inset-top,5px);
- left:0;right:0;z-index:8;display:flex;
- justify-content:center;align-items:center;padding:12px;
- pointer-events:none
-}
-.game-score{
- font-size:42px;font-weight:1000;color:#65eaff;
- text-shadow:0 0 12px #00cfff,0 0 25px #087bff
-}
-.pause{
- position:absolute;left:14px;top:12px;
- border:1px solid #23dfff;background:#10152dcc;
- color:#65eaff;border-radius:18px;padding:10px 15px;
- pointer-events:auto
-}
-#stageLabel{
- position:absolute;top:75px;left:0;right:0;
- text-align:center;color:#ffd447;font-weight:bold;
- z-index:7;pointer-events:none
-}
-#gameSong{
- position:absolute;top:100px;left:0;right:0;
- text-align:center;color:#aab8d9;font-size:13px;
- z-index:7;pointer-events:none
-}
-#comboDisplay{
- position:absolute;top:130px;left:0;right:0;
- z-index:7;text-align:center;color:#63eaff;
- font-size:17px;font-weight:bold;pointer-events:none;
- text-shadow:0 0 10px #00cfff
-}
-#starProgress{
- position:absolute;top:158px;left:0;right:0;
- z-index:8;display:flex;justify-content:center;
- gap:17px;pointer-events:none
-}
+.long-progress{position:absolute;left:0;right:0;bottom:0;height:0%;border-radius:0 0 30px 30px;background:#ffffff45;pointer-events:none}
+.combo-line{position:absolute;left:0;right:0;top:70%;height:6px;z-index:5;pointer-events:none;background:#55eaff;box-shadow:0 0 12px #13cfff,0 0 28px #13cfff}
+.combo-line:after{content:"";position:absolute;left:0;right:0;top:-6px;height:18px;background:#55eaff25}
+#gameTop{position:absolute;top:env(safe-area-inset-top,5px);left:0;right:0;z-index:8;display:flex;justify-content:center;align-items:center;padding:12px;pointer-events:none}
+.game-score{font-size:42px;font-weight:1000;color:#65eaff;text-shadow:0 0 12px #00cfff,0 0 25px #087bff}
+.pause{position:absolute;left:14px;top:12px;border:1px solid #23dfff;background:#10152dcc;color:#65eaff;border-radius:18px;padding:10px 15px;pointer-events:auto}
+#stageLabel{position:absolute;top:75px;left:0;right:0;text-align:center;color:#ffd447;font-weight:bold;z-index:7;pointer-events:none}
+#gameSong{position:absolute;top:100px;left:0;right:0;text-align:center;color:#aab8d9;font-size:13px;z-index:7;pointer-events:none}
+#comboDisplay{position:absolute;top:130px;left:0;right:0;z-index:7;text-align:center;color:#63eaff;font-size:17px;font-weight:bold;pointer-events:none;text-shadow:0 0 10px #00cfff}
+#starProgress{position:absolute;top:158px;left:0;right:0;z-index:8;display:flex;justify-content:center;gap:17px;pointer-events:none}
 .progress-star{font-size:27px;color:#66708b;transition:.25s}
-.progress-star.lit{
- color:#ffd447;text-shadow:0 0 8px #ffbd24,0 0 20px #ff9d00;
- transform:scale(1.12)
-}
-#gameMessage{
- position:absolute;bottom:22px;left:0;right:0;
- z-index:7;text-align:center;color:#63eaff;
- font-size:16px;font-weight:bold;pointer-events:none
-}
-#feedback{
- position:absolute;top:43%;left:0;right:0;z-index:9;
- text-align:center;font-size:29px;font-weight:1000;
- pointer-events:none;opacity:0;transform:scale(.8);
- transition:opacity .08s,transform .08s;
- text-shadow:0 0 15px currentColor
-}
+.progress-star.lit{color:#ffd447;text-shadow:0 0 8px #ffbd24,0 0 20px #ff9d00;transform:scale(1.12)}
+#gameMessage{position:absolute;bottom:22px;left:0;right:0;z-index:7;text-align:center;color:#63eaff;font-size:16px;font-weight:bold;pointer-events:none}
+#feedback{position:absolute;top:43%;left:0;right:0;z-index:9;text-align:center;font-size:29px;font-weight:1000;pointer-events:none;opacity:0;transform:scale(.8);transition:opacity .08s,transform .08s;text-shadow:0 0 15px currentColor}
 #feedback.perfect{color:#ff426f}
 #feedback.late{color:#ffd447}
-
-/* PAUSA Y RESULTADOS */
-#pauseOverlay{
- display:none;position:absolute;inset:0;z-index:30;
- background:#050817ef;place-items:center;padding:25px
-}
-.pause-card{
- width:100%;max-width:340px;text-align:center;
- background:#111a38;border:1px solid #28dfff;
- border-radius:24px;padding:25px;box-shadow:0 0 25px #078dff66
-}
+#pauseOverlay{display:none;position:absolute;inset:0;z-index:30;background:#050817ef;place-items:center;padding:25px}
+.pause-card{width:100%;max-width:340px;text-align:center;background:#111a38;border:1px solid #28dfff;border-radius:24px;padding:25px;box-shadow:0 0 25px #078dff66}
 #resultScreen{text-align:center}
 .result-stars{font-size:36px;color:#ffd447;letter-spacing:5px}
 #resultScore{font-size:42px;color:#65eaff}
 .result-buttons{display:grid;gap:9px;margin-top:20px}
 </style>
 </head>
-
 <body>
 <header>
  <div class="logo">MAGIC-GAM</div>
  <div class="diamonds">💎 <span id="diamondCount">0</span></div>
 </header>
-
 <main>
 <section id="home" class="screen active">
  <h1>MAGIC-GAM</h1>
@@ -229,7 +88,6 @@ body.game-open footer{display:none!important}
   <button class="neon-btn" onclick="showScreen('records')">🏆 RÉCORDS</button>
  </div>
 </section>
-
 <section id="songs" class="screen">
  <button class="back" onclick="showScreen('home')">← VOLVER</button>
  <h1>CANCIONES</h1>
@@ -245,18 +103,13 @@ body.game-open footer{display:none!important}
   </div>
   <span class="song-status">GRATIS</span>
  </button>
- <p class="notice">
-  La primera canción está desbloqueada gratis.
-  Las demás canciones costarán 500 💎 cada una.
-  La grabación original de Sunflower se añadirá cuando tengamos permiso para utilizarla.
- </p>
+ <p class="notice">La primera canción está desbloqueada gratis. Las demás canciones costarán 500 💎 cada una. La grabación original de Sunflower se añadirá cuando tengamos permiso para utilizarla.</p>
  <div class="panel">
   <strong>PRÓXIMAMENTE</strong>
   <p class="small">Aquí aparecerán las nuevas canciones de MAGIC-GAM.</p>
   <p class="song-status">🔒 Canciones por desbloquear: 500 💎</p>
  </div>
 </section>
-
 <section id="gameScreen" class="screen">
  <div id="gameTop">
   <button class="pause" onclick="pauseGame()">Ⅱ PAUSA</button>
@@ -288,7 +141,6 @@ body.game-open footer{display:none!important}
   </div>
  </div>
 </section>
-
 <section id="resultScreen" class="screen">
  <h1 id="resultTitle">PARTIDA TERMINADA</h1>
  <div class="result-stars" id="resultStars">☆☆☆</div>
@@ -302,7 +154,6 @@ body.game-open footer{display:none!important}
   <button class="neon-btn" onclick="showScreen('home')">⌂ MENÚ PRINCIPAL</button>
  </div>
 </section>
-
 <section id="records" class="screen">
  <button class="back" onclick="showScreen('home')">← VOLVER</button>
  <h1>🏆 RÉCORDS</h1>
@@ -315,20 +166,12 @@ body.game-open footer{display:none!important}
 </section>
 <footer>MAGIC-GAM · JUEGA CON EL RITMO</footer>
 </main>
-
 <script>
 const $=id=>document.getElementById(id);
 
-/* DATOS GUARDADOS */
 const defaultSave={
  diamonds:0,
- songs:{
-  sunflower:{
-   stars:0,
-   record:0,
-   paidStars:[]
-  }
- }
+ songs:{sunflower:{stars:0,record:0,paidStars:[]}}
 };
 
 let saved;
@@ -340,9 +183,7 @@ try{
 
 saved.diamonds=Number(saved.diamonds)||0;
 saved.songs=saved.songs||{};
-saved.songs.sunflower=saved.songs.sunflower||{
- stars:0,record:0,paidStars:[]
-};
+saved.songs.sunflower=saved.songs.sunflower||{stars:0,record:0,paidStars:[]};
 
 const songSave=saved.songs.sunflower;
 songSave.stars=Math.max(0,Math.min(3,Number(songSave.stars)||0));
@@ -350,9 +191,7 @@ songSave.record=Number(songSave.record)||0;
 songSave.paidStars=Array.isArray(songSave.paidStars)?songSave.paidStars:[];
 
 function save(){
- try{
-  localStorage.setItem("magicGamSave",JSON.stringify(saved));
- }catch(e){}
+ try{localStorage.setItem("magicGamSave",JSON.stringify(saved));}catch(e){}
  updateUI();
 }
 
@@ -374,7 +213,6 @@ function showScreen(id){
  updateUI();
 }
 
-/* VARIABLES */
 let running=false;
 let paused=false;
 let tiles=[];
@@ -393,24 +231,20 @@ let feedbackTimer=null;
 
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
-const COMBO_TOLERANCE=24;
 
-/* PUNTOS BASE SEGÚN LA ESTRELLA */
+/* PUNTOS BASE POR ESTRELLA */
 function getBasePoints(){
  if(starsEarned===0)return 50;
  if(starsEarned===1)return 125;
  return 185;
 }
 
-/* INICIAR */
-function selectSong(song){
- startGame();
-}
+/* INICIO */
+function selectSong(song){startGame();}
 
 function startGame(){
  stopGame();
  document.body.classList.add("game-open");
-
  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
  $("gameScreen").classList.add("active");
  $("pauseOverlay").style.display="none";
@@ -472,11 +306,11 @@ function hideFeedback(){
  $("feedback").style.transform="scale(.8)";
 }
 
-/* COMBO */
+/* COMBO PROGRESIVO */
 function registerCombo(){
  combo++;
  $("comboDisplay").textContent="COMBO x"+combo;
- showFeedback("perfect","PERFECT!");
+ showFeedback("perfect","¡PERFECTO!");
 }
 
 function registerLate(){
@@ -485,23 +319,30 @@ function registerLate(){
  showFeedback("late","TARDADO");
 }
 
-/* PRECISIÓN DEL TOQUE */
-function isTouchPerfect(clientY){
- const rect=board.getBoundingClientRect();
- const lineY=rect.top+rect.height*.70;
- return Math.abs(clientY-lineY)<=COMBO_TOLERANCE;
+/* LA TECLA DEBE ESTAR CRUZANDO LA LÍNEA DEL 70%.
+   NO IMPORTA EN QUÉ PARTE DE LA TECLA TOQUE EL JUGADOR. */
+function isTileCrossingLine(t){
+ const lineY=board.clientHeight*.70;
+ const tileTop=t.y;
+ const tileBottom=t.y+t.height;
+ return tileTop<=lineY && tileBottom>=lineY;
 }
 
-/* CALCULAR PUNTOS */
+/* PUNTUACIÓN: CADA COMBO MULTIPLICA POR 3 */
 function calculatePoints(perfect,extra=0){
  const base=getBasePoints();
- const points=(perfect?base*3:base)+extra;
+ let points;
+
+ if(perfect){
+  registerCombo();
+  points=Math.round(base*Math.pow(3,combo))+extra;
+ }else{
+  registerLate();
+  points=base+extra;
+ }
+
  score+=points;
  $("score").textContent=score;
-
- if(perfect)registerCombo();
- else registerLate();
-
  return points;
 }
 
@@ -512,15 +353,10 @@ function scoreNormalTile(perfect){
  checkStage();
 }
 
-/* TECLA LARGA
-   SOLTAR EN CUALQUIER MOMENTO = PUNTOS BASE.
-   COMPLETARLA = PUNTOS BASE + 100 EXTRA.
-   PERFECT MULTIPLICA POR 3 LOS PUNTOS BASE.
-   LOS 100 EXTRA SE MANTIENEN FIJOS. */
+/* TECLA LARGA */
 function scoreLongTile(perfect,completed){
  const extra=completed?100:0;
- const points=calculatePoints(perfect,extra);
-
+ calculatePoints(perfect,extra);
  stageHits++;
 
  $("gameMessage").textContent=completed
@@ -537,7 +373,6 @@ function spawnTile(){
  if(lane===lastLane){
   lane=(lane+1+Math.floor(Math.random()*3))%4;
  }
-
  lastLane=lane;
 
  const isLong=Math.random()<.20;
@@ -581,7 +416,7 @@ function spawnTile(){
  });
 }
 
-/* BUCLE PRINCIPAL */
+/* BUCLE */
 function loop(now){
  if(!running||paused)return;
 
@@ -600,29 +435,27 @@ function loop(now){
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
 
-  /* PROGRESO DE TECLA LARGA */
+  /* UNA TECLA LARGA PUEDE CONSEGUIR PERFECTO
+     SI CRUZA LA LÍNEA MIENTRAS SE MANTIENE PRESIONADA. */
   if(t.long&&t.holding){
+   if(isTileCrossingLine(t))t.perfect=true;
+
    const traveled=t.y-t.holdStartY;
    t.progress=Math.max(0,Math.min(1,traveled/t.height));
 
    const progress=t.el.querySelector(".long-progress");
    if(progress)progress.style.height=(t.progress*100)+"%";
 
-   /* COMPLETAR LA TECLA LARGA */
    if(t.progress>=1){
     if(t.el.isConnected)t.el.remove();
     tiles.splice(i,1);
-
     if(activeHold===t)activeHold=null;
-
     scoreLongTile(t.perfect,true);
-
     if(!running)return;
     continue;
    }
   }
 
-  /* TECLA NO TOCADA QUE LLEGA ABAJO = DERROTA */
   if(!t.touched&&t.y>=boardHeight){
    finishGame("¡TECLA PERDIDA!");
    return;
@@ -645,11 +478,7 @@ function boardDown(e){
   if(t.touched)continue;
 
   const r=t.el.getBoundingClientRect();
-  const inside=
-   e.clientX>=r.left&&
-   e.clientX<=r.right&&
-   e.clientY>=r.top&&
-   e.clientY<=r.bottom;
+  const inside=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
 
   if(inside){
    chosen=t;
@@ -657,14 +486,16 @@ function boardDown(e){
   }
  }
 
- /* TOCAR FUERA DE UNA TECLA = PERDER */
  if(!chosen){
   finishGame("¡TOCASTE FUERA DE UNA TECLA!");
   return;
  }
 
  chosen.touched=true;
- chosen.perfect=isTouchPerfect(e.clientY);
+
+ /* PERFECTO DEPENDE DE LA POSICIÓN DE LA TECLA,
+    NO DEL LUGAR DONDE SE TOCA LA PANTALLA. */
+ chosen.perfect=isTileCrossingLine(chosen);
 
  if(chosen.long){
   chosen.holding=true;
@@ -673,9 +504,7 @@ function boardDown(e){
   chosen.el.classList.add("holding");
   activeHold=chosen;
 
-  try{
-   board.setPointerCapture(e.pointerId);
-  }catch(err){}
+  try{board.setPointerCapture(e.pointerId);}catch(err){}
 
   $("gameMessage").textContent="¡MANTÉN PRESIONADO!";
  }else{
@@ -685,8 +514,7 @@ function boardDown(e){
  }
 }
 
-/* SOLTAR TECLA LARGA
-   CUALQUIER DURACIÓN CUENTA COMO ACIERTO. */
+/* SOLTAR TECLA LARGA: CUALQUIER DURACIÓN ES VÁLIDA */
 function boardUp(e){
  if(!activeHold)return;
  if(activeHold.holdPointer!==e.pointerId)return;
@@ -707,7 +535,6 @@ board.addEventListener("pointercancel",boardUp);
 /* ESTRELLAS: 12 ACIERTOS POR ESTRELLA */
 function checkStage(){
  if(stageHits<12)return;
-
  stageHits=0;
 
  if(starsEarned<3){
@@ -716,14 +543,12 @@ function checkStage(){
   const data=saved.songs.sunflower;
   if(starsEarned>data.stars)data.stars=starsEarned;
 
-  /* 50 DIAMANTES POR CADA ESTRELLA, SIN DUPLICADOS */
   if(!data.paidStars.includes(starsEarned)){
    saved.diamonds+=50;
    data.paidStars.push(starsEarned);
   }
 
   updateStars();
-
   speed+=35;
   spawnEvery=Math.max(650,spawnEvery-60);
 
@@ -734,7 +559,6 @@ function checkStage(){
 
   save();
  }else{
-  /* SUNFLOWER SIGUE SIEMPRE EN FÁCIL */
   $("gameMessage").textContent="¡SIGUE JUGANDO!";
  }
 }
@@ -742,24 +566,19 @@ function checkStage(){
 /* TERMINAR PARTIDA */
 function finishGame(message){
  if(!running)return;
-
  stopGame();
 
  const data=saved.songs.sunflower;
  if(score>data.record)data.record=score;
-
  save();
 
  $("resultTitle").textContent=message||"PARTIDA TERMINADA";
- $("resultStars").textContent=
-  "★".repeat(starsEarned)+"☆".repeat(3-starsEarned);
+ $("resultStars").textContent="★".repeat(starsEarned)+"☆".repeat(3-starsEarned);
  $("resultScore").textContent=score;
- $("resultReward").textContent=
-  "Diamantes obtenidos durante la partida: "+(starsEarned*50)+" 💎";
+ $("resultReward").textContent="Diamantes obtenidos durante la partida: "+(starsEarned*50)+" 💎";
 
  $("pauseOverlay").style.display="none";
  document.body.classList.remove("game-open");
-
  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
  $("resultScreen").classList.add("active");
 }
@@ -781,7 +600,6 @@ function pauseGame(){
 
 function resumeGame(){
  if(!paused)return;
-
  paused=false;
  $("pauseOverlay").style.display="none";
  lastTime=performance.now();
