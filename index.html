@@ -1,79 +1,820 @@
 <!doctype html>
-<html lang="es"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#080817"><link rel="manifest" href="/Magic-Gam-/manifest.json"><title>MAGIC-GAM</title>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#080817">
+<link rel="manifest" href="/Magic-Gam-/manifest.json">
+<title>MAGIC-GAM</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#080817;color:white;font-family:Arial,sans-serif;min-height:100vh}body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 10% 20%,#ed174b35,transparent 35%),radial-gradient(circle at 90% 30%,#087bff45,transparent 40%),radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%)}button{font:inherit;color:white;cursor:pointer}button:disabled{opacity:.55}header{display:flex;justify-content:space-between;align-items:center;padding:14px}.logo{font-size:25px;font-weight:1000;font-style:italic;background:linear-gradient(90deg,#20eaff,#fff,#ff315e);background-clip:text;color:transparent}.diamonds{border:1px solid #21cfff;border-radius:25px;padding:10px 14px;background:#07172c;color:#5deaff;font-weight:bold}main{width:min(100% - 28px,460px);margin:auto}.screen{display:none}.screen.active{display:block}h1{text-align:center;font-size:34px;font-style:italic}.subtitle{text-align:center;color:#aab8d9;font-size:13px}.menu{display:grid;gap:14px;margin:28px 0}.neon-btn{width:100%;padding:16px;border-radius:22px;border:2px solid #19d9ff;background:linear-gradient(100deg,#10275b,#17102e,#44102c);font-size:17px;font-weight:bold;box-shadow:0 0 13px #078dff66;margin:5px 0}.play{border-color:#ff3c80;background:linear-gradient(100deg,#092e69,#30104d,#a40d49);box-shadow:0 0 20px #f12c8177}.back{background:transparent;border:1px solid #22cfff;color:#6beaff;border-radius:15px;padding:10px 18px;margin:10px 0}.panel{background:#10152d;border:1px solid #344b82;border-radius:18px;padding:15px;margin:12px 0}.song{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:1px solid #267ac0;background:linear-gradient(110deg,#101d40,#21102e);border-radius:17px;padding:10px;margin:12px 0}.cover{width:76px;height:76px;flex-shrink:0;border-radius:13px;display:grid;place-items:center;font-size:34px;background:linear-gradient(135deg,#f22b76,#2924a7,#08c9e8)}.song-info{flex:1;min-width:0}.small{font-size:11px;color:#aab8d9;margin-top:5px}.stars{color:#ffd447;letter-spacing:3px;margin-top:5px}.song-status{font-size:11px;color:#54dcff}.notice{color:#a9badb;font-size:12px;line-height:1.5;text-align:center;margin:15px 0}footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}.account-id{font-size:20px;color:#55eaff;font-weight:bold;overflow-wrap:anywhere}.account-label{color:#aab8d9;font-size:12px}.status{font-size:12px;color:#65eaff;text-align:center;margin:12px 0;min-height:18px}
-#authGate{position:fixed;inset:0;z-index:100;background:#080817;display:none;place-items:center;padding:24px}.auth-card{width:min(100%,390px);background:#10152d;border:1px solid #21cfff;border-radius:25px;padding:25px;box-shadow:0 0 30px #087bff66;text-align:center}.auth-card .logo{font-size:32px;margin:8px}
-#gameScreen.active{display:block;position:fixed;inset:0;z-index:20;width:100%;height:100vh;height:100dvh;max-width:none;margin:0;padding:0;overflow:hidden;background:radial-gradient(circle at 10% 15%,#e8175430,transparent 40%),radial-gradient(circle at 90% 85%,#087bff45,transparent 45%),#080817}body.game-open header,body.game-open main>section:not(#gameScreen),body.game-open footer{display:none!important}#gameBoard{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;border:2px solid #244c91;background:radial-gradient(ellipse at 50% 100%,#31104d,#080d25 70%);box-shadow:inset 0 0 35px #087bff33;touch-action:none}.lanes{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr)}.lane{position:relative;border-right:1px solid #378bff45}.lane:last-child{border:0}.tile{position:absolute;width:84%;left:8%;height:clamp(145px,19vh,180px);top:-300px;border-radius:34px;background:linear-gradient(180deg,#172d65,#050b20);border:3px solid #21dfff;box-shadow:0 0 16px #00caff,inset 0 0 18px #1269d8;touch-action:none}.tile.color0{border-color:#ff3c92;box-shadow:0 0 16px #ff2589,inset 0 0 15px #a31159}.tile.color1{border-color:#20eaff;box-shadow:0 0 16px #20eaff,inset 0 0 15px #1269d8}.tile.color2{border-color:#a45aff;box-shadow:0 0 16px #a45aff,inset 0 0 15px #6524a9}.tile.color3{border-color:#2388ff;box-shadow:0 0 16px #2388ff,inset 0 0 15px #1254bd}.tile.long{height:clamp(270px,38vh,350px);border-radius:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}.long-arrows{color:#65f4ff;font-size:34px;line-height:.75;font-weight:900;text-shadow:0 0 12px #00dfff}.long-label{color:#d9fbff;font-size:15px;font-weight:900}.long-hand{font-size:34px}.tile.holding{filter:brightness(1.7);box-shadow:0 0 30px #ffffffaa}.long-progress{position:absolute;left:0;right:0;bottom:0;height:0%;border-radius:0 0 30px 30px;background:#ffffff45;pointer-events:none}.combo-line{position:absolute;left:0;right:0;top:70%;height:6px;z-index:5;pointer-events:none;background:#55eaff;box-shadow:0 0 12px #13cfff,0 0 28px #13cfff}.combo-line:after{content:"";position:absolute;left:0;right:0;top:-6px;height:18px;background:#55eaff25}#gameTop{position:absolute;top:env(safe-area-inset-top,5px);left:0;right:0;z-index:8;display:flex;justify-content:center;align-items:center;padding:12px;pointer-events:none}.game-score{font-size:42px;font-weight:1000;color:#65eaff;text-shadow:0 0 12px #00cfff,0 0 25px #087bff}.pause{position:absolute;left:14px;top:12px;border:1px solid #23dfff;background:#10152dcc;color:#65eaff;border-radius:18px;padding:10px 15px;pointer-events:auto}#stageLabel{position:absolute;top:75px;left:0;right:0;text-align:center;color:#ffd447;font-weight:bold;z-index:7;pointer-events:none}#gameSong{position:absolute;top:100px;left:0;right:0;text-align:center;color:#aab8d9;font-size:13px;z-index:7;pointer-events:none}#comboDisplay{position:absolute;top:130px;left:0;right:0;z-index:11;text-align:center;color:#63eaff;font-size:22px;font-weight:1000;pointer-events:none}#starProgress{position:absolute;top:158px;left:0;right:0;z-index:8;display:flex;justify-content:center;gap:17px;pointer-events:none}.progress-star{font-size:27px;color:#66708b;transition:.25s}.progress-star.lit{color:#ffd447;text-shadow:0 0 8px #ffbd24,0 0 20px #ff9d00;transform:scale(1.12)}#gameMessage{position:absolute;bottom:22px;left:0;right:0;z-index:7;text-align:center;color:#63eaff;font-size:16px;font-weight:bold;pointer-events:none}#feedback{position:absolute;top:42%;left:0;right:0;z-index:9;text-align:center;font-size:29px;font-weight:1000;pointer-events:none;opacity:0;transition:opacity .12s;text-shadow:0 0 15px currentColor}#feedback.perfect{color:#ff426f}#feedback.late{color:#ffd447}#pauseOverlay{display:none;position:absolute;inset:0;z-index:30;background:#050817ef;place-items:center;padding:25px}.pause-card{width:100%;max-width:340px;text-align:center;background:#111a38;border:1px solid #28dfff;border-radius:24px;padding:25px;box-shadow:0 0 25px #078dff66}#resultScreen{text-align:center}.result-stars{font-size:36px;color:#ffd447;letter-spacing:5px}#resultScore{font-size:42px;color:#65eaff}.result-buttons{display:grid;gap:9px;margin-top:20px}
-</style></head><body>
-<div id="authGate"><div class="auth-card"><div class="logo">MAGIC-GAM</div><h1>INICIA SESIÓN</h1><p class="subtitle">Tu cuenta de Google guarda tus diamantes, estrellas y récords. Inicia sesión para entrar al juego.</p><button id="gateLogin" class="neon-btn play" onclick="loginGoogle()">🔐 CONTINUAR CON GOOGLE</button><div id="gateStatus" class="status">Conecta tu cuenta para cargar tu progreso.</div></div></div>
-<header><div class="logo">MAGIC-GAM</div><div class="diamonds">💎 <span id="diamondCount">0</span></div></header>
+*{box-sizing:border-box}
+html,body,body *{
+-webkit-user-select:none!important;
+user-select:none!important;
+-webkit-touch-callout:none!important;
+-webkit-tap-highlight-color:transparent;
+}
+body{margin:0;background:#080817;color:white;font-family:Arial,sans-serif;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 10% 20%,#ed174b35,transparent 35%),radial-gradient(circle at 90% 30%,#087bff45,transparent 40%),radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%)}
+button{font:inherit;color:white;cursor:pointer}
+button:disabled{opacity:.55}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px}
+.logo{font-size:25px;font-weight:1000;font-style:italic;background:linear-gradient(90deg,#20eaff,#fff,#ff315e);background-clip:text;color:transparent}
+.diamonds{border:1px solid #21cfff;border-radius:25px;padding:10px 14px;background:#07172c;color:#5deaff;font-weight:bold}
+main{width:min(100% - 28px,460px);margin:auto}
+.screen{display:none}
+.screen.active{display:block}
+h1{text-align:center;font-size:34px;font-style:italic}
+.subtitle{text-align:center;color:#aab8d9;font-size:13px}
+.menu{display:grid;gap:14px;margin:28px 0}
+.neon-btn{width:100%;padding:16px;border-radius:22px;border:2px solid #19d9ff;background:linear-gradient(100deg,#10275b,#17102e,#44102c);font-size:17px;font-weight:bold;box-shadow:0 0 13px #078dff66;margin:5px 0}
+.play{border-color:#ff3c80;background:linear-gradient(100deg,#092e69,#30104d,#a40d49);box-shadow:0 0 20px #f12c8177}
+.back{background:transparent;border:1px solid #22cfff;color:#6beaff;border-radius:15px;padding:10px 18px;margin:10px 0}
+.panel{background:#10152d;border:1px solid #344b82;border-radius:18px;padding:15px;margin:12px 0}
+.song{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:1px solid #267ac0;background:linear-gradient(110deg,#101d40,#21102e);border-radius:17px;padding:10px;margin:12px 0}
+.cover{width:76px;height:76px;flex-shrink:0;border-radius:13px;display:grid;place-items:center;font-size:34px;background:linear-gradient(135deg,#f22b76,#2924a7,#08c9e8)}
+.song-info{flex:1;min-width:0}
+.small{font-size:11px;color:#aab8d9;margin-top:5px}
+.stars{color:#ffd447;letter-spacing:3px;margin-top:5px}
+.song-status{font-size:11px;color:#54dcff}
+.notice{color:#a9badb;font-size:12px;line-height:1.5;text-align:center;margin:15px 0}
+footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
+.account-id{font-size:20px;color:#55eaff;font-weight:bold;overflow-wrap:anywhere}
+.account-label{color:#aab8d9;font-size:12px}
+.status{font-size:12px;color:#65eaff;text-align:center;margin:12px 0;min-height:18px}
+#authGate{position:fixed;inset:0;z-index:100;background:#080817;display:none;place-items:center;padding:24px}
+.auth-card{width:min(100%,390px);background:#10152d;border:1px solid #21cfff;border-radius:25px;padding:25px;box-shadow:0 0 30px #087bff66;text-align:center}
+.auth-card .logo{font-size:32px;margin:8px}
+#gameScreen.active{display:block;position:fixed;inset:0;z-index:20;width:100%;height:100vh;height:100dvh;max-width:none;margin:0;padding:0;overflow:hidden;background:radial-gradient(circle at 10% 15%,#e8175430,transparent 40%),radial-gradient(circle at 90% 85%,#087bff45,transparent 45%),#080817}
+body.game-open header,body.game-open main>section:not(#gameScreen),body.game-open footer{display:none!important}
+#gameBoard{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;border:2px solid #244c91;background:radial-gradient(ellipse at 50% 100%,#31104d,#080d25 70%);box-shadow:inset 0 0 35px #087bff33;touch-action:none}
+.lanes{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr)}
+.lane{position:relative;border-right:1px solid #378bff45}
+.lane:last-child{border:0}
+.tile{position:absolute;width:84%;left:8%;height:clamp(145px,19vh,180px);top:-300px;border-radius:34px;background:linear-gradient(180deg,#172d65,#050b20);border:3px solid #21dfff;box-shadow:0 0 16px #00caff,inset 0 0 18px #1269d8;touch-action:none}
+.tile.color0{border-color:#ff3c92;box-shadow:0 0 16px #ff2589,inset 0 0 15px #a31159}
+.tile.color1{border-color:#20eaff;box-shadow:0 0 16px #20eaff,inset 0 0 15px #1269d8}
+.tile.color2{border-color:#a45aff;box-shadow:0 0 16px #a45aff,inset 0 0 15px #6524a9}
+.tile.color3{border-color:#2388ff;box-shadow:0 0 16px #2388ff,inset 0 0 15px #1254bd}
+.tile.long{height:clamp(270px,38vh,350px);border-radius:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.long-arrows{color:#65f4ff;font-size:34px;line-height:.75;font-weight:900;text-shadow:0 0 12px #00dfff}
+.long-label{color:#d9fbff;font-size:15px;font-weight:900}
+.long-hand{font-size:34px}
+.tile.holding{filter:brightness(1.7);box-shadow:0 0 30px #ffffffaa}
+.long-progress{position:absolute;left:0;right:0;bottom:0;height:0%;border-radius:0 0 30px 30px;background:#ffffff45;pointer-events:none}
+.combo-line{position:absolute;left:0;right:0;top:70%;height:6px;z-index:5;pointer-events:none;background:#55eaff;box-shadow:0 0 12px #13cfff,0 0 28px #13cfff}
+.combo-line:after{content:"";position:absolute;left:0;right:0;top:-6px;height:18px;background:#55eaff25}
+#gameTop{position:absolute;top:env(safe-area-inset-top,5px);left:0;right:0;z-index:8;display:flex;justify-content:center;align-items:center;padding:12px;pointer-events:none}
+.game-score{font-size:42px;font-weight:1000;color:#65eaff;text-shadow:0 0 12px #00cfff,0 0 25px #087bff}
+.pause{position:absolute;left:14px;top:12px;border:1px solid #23dfff;background:#10152dcc;color:#65eaff;border-radius:18px;padding:10px 15px;pointer-events:auto}
+#stageLabel{position:absolute;top:75px;left:0;right:0;text-align:center;color:#ffd447;font-weight:bold;z-index:7;pointer-events:none}
+#gameSong{position:absolute;top:100px;left:0;right:0;text-align:center;color:#aab8d9;font-size:13px;z-index:7;pointer-events:none}
+#comboDisplay{position:absolute;top:130px;left:0;right:0;z-index:11;text-align:center;color:#63eaff;font-size:22px;font-weight:1000;pointer-events:none}
+#starProgress{position:absolute;top:158px;left:0;right:0;z-index:8;display:flex;justify-content:center;gap:17px;pointer-events:none}
+.progress-star{font-size:27px;color:#66708b;transition:.25s}
+.progress-star.lit{color:#ffd447;text-shadow:0 0 8px #ffbd24,0 0 20px #ff9d00;transform:scale(1.12)}
+#gameMessage{position:absolute;bottom:22px;left:0;right:0;z-index:7;text-align:center;color:#63eaff;font-size:16px;font-weight:bold;pointer-events:none}
+#feedback{position:absolute;top:42%;left:0;right:0;z-index:9;text-align:center;font-size:29px;font-weight:1000;pointer-events:none;opacity:0;transition:opacity .12s;text-shadow:0 0 15px currentColor}
+#feedback.perfect{color:#ff426f}
+#feedback.late{color:#ffd447}
+#pauseOverlay{display:none;position:absolute;inset:0;z-index:30;background:#050817ef;place-items:center;padding:25px}
+.pause-card{width:100%;max-width:340px;text-align:center;background:#111a38;border:1px solid #28dfff;border-radius:24px;padding:25px;box-shadow:0 0 25px #078dff66}
+#resultScreen{text-align:center}
+.result-stars{font-size:36px;color:#ffd447;letter-spacing:5px}
+#resultScore{font-size:42px;color:#65eaff}
+.result-buttons{display:grid;gap:9px;margin-top:20px}
+</style>
+</head>
+<body>
+
+<div id="authGate">
+ <div class="auth-card">
+  <div class="logo">MAGIC-GAM</div>
+  <h1>INICIA SESIÓN</h1>
+  <p class="subtitle">Tu cuenta de Google guarda tus diamantes, estrellas y récords. Inicia sesión para entrar al juego.</p>
+  <button id="gateLogin" class="neon-btn play" onclick="loginGoogle()">🔐 CONTINUAR CON GOOGLE</button>
+  <div id="gateStatus" class="status">Conecta tu cuenta para cargar tu progreso.</div>
+ </div>
+</div>
+
+<header>
+ <div class="logo">MAGIC-GAM</div>
+ <div class="diamonds">💎 <span id="diamondCount">0</span></div>
+</header>
+
 <main>
-<section id="home" class="screen active"><h1>MAGIC-GAM</h1><p class="subtitle">TU RITMO. TU VELOCIDAD. TU RÉCORD.</p><div style="text-align:center;font-size:105px;margin:40px 0;text-shadow:0 0 25px #14cfff">♫</div><div class="menu"><button class="neon-btn play" onclick="showScreen('songs')">▶ JUGAR</button><button class="neon-btn" onclick="showScreen('records')">🏆 RÉCORDS</button><button class="neon-btn" onclick="showScreen('account')">👤 MI CUENTA</button></div><p class="notice">Tu progreso está vinculado a tu cuenta de Google.</p></section>
-<section id="account" class="screen"><button class="back" onclick="showScreen('home')">← VOLVER</button><h1>MI CUENTA</h1><div class="panel"><div id="accountState" class="status">Conectando...</div><div id="accountDetails" style="display:none"><p class="account-label">NOMBRE DEL JUGADOR</p><h2 id="accountName">Jugador</h2><p class="account-label">TU ID DE JUGADOR</p><p class="account-id" id="playerId">MG-...</p><button class="neon-btn" onclick="copyPlayerId()">📋 COPIAR ID</button><p class="account-label">Cuenta vinculada a Google.</p></div><button id="accountLogout" class="neon-btn" onclick="logoutGoogle()">CERRAR SESIÓN</button><div id="accountMessage" class="status"></div></div></section>
-<section id="songs" class="screen"><button class="back" onclick="showScreen('home')">← VOLVER</button><h1>CANCIONES</h1><p class="subtitle">ELIGE TU CANCIÓN</p><button class="song" onclick="selectSong('sunflower')"><div class="cover">🌻</div><div class="song-info"><strong>SUNFLOWER</strong><div class="small">Post Malone y Swae Lee</div><div class="stars" id="stars-sunflower">☆☆☆</div><div class="small">Récord: <span id="record-sunflower">0</span></div><div class="small">Dificultad: FÁCIL</div></div><span class="song-status">GRATIS</span></button><p class="notice">La canción original y su sincronización se añadirán cuando tengamos permiso para utilizarla. Por ahora se juega con patrones de prueba.</p><div class="panel"><strong>PRÓXIMAMENTE</strong><p class="small">Aquí aparecerán nuevas canciones de MAGIC-GAM.</p></div></section>
-<section id="gameScreen" class="screen"><div id="gameTop"><button class="pause" onclick="pauseGame()">Ⅱ PAUSA</button><div class="game-score" id="score">0</div></div><div id="stageLabel">⭐ PRIMERA ESTRELLA</div><div id="gameSong">SUNFLOWER · FÁCIL</div><div id="comboDisplay">COMBO x0</div><div id="starProgress"><span class="progress-star" id="star1">★</span><span class="progress-star" id="star2">★</span><span class="progress-star" id="star3">★</span></div><div id="gameBoard"><div class="lanes"><div class="lane"></div><div class="lane"></div><div class="lane"></div><div class="lane"></div></div><div class="combo-line"></div></div><div id="feedback"></div><div id="gameMessage"></div><div id="pauseOverlay"><div class="pause-card"><h1>PAUSA</h1><p class="subtitle">Tu partida está detenida.</p><button class="neon-btn play" onclick="resumeGame()">▶ CONTINUAR</button><button class="neon-btn" onclick="showScreen('home')">⌂ SALIR AL MENÚ</button></div></div></section>
-<section id="resultScreen" class="screen"><h1 id="resultTitle">PARTIDA TERMINADA</h1><div class="result-stars" id="resultStars">☆☆☆</div><div class="panel"><h2 id="resultScore">0</h2><p class="small">PUNTUACIÓN FINAL</p><p id="resultReward">¡Buen intento!</p></div><div class="result-buttons"><button class="neon-btn play" onclick="startGame()">↻ VOLVER A JUGAR</button><button class="neon-btn" onclick="showScreen('home')">⌂ MENÚ PRINCIPAL</button></div></section>
-<section id="records" class="screen"><button class="back" onclick="showScreen('home')">← VOLVER</button><h1>🏆 RÉCORDS</h1><div class="panel"><strong>SUNFLOWER</strong><h2 id="recordPage">0</h2><span class="small">MEJOR PUNTUACIÓN</span><div class="stars" id="recordStars">☆☆☆</div></div></section>
-<footer>MAGIC-GAM · JUEGA CON EL RITMO</footer></main>
+<section id="home" class="screen active">
+ <h1>MAGIC-GAM</h1>
+ <p class="subtitle">TU RITMO. TU VELOCIDAD. TU RÉCORD.</p>
+ <div style="text-align:center;font-size:105px;margin:40px 0;text-shadow:0 0 25px #14cfff">♫</div>
+ <div class="menu">
+  <button class="neon-btn play" onclick="showScreen('songs')">▶ JUGAR</button>
+  <button class="neon-btn" onclick="showScreen('records')">🏆 RÉCORDS</button>
+  <button class="neon-btn" onclick="showScreen('account')">👤 MI CUENTA</button>
+ </div>
+ <p class="notice">Tu progreso está vinculado a tu cuenta de Google.</p>
+</section>
+
+<section id="account" class="screen">
+ <button class="back" onclick="showScreen('home')">← VOLVER</button>
+ <h1>MI CUENTA</h1>
+ <div class="panel">
+  <div id="accountState" class="status">Conectando...</div>
+  <div id="accountDetails" style="display:none">
+   <p class="account-label">NOMBRE DEL JUGADOR</p>
+   <h2 id="accountName">Jugador</h2>
+   <p class="account-label">TU ID DE JUGADOR</p>
+   <p class="account-id" id="playerId">MG-...</p>
+   <button class="neon-btn" onclick="copyPlayerId()">📋 COPIAR ID</button>
+   <p class="account-label">Cuenta vinculada a Google.</p>
+  </div>
+  <button id="accountLogout" class="neon-btn" onclick="logoutGoogle()">CERRAR SESIÓN</button>
+  <div id="accountMessage" class="status"></div>
+ </div>
+</section>
+
+<section id="songs" class="screen">
+ <button class="back" onclick="showScreen('home')">← VOLVER</button>
+ <h1>CANCIONES</h1>
+ <p class="subtitle">ELIGE TU CANCIÓN</p>
+ <button class="song" onclick="selectSong('sunflower')">
+  <div class="cover">🌻</div>
+  <div class="song-info">
+   <strong>SUNFLOWER</strong>
+   <div class="small">Post Malone y Swae Lee</div>
+   <div class="stars" id="stars-sunflower">☆☆☆</div>
+   <div class="small">Récord: <span id="record-sunflower">0</span></div>
+   <div class="small">Dificultad: FÁCIL</div>
+  </div>
+  <span class="song-status">GRATIS</span>
+ </button>
+ <p class="notice">La canción original y su sincronización se añadirán cuando tengamos permiso para utilizarla. Por ahora se juega con patrones de prueba.</p>
+ <div class="panel">
+  <strong>PRÓXIMAMENTE</strong>
+  <p class="small">Aquí aparecerán nuevas canciones de MAGIC-GAM.</p>
+ </div>
+</section>
+
+<section id="gameScreen" class="screen">
+ <div id="gameTop">
+  <button class="pause" onclick="pauseGame()">Ⅱ PAUSA</button>
+  <div class="game-score" id="score">0</div>
+ </div>
+ <div id="stageLabel">⭐ PRIMERA ESTRELLA</div>
+ <div id="gameSong">SUNFLOWER · FÁCIL</div>
+ <div id="comboDisplay">COMBO x0</div>
+ <div id="starProgress">
+  <span class="progress-star" id="star1">★</span>
+  <span class="progress-star" id="star2">★</span>
+  <span class="progress-star" id="star3">★</span>
+ </div>
+ <div id="gameBoard">
+  <div class="lanes">
+   <div class="lane"></div><div class="lane"></div>
+   <div class="lane"></div><div class="lane"></div>
+  </div>
+  <div class="combo-line"></div>
+ </div>
+ <div id="feedback"></div>
+ <div id="gameMessage"></div>
+ <div id="pauseOverlay">
+  <div class="pause-card">
+   <h1>PAUSA</h1>
+   <p class="subtitle">Tu partida está detenida.</p>
+   <button class="neon-btn play" onclick="resumeGame()">▶ CONTINUAR</button>
+   <button class="neon-btn" onclick="showScreen('home')">⌂ SALIR AL MENÚ</button>
+  </div>
+ </div>
+</section>
+
+<section id="resultScreen" class="screen">
+ <h1 id="resultTitle">PARTIDA TERMINADA</h1>
+ <div class="result-stars" id="resultStars">☆☆☆</div>
+ <div class="panel">
+  <h2 id="resultScore">0</h2>
+  <p class="small">PUNTUACIÓN FINAL</p>
+  <p id="resultReward">¡Buen intento!</p>
+ </div>
+ <div class="result-buttons">
+  <button class="neon-btn play" onclick="startGame()">↻ VOLVER A JUGAR</button>
+  <button class="neon-btn" onclick="showScreen('home')">⌂ MENÚ PRINCIPAL</button>
+ </div>
+</section>
+
+<section id="records" class="screen">
+ <button class="back" onclick="showScreen('home')">← VOLVER</button>
+ <h1>🏆 RÉCORDS</h1>
+ <div class="panel">
+  <strong>SUNFLOWER</strong>
+  <h2 id="recordPage">0</h2>
+  <span class="small">MEJOR PUNTUACIÓN</span>
+  <div class="stars" id="recordStars">☆☆☆</div>
+ </div>
+</section>
+<footer>MAGIC-GAM · JUEGA CON EL RITMO</footer>
+</main>
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
 import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from"https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import{getFirestore,doc,getDoc,setDoc,updateDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv40iIzwRZg",authDomain:"magic-gam.firebaseapp.com",projectId:"magic-gam",storageBucket:"magic-gam.firebasestorage.app",messagingSenderId:"751178083554",appId:"1:751178083554:web:bc52c2bf8167eaeadcc2bb"};
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
-auth.languageCode="es";provider.setCustomParameters({prompt:"select_account"});
-const gate=document.getElementById("authGate"),gateStatus=document.getElementById("gateStatus");
-let cloudReady=false,currentUid=null;
-const blank=()=>({diamonds:0,songs:{sunflower:{stars:0,record:0,paidStars:[]}}});
-function normalize(raw){const s=raw?.songs?.sunflower||{};return{diamonds:Math.max(0,Math.floor(Number(raw?.diamonds)||0)),songs:{sunflower:{stars:Math.max(0,Math.min(3,Math.floor(Number(s.stars)||0))),record:Math.max(0,Math.floor(Number(s.record)||0)),paidStars:[...new Set((Array.isArray(s.paidStars)?s.paidStars:[]).map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=3))]}}};}
-function showError(e){console.error("MAGIC-GAM Firebase:",e);const c=e?.code||"error",m={"auth/unauthorized-domain":"Este dominio no está autorizado en Firebase Authentication.","auth/operation-not-allowed":"Activa Google en los proveedores de acceso de Firebase.","auth/popup-blocked":"El navegador bloqueó la ventana de Google.","auth/popup-closed-by-user":"Se cerró la ventana de inicio de sesión.","auth/network-request-failed":"Comprueba tu conexión a Internet.","permission-denied":"Firestore rechazó la operación. Revisa las reglas de seguridad."};gateStatus.textContent="Error: "+(m[c]||e?.message||c);document.getElementById("accountMessage").textContent=gateStatus.textContent;}
-async function ensurePlayer(user){const ref=doc(db,"players",user.uid),snap=await getDoc(ref);if(!snap.exists()){const p={playerId:"MG-"+user.uid,displayName:user.displayName||"Jugador",createdAt:serverTimestamp(),accountType:"google"};await setDoc(ref,p);return{ref,data:{...p,playerId:p.playerId}};}return{ref,data:snap.data()};}
-async function loadAccount(user){cloudReady=false;currentUid=user.uid;window.magicGamCurrentUid=user.uid;gate.style.display="grid";gateStatus.textContent="Cargando tu cuenta y tu progreso...";const{ref,data}=await ensurePlayer(user);let save;if(data.gameSave){save=normalize(data.gameSave);}else{const cache=localStorage.getItem("magicGamSave_"+user.uid);save=cache?normalize(JSON.parse(cache)):blank();await updateDoc(ref,{gameSave:save});}localStorage.setItem("magicGamSave_"+user.uid,JSON.stringify(save));window.magicGamApplySave(save);document.getElementById("accountName").textContent=data.displayName||user.displayName||"Jugador";document.getElementById("playerId").textContent=data.playerId||"MG-"+user.uid;document.getElementById("accountDetails").style.display="block";document.getElementById("accountState").textContent="✓ Cuenta conectada con Google";document.getElementById("accountMessage").textContent="Tu cuenta y tu progreso están sincronizados.";cloudReady=true;gate.style.display="none";}
-window.loginGoogle=async()=>{const b=document.getElementById("gateLogin");b.disabled=true;b.textContent="CONECTANDO...";gateStatus.textContent="Abriendo Google...";try{await setPersistence(auth,browserLocalPersistence);await signInWithPopup(auth,provider);}catch(e){showError(e);}finally{b.disabled=false;b.textContent="🔐 CONTINUAR CON GOOGLE";}};
-window.logoutGoogle=async()=>{if(!auth.currentUser)return;try{await window.magicGamFlushSave();cloudReady=false;await signOut(auth);}catch(e){showError(e);}};
-window.copyPlayerId=async()=>{try{await navigator.clipboard.writeText(document.getElementById("playerId").textContent);document.getElementById("accountMessage").textContent="¡ID copiado!";}catch(e){document.getElementById("accountMessage").textContent="Selecciona y copia el ID manualmente.";}}
-onAuthStateChanged(auth,async user=>{if(!user){cloudReady=false;currentUid=null;window.magicGamCurrentUid=null;gate.style.display="grid";gateStatus.textContent="Inicia sesión con Google para acceder a MAGIC-GAM.";document.getElementById("accountDetails").style.display="none";document.getElementById("accountState").textContent="Sesión cerrada.";return;}try{await loadAccount(user);}catch(e){showError(e);gate.style.display="grid";}});
-window.magicGamCloudWrite=async save=>{if(!auth.currentUser||!cloudReady||auth.currentUser.uid!==currentUid)throw Error("La cuenta todavía no está lista.");const clean=normalize(save);await updateDoc(doc(db,"players",currentUid),{gameSave:clean});localStorage.setItem("magicGamSave_"+currentUid,JSON.stringify(clean));};
+
+const firebaseConfig={
+ apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv0IiwZg",
+ authDomain:"magic-gam.firebaseapp.com",
+ projectId:"magic-gam",
+ storageBucket:"magic-gam.firebasestorage.app",
+ messagingSenderId:"751178083554",
+ appId:"1:751178083554:web:bc52c2bf8167eaeadcc2bb"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const provider=new GoogleAuthProvider();
+
+auth.languageCode="es";
+provider.setCustomParameters({prompt:"select_account"});
+
+const gate=document.getElementById("authGate");
+const gateStatus=document.getElementById("gateStatus");
+
+let cloudReady=false;
+let currentUid=null;
+
+const blank=()=>({
+ diamonds:0,
+ songs:{sunflower:{stars:0,record:0,paidStars:[]}}
+});
+
+function normalize(raw){
+ const s=raw?.songs?.sunflower||{};
+ return{
+  diamonds:Math.max(0,Math.floor(Number(raw?.diamonds)||0)),
+  songs:{
+   sunflower:{
+    stars:Math.max(0,Math.min(3,Math.floor(Number(s.stars)||0))),
+    record:Math.max(0,Math.floor(Number(s.record)||0)),
+    paidStars:[...new Set((Array.isArray(s.paidStars)?s.paidStars:[]).map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=3))]
+   }
+  }
+ };
+}
+
+function showError(e){
+ console.error("MAGIC-GAM Firebase:",e);
+ const c=e?.code||"error";
+ const m={
+  "auth/unauthorized-domain":"Este dominio no está autorizado en Firebase Authentication.",
+  "auth/operation-not-allowed":"Activa Google en los proveedores de acceso de Firebase.",
+  "auth/popup-blocked":"El navegador bloqueó la ventana de Google.",
+  "auth/popup-closed-by-user":"Se cerró la ventana de inicio de sesión.",
+  "auth/network-request-failed":"Comprueba tu conexión a Internet.",
+  "permission-denied":"Firestore rechazó la operación. Revisa las reglas de seguridad."
+ };
+ gateStatus.textContent="Error: "+(m[c]||e?.message||c);
+ document.getElementById("accountMessage").textContent=gateStatus.textContent;
+}
+
+async function ensurePlayer(user){
+ const ref=doc(db,"players",user.uid);
+ const snap=await getDoc(ref);
+
+ if(!snap.exists()){
+  const p={
+   playerId:"MG-"+user.uid,
+   displayName:user.displayName||"Jugador",
+   createdAt:serverTimestamp(),
+   accountType:"google"
+  };
+  await setDoc(ref,p);
+  return{ref,data:{...p}};
+ }
+ return{ref,data:snap.data()};
+}
+
+async function loadAccount(user){
+ cloudReady=false;
+ currentUid=user.uid;
+ window.magicGamCurrentUid=user.uid;
+ gate.style.display="grid";
+ gateStatus.textContent="Cargando tu cuenta y tu progreso...";
+
+ const {ref,data}=await ensurePlayer(user);
+ let save;
+
+ if(data.gameSave){
+  save=normalize(data.gameSave);
+ }else{
+  const cache=localStorage.getItem("magicGamSave_"+user.uid);
+  save=cache?normalize(JSON.parse(cache)):blank();
+  await updateDoc(ref,{gameSave:save});
+ }
+
+ localStorage.setItem("magicGamSave_"+user.uid,JSON.stringify(save));
+ window.magicGamApplySave(save);
+
+ document.getElementById("accountName").textContent=data.displayName||user.displayName||"Jugador";
+ document.getElementById("playerId").textContent=data.playerId||"MG-"+user.uid;
+ document.getElementById("accountDetails").style.display="block";
+ document.getElementById("accountState").textContent="✓ Cuenta conectada con Google";
+ document.getElementById("accountMessage").textContent="Tu cuenta y tu progreso están sincronizados.";
+
+ cloudReady=true;
+ gate.style.display="none";
+}
+
+window.loginGoogle=async()=>{
+ const b=document.getElementById("gateLogin");
+ b.disabled=true;
+ b.textContent="CONECTANDO...";
+ gateStatus.textContent="Abriendo Google...";
+
+ try{
+  await setPersistence(auth,browserLocalPersistence);
+  await signInWithPopup(auth,provider);
+ }catch(e){
+  showError(e);
+ }finally{
+  b.disabled=false;
+  b.textContent="🔐 CONTINUAR CON GOOGLE";
+ }
+};
+
+window.logoutGoogle=async()=>{
+ if(!auth.currentUser)return;
+ try{
+  await window.magicGamFlushSave();
+  cloudReady=false;
+  await signOut(auth);
+ }catch(e){
+  showError(e);
+ }
+};
+
+window.copyPlayerId=async()=>{
+ try{
+  await navigator.clipboard.writeText(document.getElementById("playerId").textContent);
+  document.getElementById("accountMessage").textContent="¡ID copiado!";
+ }catch(e){
+  document.getElementById("accountMessage").textContent="Selecciona y copia el ID manualmente.";
+ }
+};
+
+onAuthStateChanged(auth,async user=>{
+ if(!user){
+  cloudReady=false;
+  currentUid=null;
+  window.magicGamCurrentUid=null;
+  gate.style.display="grid";
+  gateStatus.textContent="Inicia sesión con Google para acceder a MAGIC-GAM.";
+  document.getElementById("accountDetails").style.display="none";
+  document.getElementById("accountState").textContent="Sesión cerrada.";
+  return;
+ }
+
+ try{
+  await loadAccount(user);
+ }catch(e){
+  showError(e);
+  gate.style.display="grid";
+ }
+});
+
+window.magicGamCloudWrite=async save=>{
+ if(!auth.currentUser||!cloudReady||auth.currentUser.uid!==currentUid){
+  throw Error("La cuenta todavía no está lista.");
+ }
+ const clean=normalize(save);
+ await updateDoc(doc(db,"players",currentUid),{gameSave:clean});
+ localStorage.setItem("magicGamSave_"+currentUid,JSON.stringify(clean));
+};
 </script>
+
 <script>
-const $=id=>document.getElementById(id),nf=new Intl.NumberFormat("en-US");
-let saved={diamonds:0,songs:{sunflower:{stars:0,record:0,paidStars:[]}}},saveQueue=Promise.resolve();
-function norm(raw){const s=raw?.songs?.sunflower||{};return{diamonds:Math.max(0,Math.floor(Number(raw?.diamonds)||0)),songs:{sunflower:{stars:Math.max(0,Math.min(3,Math.floor(Number(s.stars)||0))),record:Math.max(0,Math.floor(Number(s.record)||0)),paidStars:[...new Set((Array.isArray(s.paidStars)?s.paidStars:[]).map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=3))]}}};}
-window.magicGamApplySave=s=>{saved=norm(s);updateUI();};
-window.magicGamFlushSave=async()=>{if(window.magicGamCloudWrite)await window.magicGamCloudWrite(saved);};
+const $=id=>document.getElementById(id);
+const nf=new Intl.NumberFormat("en-US");
+
+let saved={
+ diamonds:0,
+ songs:{sunflower:{stars:0,record:0,paidStars:[]}}
+};
+
+let saveQueue=Promise.resolve();
+
+function norm(raw){
+ const s=raw?.songs?.sunflower||{};
+ return{
+  diamonds:Math.max(0,Math.floor(Number(raw?.diamonds)||0)),
+  songs:{
+   sunflower:{
+    stars:Math.max(0,Math.min(3,Math.floor(Number(s.stars)||0))),
+    record:Math.max(0,Math.floor(Number(s.record)||0)),
+    paidStars:[...new Set((Array.isArray(s.paidStars)?s.paidStars:[]).map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=3))]
+   }
+  }
+ };
+}
+
+window.magicGamApplySave=s=>{
+ saved=norm(s);
+ updateUI();
+};
+
+window.magicGamFlushSave=async()=>{
+ if(window.magicGamCloudWrite)await window.magicGamCloudWrite(saved);
+};
+
 function fmt(n){return nf.format(Math.round(n));}
-function fmtRecord(n){n=Math.round(Number(n)||0);if(n<1e6)return fmt(n);for(const u of[{v:1e15,s:"Q"},{v:1e12,s:"T"},{v:1e9,s:"B"},{v:1e6,s:"M"}])if(n>=u.v)return(n/u.v).toFixed(2).replace(/\.?0+$/,"")+u.s;return fmt(n);}
-function save(){saved=norm(saved);updateUI();const uid=window.magicGamCurrentUid;if(uid)localStorage.setItem("magicGamSave_"+uid,JSON.stringify(saved));if(window.magicGamCloudWrite)saveQueue=saveQueue.then(()=>window.magicGamCloudWrite(saved)).catch(e=>console.error("Error guardando en Firebase:",e));}
-function updateUI(){const d=saved.songs.sunflower;$("diamondCount").textContent=fmt(saved.diamonds);$("stars-sunflower").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);$("record-sunflower").textContent=fmtRecord(d.record);$("recordPage").textContent=fmtRecord(d.record);$("recordStars").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);}
-function showScreen(id){stopGame();$("pauseOverlay").style.display="none";document.body.classList.remove("game-open");document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");updateUI();}
-let running=false,paused=false,tiles=[],score=0,combo=0,starsEarned=0,stageHits=0,lastTime=0,lastSpawn=0,animation=0,speed=210,spawnEvery=950,activeHold=null,lastLane=-1,feedbackTimer=null;
-const board=$("gameBoard"),lanes=[...document.querySelectorAll(".lane")];
-function basePoints(){return starsEarned===0?2:starsEarned===1?3:4;}
-function selectSong(){startGame();}
-function startGame(){stopGame();document.body.classList.add("game-open");document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$("gameScreen").classList.add("active");$("pauseOverlay").style.display="none";lanes.forEach(l=>l.innerHTML="");tiles=[];score=0;combo=0;starsEarned=0;stageHits=0;speed=210;spawnEvery=950;activeHold=null;lastLane=-1;paused=false;$("score").textContent="0";$("stageLabel").textContent="⭐ PRIMERA ESTRELLA";$("gameSong").textContent="SUNFLOWER · FÁCIL";$("comboDisplay").textContent="COMBO x0";$("gameMessage").textContent="";hideFeedback();updateStars();running=true;lastTime=performance.now();lastSpawn=lastTime;animation=requestAnimationFrame(loop);}
-function stopGame(){running=false;paused=false;if(animation)cancelAnimationFrame(animation);animation=0;activeHold=null;}
-function updateStars(){for(let i=1;i<=3;i++)$("star"+i).classList.toggle("lit",i<=starsEarned);}
-function feedback(type,msg){const b=$("feedback");clearTimeout(feedbackTimer);b.className="";b.textContent=msg;b.classList.add(type);b.style.opacity="1";feedbackTimer=setTimeout(hideFeedback,350);}
-function hideFeedback(){$("feedback").style.opacity="0";}
-function registerCombo(){combo++;$("comboDisplay").textContent="COMBO x"+combo;feedback("perfect","¡PERFECTO!");}
-function registerLate(){combo=0;$("comboDisplay").textContent="COMBO x0";feedback("late","TARDADO");}
-function crossing(t){const y=board.clientHeight*.70;return t.y<=y&&t.y+t.height>=y;}
-function points(perfect,extra=0){let p;if(perfect){registerCombo();p=basePoints()*Math.min(2,1+combo*.2)+extra;}else{registerLate();p=basePoints()+extra;}p=Math.round(p);score+=p;$("score").textContent=fmt(score);}
-function scoreNormal(perfect){points(perfect);stageHits++;checkStage();}
-function scoreLong(perfect,complete){points(perfect,complete?2:0);stageHits++;$("gameMessage").textContent=complete?"¡TECLA LARGA COMPLETADA! +2 EXTRA":"¡TECLA LARGA VÁLIDA!";checkStage();}
-function spawnTile(){let lane=Math.floor(Math.random()*4);if(lane===lastLane)lane=(lane+1+Math.floor(Math.random()*3))%4;lastLane=lane;const lng=Math.random()<.02,tile=document.createElement("div");tile.className="tile color"+lane+(lng?" long":"");if(lng){const a=document.createElement("div");a.className="long-arrows";a.innerHTML="⌄<br>⌄<br>⌄";const l=document.createElement("div");l.className="long-label";l.textContent="MANTÉN";const h=document.createElement("div");h.className="long-hand";h.textContent="👆";const p=document.createElement("div");p.className="long-progress";tile.append(a,l,h,p);}lanes[lane].appendChild(tile);const h=tile.offsetHeight;tiles.push({el:tile,lane,y:-h-10,height:h,long:lng,touched:false,holding:false,holdPointer:null,holdStartY:null,perfect:false,progress:0});}
-function loop(now){if(!running||paused)return;const dt=Math.min((now-lastTime)/1000,.04);lastTime=now;const bh=board.clientHeight;if(now-lastSpawn>=spawnEvery){spawnTile();lastSpawn=now;}for(let i=tiles.length-1;i>=0;i--){const t=tiles[i];t.y+=speed*dt;t.el.style.top=t.y+"px";if(t.long&&t.holding){if(crossing(t))t.perfect=true;t.progress=Math.max(0,Math.min(1,(t.y-t.holdStartY)/t.height));const p=t.el.querySelector(".long-progress");if(p)p.style.height=(t.progress*100)+"%";if(t.progress>=1){if(t.el.isConnected)t.el.remove();tiles.splice(i,1);if(activeHold===t)activeHold=null;scoreLong(t.perfect,true);if(!running)return;continue;}}if(!t.touched&&t.y>=bh){finishGame("¡TECLA PERDIDA!");return;}}animation=requestAnimationFrame(loop);}
-function boardDown(e){if(!running||paused)return;e.preventDefault();if(activeHold)return;let chosen=null;for(const t of tiles){if(t.touched)continue;const r=t.el.getBoundingClientRect();if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom){chosen=t;break;}}if(!chosen){finishGame("¡TOCASTE FUERA DE UNA TECLA!");return;}chosen.touched=true;chosen.perfect=crossing(chosen);if(chosen.long){chosen.holding=true;chosen.holdPointer=e.pointerId;chosen.holdStartY=chosen.y;chosen.el.classList.add("holding");activeHold=chosen;try{board.setPointerCapture(e.pointerId);}catch(err){}$("gameMessage").textContent="¡MANTÉN PRESIONADO!";}else{if(chosen.el.isConnected)chosen.el.remove();tiles=tiles.filter(t=>t!==chosen);scoreNormal(chosen.perfect);}}
-function boardUp(e){if(!activeHold||activeHold.holdPointer!==e.pointerId)return;const t=activeHold;if(t.el.isConnected)t.el.remove();tiles=tiles.filter(x=>x!==t);activeHold=null;scoreLong(t.perfect,false);}
-board.addEventListener("pointerdown",boardDown,{passive:false});board.addEventListener("pointerup",boardUp);board.addEventListener("pointercancel",boardUp);
-function checkStage(){if(stageHits<12)return;stageHits=0;if(starsEarned<3){starsEarned++;const d=saved.songs.sunflower;if(starsEarned>d.stars)d.stars=starsEarned;if(!d.paidStars.includes(starsEarned)){saved.diamonds+=50;d.paidStars.push(starsEarned);}updateStars();speed+=35;spawnEvery=Math.max(650,spawnEvery-60);const n=["","PRIMERA","SEGUNDA","TERCERA"];$("stageLabel").textContent="⭐ "+n[starsEarned]+" ESTRELLA";$("gameSong").textContent="SUNFLOWER · FÁCIL";$("gameMessage").textContent="¡ESTRELLA CONSEGUIDA! +50 💎";save();}else $("gameMessage").textContent="¡SIGUE JUGANDO!";}
-function finishGame(msg){if(!running)return;stopGame();const d=saved.songs.sunflower;if(score>d.record)d.record=score;save();$("resultTitle").textContent=msg||"PARTIDA TERMINADA";$("resultStars").textContent="★".repeat(starsEarned)+"☆".repeat(3-starsEarned);$("resultScore").textContent=fmt(score);$("resultReward").textContent="Diamantes obtenidos por estrellas: "+fmt(starsEarned*50)+" 💎";$("pauseOverlay").style.display="none";document.body.classList.remove("game-open");document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$("resultScreen").classList.add("active");}
-function pauseGame(){if(!running||paused)return;if(activeHold){$("gameMessage").textContent="Puedes soltar la tecla larga cuando quieras.";return;}paused=true;if(animation)cancelAnimationFrame(animation);animation=0;$("pauseOverlay").style.display="grid";}
-function resumeGame(){if(!paused)return;paused=false;$("pauseOverlay").style.display="none";lastTime=performance.now();lastSpawn=performance.now();animation=requestAnimationFrame(loop);}
+
+function fmtRecord(n){
+ n=Math.round(Number(n)||0);
+ if(n<1e6)return fmt(n);
+ for(const u of[
+  {v:1e15,s:"Q"},
+  {v:1e12,s:"T"},
+  {v:1e9,s:"B"},
+  {v:1e6,s:"M"}
+ ]){
+  if(n>=u.v)return(n/u.v).toFixed(2).replace(/\.?0+$/,"")+u.s;
+ }
+ return fmt(n);
+}
+
+function save(){
+ saved=norm(saved);
+ updateUI();
+
+ const uid=window.magicGamCurrentUid;
+ if(uid)localStorage.setItem("magicGamSave_"+uid,JSON.stringify(saved));
+
+ if(window.magicGamCloudWrite){
+  saveQueue=saveQueue.then(()=>window.magicGamCloudWrite(saved)).catch(e=>console.error("Error guardando en Firebase:",e));
+ }
+}
+
+function updateUI(){
+ const d=saved.songs.sunflower;
+ $("diamondCount").textContent=fmt(saved.diamonds);
+ $("stars-sunflower").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);
+ $("record-sunflower").textContent=fmtRecord(d.record);
+ $("recordPage").textContent=fmtRecord(d.record);
+ $("recordStars").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);
+}
+
+function showScreen(id){
+ stopGame();
+ $("pauseOverlay").style.display="none";
+ document.body.classList.remove("game-open");
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ $(id).classList.add("active");
+ updateUI();
+}
+
+let running=false,paused=false,tiles=[],score=0,combo=0,starsEarned=0,stageHits=0;
+let lastTime=0,lastSpawn=0,animation=0,speed=210,spawnEvery=950;
+let activeHold=null,lastLane=-1,feedbackTimer=null;
+
+const board=$("gameBoard");
+const lanes=[...document.querySelectorAll(".lane")];
+
+function basePoints(){
+ return starsEarned===0?2:starsEarned===1?3:4;
+}
+
+function selectSong(){
+ startGame();
+}
+
+function startGame(){
+ stopGame();
+ document.body.classList.add("game-open");
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ $("gameScreen").classList.add("active");
+ $("pauseOverlay").style.display="none";
+ lanes.forEach(l=>l.innerHTML="");
+ tiles=[];
+ score=0;
+ combo=0;
+ starsEarned=0;
+ stageHits=0;
+ speed=210;
+ spawnEvery=950;
+ activeHold=null;
+ lastLane=-1;
+ paused=false;
+
+ $("score").textContent="0";
+ $("stageLabel").textContent="⭐ PRIMERA ESTRELLA";
+ $("gameSong").textContent="SUNFLOWER · FÁCIL";
+ $("comboDisplay").textContent="COMBO x0";
+ $("gameMessage").textContent="";
+ hideFeedback();
+ updateStars();
+
+ running=true;
+ lastTime=performance.now();
+ lastSpawn=lastTime;
+ animation=requestAnimationFrame(loop);
+}
+
+function stopGame(){
+ running=false;
+ paused=false;
+ if(animation)cancelAnimationFrame(animation);
+ animation=0;
+ activeHold=null;
+}
+
+function updateStars(){
+ for(let i=1;i<=3;i++){
+  $("star"+i).classList.toggle("lit",i<=starsEarned);
+ }
+}
+
+function feedback(type,msg){
+ const b=$("feedback");
+ clearTimeout(feedbackTimer);
+ b.className="";
+ b.textContent=msg;
+ b.classList.add(type);
+ b.style.opacity="1";
+ feedbackTimer=setTimeout(hideFeedback,350);
+}
+
+function hideFeedback(){
+ $("feedback").style.opacity="0";
+}
+
+function registerCombo(){
+ combo++;
+ $("comboDisplay").textContent="COMBO x"+combo;
+ feedback("perfect","¡PERFECTO!");
+}
+
+function registerLate(){
+ combo=0;
+ $("comboDisplay").textContent="COMBO x0";
+ feedback("late","TARDADO");
+}
+
+function crossing(t){
+ const y=board.clientHeight*.70;
+ return t.y<=y&&t.y+t.height>=y;
+}
+
+function points(perfect,extra=0){
+ let p;
+ if(perfect){
+  registerCombo();
+  p=basePoints()*Math.min(2,1+combo*.2)+extra;
+ }else{
+  registerLate();
+  p=basePoints()+extra;
+ }
+ p=Math.round(p);
+ score+=p;
+ $("score").textContent=fmt(score);
+}
+
+function scoreNormal(perfect){
+ points(perfect);
+ stageHits++;
+ checkStage();
+}
+
+function scoreLong(perfect,complete){
+ points(perfect,complete?2:0);
+ stageHits++;
+ $("gameMessage").textContent=complete?"¡TECLA LARGA COMPLETADA! +2 EXTRA":"¡TECLA LARGA VÁLIDA!";
+ checkStage();
+}
+
+function spawnTile(){
+ let lane=Math.floor(Math.random()*4);
+ if(lane===lastLane)lane=(lane+1+Math.floor(Math.random()*3))%4;
+ lastLane=lane;
+
+ const lng=Math.random()<.02;
+ const tile=document.createElement("div");
+ tile.className="tile color"+lane+(lng?" long":"");
+
+ if(lng){
+  const a=document.createElement("div");
+  a.className="long-arrows";
+  a.innerHTML="⌄<br>⌄<br>⌄";
+
+  const l=document.createElement("div");
+  l.className="long-label";
+  l.textContent="MANTÉN";
+
+  const h=document.createElement("div");
+  h.className="long-hand";
+  h.textContent="👆";
+
+  const p=document.createElement("div");
+  p.className="long-progress";
+  tile.append(a,l,h,p);
+ }
+
+ lanes[lane].appendChild(tile);
+ const h=tile.offsetHeight;
+
+ tiles.push({
+  el:tile,lane,y:-h-10,height:h,long:lng,
+  touched:false,holding:false,holdPointer:null,
+  holdStartY:null,perfect:false,progress:0
+ });
+}
+
+function loop(now){
+ if(!running||paused)return;
+
+ const dt=Math.min((now-lastTime)/1000,.04);
+ lastTime=now;
+ const bh=board.clientHeight;
+
+ if(now-lastSpawn>=spawnEvery){
+  spawnTile();
+  lastSpawn=now;
+ }
+
+ for(let i=tiles.length-1;i>=0;i--){
+  const t=tiles[i];
+  t.y+=speed*dt;
+  t.el.style.top=t.y+"px";
+
+  if(t.long&&t.holding){
+   if(crossing(t))t.perfect=true;
+
+   t.progress=Math.max(0,Math.min(1,(t.y-t.holdStartY)/t.height));
+   const p=t.el.querySelector(".long-progress");
+   if(p)p.style.height=(t.progress*100)+"%";
+
+   if(t.progress>=1){
+    if(t.el.isConnected)t.el.remove();
+    tiles.splice(i,1);
+    if(activeHold===t)activeHold=null;
+    scoreLong(t.perfect,true);
+    if(!running)return;
+    continue;
+   }
+  }
+
+  if(!t.touched&&t.y>=bh){
+   finishGame("¡TECLA PERDIDA!");
+   return;
+  }
+ }
+
+ animation=requestAnimationFrame(loop);
+}
+
+function boardDown(e){
+ if(!running||paused)return;
+ e.preventDefault();
+ if(activeHold)return;
+
+ let chosen=null;
+
+ for(const t of tiles){
+  if(t.touched)continue;
+  const r=t.el.getBoundingClientRect();
+
+  if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom){
+   chosen=t;
+   break;
+  }
+ }
+
+ if(!chosen){
+  finishGame("¡TOCASTE FUERA DE UNA TECLA!");
+  return;
+ }
+
+ chosen.touched=true;
+ chosen.perfect=crossing(chosen);
+
+ if(chosen.long){
+  chosen.holding=true;
+  chosen.holdPointer=e.pointerId;
+  chosen.holdStartY=chosen.y;
+  chosen.el.classList.add("holding");
+  activeHold=chosen;
+
+  try{board.setPointerCapture(e.pointerId);}catch(err){}
+
+  $("gameMessage").textContent="¡MANTÉN PRESIONADO!";
+ }else{
+  if(chosen.el.isConnected)chosen.el.remove();
+  tiles=tiles.filter(t=>t!==chosen);
+  scoreNormal(chosen.perfect);
+ }
+}
+
+function boardUp(e){
+ if(!activeHold||activeHold.holdPointer!==e.pointerId)return;
+
+ const t=activeHold;
+ if(t.el.isConnected)t.el.remove();
+ tiles=tiles.filter(x=>x!==t);
+ activeHold=null;
+ scoreLong(t.perfect,false);
+}
+
+board.addEventListener("pointerdown",boardDown,{passive:false});
+board.addEventListener("pointerup",boardUp);
+board.addEventListener("pointercancel",boardUp);
+
+function checkStage(){
+ if(stageHits<12)return;
+ stageHits=0;
+
+ if(starsEarned<3){
+  starsEarned++;
+  const d=saved.songs.sunflower;
+
+  if(starsEarned>d.stars)d.stars=starsEarned;
+
+  if(!d.paidStars.includes(starsEarned)){
+   saved.diamonds+=50;
+   d.paidStars.push(starsEarned);
+  }
+
+  updateStars();
+  speed+=35;
+  spawnEvery=Math.max(650,spawnEvery-60);
+
+  const n=["","PRIMERA","SEGUNDA","TERCERA"];
+  $("stageLabel").textContent="⭐ "+n[starsEarned]+" ESTRELLA";
+  $("gameSong").textContent="SUNFLOWER · FÁCIL";
+  $("gameMessage").textContent="¡ESTRELLA CONSEGUIDA! +50 💎";
+  save();
+ }else{
+  $("gameMessage").textContent="¡SIGUE JUGANDO!";
+ }
+}
+
+function finishGame(msg){
+ if(!running)return;
+ stopGame();
+
+ const d=saved.songs.sunflower;
+ if(score>d.record)d.record=score;
+ save();
+
+ $("resultTitle").textContent=msg||"PARTIDA TERMINADA";
+ $("resultStars").textContent="★".repeat(starsEarned)+"☆".repeat(3-starsEarned);
+ $("resultScore").textContent=fmt(score);
+ $("resultReward").textContent="Diamantes obtenidos por estrellas: "+fmt(starsEarned*50)+" 💎";
+
+ $("pauseOverlay").style.display="none";
+ document.body.classList.remove("game-open");
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ $("resultScreen").classList.add("active");
+}
+
+function pauseGame(){
+ if(!running||paused)return;
+
+ if(activeHold){
+  $("gameMessage").textContent="Puedes soltar la tecla larga cuando quieras.";
+  return;
+ }
+
+ paused=true;
+ if(animation)cancelAnimationFrame(animation);
+ animation=0;
+ $("pauseOverlay").style.display="grid";
+}
+
+function resumeGame(){
+ if(!paused)return;
+ paused=false;
+ $("pauseOverlay").style.display="none";
+ lastTime=performance.now();
+ lastSpawn=performance.now();
+ animation=requestAnimationFrame(loop);
+}
+
 updateUI();
 </script>
-<script>if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/Magic-Gam-/service-worker.js").catch(e=>console.error("Service Worker:",e)));</script>
-</body></html>
+
+<script>
+if("serviceWorker"in navigator){
+ window.addEventListener("load",()=>{
+  navigator.serviceWorker.register("/Magic-Gam-/service-worker.js")
+   .catch(e=>console.error("Service Worker:",e));
+ });
+}
+
+/* Bloquea la selección de texto y el menú de búsqueda de Android/Chrome. */
+document.addEventListener("contextmenu",function(e){
+ e.preventDefault();
+});
+document.addEventListener("selectstart",function(e){
+ e.preventDefault();
+});
+</script>
+</body>
+</html>
