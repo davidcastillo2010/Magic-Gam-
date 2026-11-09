@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,10 +8,7 @@
 
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;background:#080817;color:white;
- font-family:Arial,sans-serif;min-height:100vh
-}
+body{margin:0;background:#080817;color:white;font-family:Arial,sans-serif;min-height:100vh}
 body:before{
  content:"";position:fixed;inset:0;z-index:-1;
  background:
@@ -21,10 +17,7 @@ body:before{
  radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%)
 }
 button{font:inherit;color:white;cursor:pointer}
-header{
- display:flex;justify-content:space-between;
- align-items:center;padding:17px 15px
-}
+header{display:flex;justify-content:space-between;align-items:center;padding:17px 15px}
 .logo{
  font-size:25px;font-weight:1000;font-style:italic;
  background:linear-gradient(90deg,#20eaff,#fff,#ff315e);
@@ -164,38 +157,42 @@ body.game-open footer{display:none!important}
  top:-6px;height:18px;background:#55eaff25
 }
 
-/* INFORMACIÓN */
+/* PUNTUACIÓN */
 #gameTop{
  position:absolute;top:env(safe-area-inset-top,5px);
  left:0;right:0;z-index:8;
- display:flex;justify-content:space-between;
- align-items:center;padding:10px 14px;
+ display:flex;justify-content:center;
+ align-items:center;padding:12px;
  pointer-events:none
 }
-#gameTop>*{pointer-events:auto}
-.game-score{font-size:25px;font-weight:bold;color:#65eaff}
+.game-score{
+ font-size:42px;font-weight:1000;color:#65eaff;
+ text-shadow:0 0 12px #00cfff,0 0 25px #087bff
+}
 .pause{
+ position:absolute;left:14px;top:12px;
  border:1px solid #23dfff;background:#10152dcc;
- color:#65eaff;border-radius:18px;padding:10px 15px
+ color:#65eaff;border-radius:18px;padding:10px 15px;
+ pointer-events:auto
 }
 #stageLabel{
- position:absolute;top:65px;left:0;right:0;
+ position:absolute;top:75px;left:0;right:0;
  text-align:center;color:#ffd447;
  font-weight:bold;z-index:7;pointer-events:none
 }
 #gameSong{
- position:absolute;top:90px;left:0;right:0;
+ position:absolute;top:100px;left:0;right:0;
  text-align:center;color:#aab8d9;
  font-size:13px;z-index:7;pointer-events:none
 }
 #comboDisplay{
- position:absolute;top:125px;left:0;right:0;
+ position:absolute;top:130px;left:0;right:0;
  z-index:7;text-align:center;color:#63eaff;
  font-size:17px;font-weight:bold;
  pointer-events:none;text-shadow:0 0 10px #00cfff
 }
 #starProgress{
- position:absolute;top:153px;left:0;right:0;
+ position:absolute;top:158px;left:0;right:0;
  z-index:8;display:flex;justify-content:center;
  gap:17px;pointer-events:none
 }
@@ -211,9 +208,8 @@ body.game-open footer{display:none!important}
 }
 #feedback{
  position:absolute;top:43%;left:0;right:0;
- z-index:9;text-align:center;
- font-size:29px;font-weight:1000;
- pointer-events:none;opacity:0;
+ z-index:9;text-align:center;font-size:29px;
+ font-weight:1000;pointer-events:none;opacity:0;
  transform:scale(.8);
  transition:opacity .08s,transform .08s;
  text-shadow:0 0 15px currentColor
@@ -317,7 +313,7 @@ body.game-open footer{display:none!important}
  </div>
 
  <div id="feedback"></div>
- <div id="gameMessage">¡Toca las teclas!</div>
+ <div id="gameMessage"></div>
 
  <div id="pauseOverlay">
   <div class="pause-card">
@@ -374,7 +370,6 @@ const defaultSave={
 };
 
 let saved;
-
 try{
  saved=JSON.parse(localStorage.getItem("magicGamSave"))||defaultSave;
 }catch(e){
@@ -413,11 +408,7 @@ function showScreen(id){
  stopGame();
  $("pauseOverlay").style.display="none";
  document.body.classList.remove("game-open");
-
- document.querySelectorAll(".screen").forEach(s=>{
-  s.classList.remove("active");
- });
-
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
  $(id).classList.add("active");
  updateUI();
 }
@@ -431,7 +422,6 @@ let combo=0;
 let starsEarned=0;
 let stageHits=0;
 let superDifficult=false;
-
 let lastTime=0;
 let lastSpawn=0;
 let animation=0;
@@ -452,13 +442,9 @@ function selectSong(song){
 
 function startGame(){
  stopGame();
-
  document.body.classList.add("game-open");
 
- document.querySelectorAll(".screen").forEach(s=>{
-  s.classList.remove("active");
- });
-
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
  $("gameScreen").classList.add("active");
  $("pauseOverlay").style.display="none";
 
@@ -470,7 +456,6 @@ function startGame(){
  starsEarned=0;
  stageHits=0;
  superDifficult=false;
-
  speed=210;
  spawnEvery=950;
  activeHold=null;
@@ -481,23 +466,20 @@ function startGame(){
  $("stageLabel").textContent="⭐ ETAPA 1";
  $("gameSong").textContent="SUNFLOWER · FÁCIL";
  $("comboDisplay").textContent="COMBO x0";
- $("gameMessage").textContent="¡Toca las teclas!";
+ $("gameMessage").textContent="";
  hideFeedback();
  updateStars();
 
  running=true;
  lastTime=performance.now();
  lastSpawn=lastTime;
-
  animation=requestAnimationFrame(loop);
 }
 
 function stopGame(){
  running=false;
  paused=false;
-
  if(animation)cancelAnimationFrame(animation);
-
  animation=0;
  activeHold=null;
 }
@@ -508,26 +490,22 @@ function updateStars(){
  }
 }
 
-/* MENSAJES DE PRECISIÓN */
+/* MENSAJES */
 function showFeedback(type,message){
  const box=$("feedback");
-
  clearTimeout(feedbackTimer);
  box.textContent=message;
  box.className=type;
  box.style.opacity="1";
  box.style.transform="scale(1.15)";
-
  feedbackTimer=setTimeout(hideFeedback,500);
 }
 
 function hideFeedback(){
- const box=$("feedback");
- box.style.opacity="0";
- box.style.transform="scale(.8)";
+ $("feedback").style.opacity="0";
+ $("feedback").style.transform="scale(.8)";
 }
 
-/* COMBO */
 function registerCombo(){
  combo++;
  $("comboDisplay").textContent="COMBO x"+combo;
@@ -540,45 +518,43 @@ function registerLate(){
  showFeedback("late","TARDADO");
 }
 
-/* PUNTOS DE TECLAS NORMALES */
-function scoreNormalTile(isPerfect){
- score+=50;
- stageHits++;
-
- $("score").textContent=score;
- $("gameMessage").textContent="+50 PUNTOS";
-
- if(isPerfect){
-  registerCombo();
- }else{
-  registerLate();
- }
-
- checkStage();
-}
-
-/* PUNTOS DE TECLAS LARGAS */
-function scoreLongTile(isPerfect){
- score+=100;
- stageHits++;
-
- $("score").textContent=score;
- $("gameMessage").textContent="¡TECLA LARGA COMPLETADA! +100";
-
- if(isPerfect){
-  registerCombo();
- }else{
-  registerLate();
- }
-
- checkStage();
-}
-
-/* COMPROBAR SI TOCÓ EN LA LÍNEA */
+/* PRECISIÓN DEL TOQUE */
 function isTouchPerfect(clientY){
  const rect=board.getBoundingClientRect();
  const lineY=rect.top+rect.height*.70;
  return Math.abs(clientY-lineY)<=COMBO_TOLERANCE;
+}
+
+/* PUNTOS NORMALES */
+function scoreNormalTile(perfect){
+ score+=50;
+ stageHits++;
+ $("score").textContent=score;
+
+ if(perfect)registerCombo();
+ else registerLate();
+
+ checkStage();
+}
+
+/* TECLA LARGA:
+   CUALQUIER TOQUE = 50 PUNTOS.
+   COMPLETARLA = 100 PUNTOS EXTRA. */
+function scoreLongTile(perfect,completed){
+ score+=completed?150:50;
+ stageHits++;
+ $("score").textContent=score;
+
+ if(completed){
+  $("gameMessage").textContent="¡TECLA LARGA COMPLETADA! +100 EXTRA";
+ }else{
+  $("gameMessage").textContent="¡TECLA LARGA VÁLIDA! +50";
+ }
+
+ if(perfect)registerCombo();
+ else registerLate();
+
+ checkStage();
 }
 
 /* CREAR TECLAS */
@@ -593,7 +569,6 @@ function spawnTile(){
 
  const isLong=Math.random()<.20;
  const tile=document.createElement("div");
-
  tile.className="tile color"+lane+(isLong?" long":"");
 
  if(isLong){
@@ -616,20 +591,20 @@ function spawnTile(){
  }
 
  lanes[lane].appendChild(tile);
-
- const tileHeight=tile.offsetHeight;
+ const h=tile.offsetHeight;
 
  tiles.push({
   el:tile,
   lane:lane,
-  y:-tileHeight-10,
-  height:tileHeight,
+  y:-h-10,
+  height:h,
   long:isLong,
   touched:false,
   holding:false,
   holdPointer:null,
   holdStartY:null,
-  perfect:false
+  perfect:false,
+  progress:0
  });
 }
 
@@ -639,7 +614,6 @@ function loop(now){
 
  const dt=Math.min((now-lastTime)/1000,.04);
  lastTime=now;
-
  const boardHeight=board.clientHeight;
 
  if(now-lastSpawn>=spawnEvery){
@@ -653,36 +627,28 @@ function loop(now){
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
 
-  /* PROGRESO DE TECLA LARGA */
   if(t.long&&t.holding){
    const traveled=t.y-t.holdStartY;
-   const percent=Math.max(0,Math.min(100,(traveled/t.height)*100));
+   t.progress=Math.max(0,Math.min(1,traveled/t.height));
 
    const progress=t.el.querySelector(".long-progress");
-   if(progress)progress.style.height=percent+"%";
+   if(progress)progress.style.height=(t.progress*100)+"%";
 
-   /*
-    * LA TECLA LARGA SE COMPLETA DESPUÉS
-    * DE RECORRER UNA DISTANCIA IGUAL A SU ALTURA.
-    */
-   if(traveled>=t.height){
+   /* COMPLETAR TODA LA TECLA LARGA */
+   if(t.progress>=1){
     if(t.el.isConnected)t.el.remove();
-
     tiles.splice(i,1);
 
     if(activeHold===t)activeHold=null;
 
-    scoreLongTile(t.perfect);
+    scoreLongTile(t.perfect,true);
 
     if(!running)return;
     continue;
    }
   }
 
-  /*
-   * UNA TECLA SIN TOCAR QUE LLEGA AL FONDO
-   * TERMINA LA PARTIDA.
-   */
+  /* TECLA SIN TOCAR QUE LLEGA AL FONDO = DERROTA */
   if(!t.touched&&t.y>=boardHeight){
    finishGame(false,"¡TECLA PERDIDA!");
    return;
@@ -695,10 +661,8 @@ function loop(now){
 /* DETECTAR TOQUE */
 function boardDown(e){
  if(!running||paused)return;
-
  e.preventDefault();
 
- /* No iniciar otra tecla mientras se mantiene una larga */
  if(activeHold)return;
 
  let chosen=null;
@@ -707,7 +671,6 @@ function boardDown(e){
   if(t.touched)continue;
 
   const r=t.el.getBoundingClientRect();
-
   const inside=
    e.clientX>=r.left&&
    e.clientX<=r.right&&
@@ -727,16 +690,13 @@ function boardDown(e){
  }
 
  chosen.touched=true;
-
- /* ¿TOCÓ JUSTO EN LA LÍNEA DE COMBO? */
  chosen.perfect=isTouchPerfect(e.clientY);
 
  if(chosen.long){
-  /* TECLA LARGA: MANTENER PRESIONADO */
+  /* INICIAR MANTENIMIENTO */
   chosen.holding=true;
   chosen.holdPointer=e.pointerId;
   chosen.holdStartY=chosen.y;
-
   chosen.el.classList.add("holding");
   activeHold=chosen;
 
@@ -746,40 +706,33 @@ function boardDown(e){
 
   $("gameMessage").textContent="¡MANTÉN PRESIONADO!";
  }else{
-  /*
-   * TECLA NORMAL:
-   * SE PUEDE TOCAR EN CUALQUIER PARTE.
-   * DESAPARECE Y SUMA PUNTOS INMEDIATAMENTE.
-   */
+  /* TECLA NORMAL: DESAPARECE Y SUMA 50 */
   if(chosen.el.isConnected)chosen.el.remove();
-
   tiles=tiles.filter(t=>t!==chosen);
-
   scoreNormalTile(chosen.perfect);
  }
 }
 
-/* SOLTAR TECLA LARGA */
+/* SOLTAR TECLA LARGA:
+   CUALQUIER DURACIÓN ES VÁLIDA. */
 function boardUp(e){
  if(!activeHold)return;
-
  if(activeHold.holdPointer!==e.pointerId)return;
 
  const t=activeHold;
 
  /*
-  * Si todavía no completó su recorrido,
-  * soltarla significa que falló.
+  * Si la tecla ya se completó, el bucle
+  * ya la eliminó y dio sus 150 puntos.
   *
-  * Si ya terminó, activeHold ya fue limpiado
-  * y este evento no causa una penalización.
+  * Si se suelta antes, recibe 50 puntos.
   */
  if(t.el.isConnected)t.el.remove();
 
  tiles=tiles.filter(x=>x!==t);
  activeHold=null;
 
- finishGame(false,"¡SOLTASTE LA TECLA LARGA!");
+ scoreLongTile(t.perfect,false);
 }
 
 board.addEventListener("pointerdown",boardDown,{passive:false});
@@ -791,15 +744,12 @@ function checkStage(){
  if(stageHits<12)return;
 
  stageHits=0;
-
  const data=saved.songs.sunflower;
 
  if(starsEarned<3){
   starsEarned++;
 
-  if(starsEarned>data.stars){
-   data.stars=starsEarned;
-  }
+  if(starsEarned>data.stars)data.stars=starsEarned;
 
   if(!data.paidStars.includes(starsEarned)){
    saved.diamonds+=50;
@@ -807,7 +757,6 @@ function checkStage(){
   }
 
   updateStars();
-
   speed+=45;
   spawnEvery=Math.max(650,spawnEvery-75);
 
@@ -816,7 +765,6 @@ function checkStage(){
 
   if(starsEarned===3){
    superDifficult=true;
-
    speed+=100;
    spawnEvery=600;
 
@@ -826,7 +774,6 @@ function checkStage(){
   }
 
   save();
-
  }else if(superDifficult){
   finishGame(true,"¡SÚPER DIFÍCIL COMPLETADO!");
  }
@@ -837,12 +784,9 @@ function finishGame(won,message){
  if(!running)return;
 
  stopGame();
-
  const data=saved.songs.sunflower;
 
- if(score>data.record){
-  data.record=score;
- }
+ if(score>data.record)data.record=score;
 
  let reward=0;
 
@@ -855,10 +799,8 @@ function finishGame(won,message){
  save();
 
  $("resultTitle").textContent=message||"PARTIDA TERMINADA";
-
  $("resultStars").textContent=
   "★".repeat(starsEarned)+"☆".repeat(3-starsEarned);
-
  $("resultScore").textContent=score;
 
  $("resultReward").textContent=reward
@@ -868,10 +810,7 @@ function finishGame(won,message){
  $("pauseOverlay").style.display="none";
  document.body.classList.remove("game-open");
 
- document.querySelectorAll(".screen").forEach(s=>{
-  s.classList.remove("active");
- });
-
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
  $("resultScreen").classList.add("active");
 }
 
@@ -880,14 +819,12 @@ function pauseGame(){
  if(!running||paused)return;
 
  if(activeHold){
-  $("gameMessage").textContent="¡COMPLETA LA TECLA LARGA PRIMERO!";
+  $("gameMessage").textContent="¡COMPLETA O SUELTA LA TECLA LARGA!";
   return;
  }
 
  paused=true;
-
  if(animation)cancelAnimationFrame(animation);
-
  animation=0;
  $("pauseOverlay").style.display="grid";
 }
@@ -897,10 +834,8 @@ function resumeGame(){
 
  paused=false;
  $("pauseOverlay").style.display="none";
-
  lastTime=performance.now();
  lastSpawn=performance.now();
-
  animation=requestAnimationFrame(loop);
 }
 
