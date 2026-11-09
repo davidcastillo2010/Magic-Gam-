@@ -8,12 +8,7 @@
 <title>MAGIC-GAM</title>
 <style>
 *{box-sizing:border-box}
-html,body,body *{
--webkit-user-select:none!important;
-user-select:none!important;
--webkit-touch-callout:none!important;
--webkit-tap-highlight-color:transparent;
-}
+html,body,body *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:#080817;color:white;font-family:Arial,sans-serif;min-height:100vh}
 body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 10% 20%,#ed174b35,transparent 35%),radial-gradient(circle at 90% 30%,#087bff45,transparent 40%),radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%)}
 button{font:inherit;color:white;cursor:pointer}
@@ -22,8 +17,7 @@ header{display:flex;justify-content:space-between;align-items:center;padding:14p
 .logo{font-size:25px;font-weight:1000;font-style:italic;background:linear-gradient(90deg,#20eaff,#fff,#ff315e);background-clip:text;color:transparent}
 .diamonds{border:1px solid #21cfff;border-radius:25px;padding:10px 14px;background:#07172c;color:#5deaff;font-weight:bold}
 main{width:min(100% - 28px,460px);margin:auto}
-.screen{display:none}
-.screen.active{display:block}
+.screen{display:none}.screen.active{display:block}
 h1{text-align:center;font-size:34px;font-style:italic}
 .subtitle{text-align:center;color:#aab8d9;font-size:13px}
 .menu{display:grid;gap:14px;margin:28px 0}
@@ -49,8 +43,7 @@ footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
 body.game-open header,body.game-open main>section:not(#gameScreen),body.game-open footer{display:none!important}
 #gameBoard{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;border:2px solid #244c91;background:radial-gradient(ellipse at 50% 100%,#31104d,#080d25 70%);box-shadow:inset 0 0 35px #087bff33;touch-action:none}
 .lanes{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr)}
-.lane{position:relative;border-right:1px solid #378bff45}
-.lane:last-child{border:0}
+.lane{position:relative;border-right:1px solid #378bff45}.lane:last-child{border:0}
 .tile{position:absolute;width:84%;left:8%;height:clamp(145px,19vh,180px);top:-300px;border-radius:34px;background:linear-gradient(180deg,#172d65,#050b20);border:3px solid #21dfff;box-shadow:0 0 16px #00caff,inset 0 0 18px #1269d8;touch-action:none}
 .tile.color0{border-color:#ff3c92;box-shadow:0 0 16px #ff2589,inset 0 0 15px #a31159}
 .tile.color1{border-color:#20eaff;box-shadow:0 0 16px #20eaff,inset 0 0 15px #1269d8}
@@ -75,8 +68,7 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 .progress-star.lit{color:#ffd447;text-shadow:0 0 8px #ffbd24,0 0 20px #ff9d00;transform:scale(1.12)}
 #gameMessage{position:absolute;bottom:22px;left:0;right:0;z-index:7;text-align:center;color:#63eaff;font-size:16px;font-weight:bold;pointer-events:none}
 #feedback{position:absolute;top:42%;left:0;right:0;z-index:9;text-align:center;font-size:29px;font-weight:1000;pointer-events:none;opacity:0;transition:opacity .12s;text-shadow:0 0 15px currentColor}
-#feedback.perfect{color:#ff426f}
-#feedback.late{color:#ffd447}
+#feedback.perfect{color:#ff426f}#feedback.late{color:#ffd447}
 #pauseOverlay{display:none;position:absolute;inset:0;z-index:30;background:#050817ef;place-items:center;padding:25px}
 .pause-card{width:100%;max-width:340px;text-align:center;background:#111a38;border:1px solid #28dfff;border-radius:24px;padding:25px;box-shadow:0 0 25px #078dff66}
 #resultScreen{text-align:center}
@@ -220,7 +212,7 @@ import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut,set
 import{getFirestore,doc,getDoc,setDoc,updateDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv0IiwZg",
+ apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv0iIzwRZg",
  authDomain:"magic-gam.firebaseapp.com",
  projectId:"magic-gam",
  storageBucket:"magic-gam.firebasestorage.app",
@@ -395,47 +387,30 @@ window.magicGamCloudWrite=async save=>{
 const $=id=>document.getElementById(id);
 const nf=new Intl.NumberFormat("en-US");
 
-let saved={
- diamonds:0,
- songs:{sunflower:{stars:0,record:0,paidStars:[]}}
-};
-
+let saved={diamonds:0,songs:{sunflower:{stars:0,record:0,paidStars:[]}}};
 let saveQueue=Promise.resolve();
 
 function norm(raw){
  const s=raw?.songs?.sunflower||{};
  return{
   diamonds:Math.max(0,Math.floor(Number(raw?.diamonds)||0)),
-  songs:{
-   sunflower:{
-    stars:Math.max(0,Math.min(3,Math.floor(Number(s.stars)||0))),
-    record:Math.max(0,Math.floor(Number(s.record)||0)),
-    paidStars:[...new Set((Array.isArray(s.paidStars)?s.paidStars:[]).map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=3))]
-   }
-  }
+  songs:{sunflower:{
+   stars:Math.max(0,Math.min(3,Math.floor(Number(s.stars)||0))),
+   record:Math.max(0,Math.floor(Number(s.record)||0)),
+   paidStars:[...new Set((Array.isArray(s.paidStars)?s.paidStars:[]).map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=3))]
+  }}
  };
 }
 
-window.magicGamApplySave=s=>{
- saved=norm(s);
- updateUI();
-};
-
-window.magicGamFlushSave=async()=>{
- if(window.magicGamCloudWrite)await window.magicGamCloudWrite(saved);
-};
+window.magicGamApplySave=s=>{saved=norm(s);updateUI();};
+window.magicGamFlushSave=async()=>{if(window.magicGamCloudWrite)await window.magicGamCloudWrite(saved);};
 
 function fmt(n){return nf.format(Math.round(n));}
 
 function fmtRecord(n){
  n=Math.round(Number(n)||0);
  if(n<1e6)return fmt(n);
- for(const u of[
-  {v:1e15,s:"Q"},
-  {v:1e12,s:"T"},
-  {v:1e9,s:"B"},
-  {v:1e6,s:"M"}
- ]){
+ for(const u of[{v:1e15,s:"Q"},{v:1e12,s:"T"},{v:1e9,s:"B"},{v:1e6,s:"M"}]){
   if(n>=u.v)return(n/u.v).toFixed(2).replace(/\.?0+$/,"")+u.s;
  }
  return fmt(n);
@@ -444,10 +419,8 @@ function fmtRecord(n){
 function save(){
  saved=norm(saved);
  updateUI();
-
  const uid=window.magicGamCurrentUid;
  if(uid)localStorage.setItem("magicGamSave_"+uid,JSON.stringify(saved));
-
  if(window.magicGamCloudWrite){
   saveQueue=saveQueue.then(()=>window.magicGamCloudWrite(saved)).catch(e=>console.error("Error guardando en Firebase:",e));
  }
@@ -478,13 +451,9 @@ let activeHold=null,lastLane=-1,feedbackTimer=null;
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
 
-function basePoints(){
- return starsEarned===0?2:starsEarned===1?3:4;
-}
+function basePoints(){return starsEarned===0?2:starsEarned===1?3:4;}
 
-function selectSong(){
- startGame();
-}
+function selectSong(){startGame();}
 
 function startGame(){
  stopGame();
@@ -493,68 +462,43 @@ function startGame(){
  $("gameScreen").classList.add("active");
  $("pauseOverlay").style.display="none";
  lanes.forEach(l=>l.innerHTML="");
- tiles=[];
- score=0;
- combo=0;
- starsEarned=0;
- stageHits=0;
- speed=210;
- spawnEvery=950;
- activeHold=null;
- lastLane=-1;
- paused=false;
-
+ tiles=[];score=0;combo=0;starsEarned=0;stageHits=0;
+ speed=210;spawnEvery=950;activeHold=null;lastLane=-1;paused=false;
  $("score").textContent="0";
  $("stageLabel").textContent="⭐ PRIMERA ESTRELLA";
  $("gameSong").textContent="SUNFLOWER · FÁCIL";
  $("comboDisplay").textContent="COMBO x0";
  $("gameMessage").textContent="";
- hideFeedback();
- updateStars();
-
- running=true;
- lastTime=performance.now();
- lastSpawn=lastTime;
+ hideFeedback();updateStars();
+ running=true;lastTime=performance.now();lastSpawn=lastTime;
  animation=requestAnimationFrame(loop);
 }
 
 function stopGame(){
- running=false;
- paused=false;
+ running=false;paused=false;
  if(animation)cancelAnimationFrame(animation);
- animation=0;
- activeHold=null;
+ animation=0;activeHold=null;
 }
 
 function updateStars(){
- for(let i=1;i<=3;i++){
-  $("star"+i).classList.toggle("lit",i<=starsEarned);
- }
+ for(let i=1;i<=3;i++)$("star"+i).classList.toggle("lit",i<=starsEarned);
 }
 
 function feedback(type,msg){
- const b=$("feedback");
- clearTimeout(feedbackTimer);
- b.className="";
- b.textContent=msg;
- b.classList.add(type);
- b.style.opacity="1";
+ const b=$("feedback");clearTimeout(feedbackTimer);
+ b.className="";b.textContent=msg;b.classList.add(type);b.style.opacity="1";
  feedbackTimer=setTimeout(hideFeedback,350);
 }
 
-function hideFeedback(){
- $("feedback").style.opacity="0";
-}
+function hideFeedback(){$("feedback").style.opacity="0";}
 
 function registerCombo(){
- combo++;
- $("comboDisplay").textContent="COMBO x"+combo;
+ combo++;$("comboDisplay").textContent="COMBO x"+combo;
  feedback("perfect","¡PERFECTO!");
 }
 
 function registerLate(){
- combo=0;
- $("comboDisplay").textContent="COMBO x0";
+ combo=0;$("comboDisplay").textContent="COMBO x0";
  feedback("late","TARDADO");
 }
 
@@ -572,20 +516,13 @@ function points(perfect,extra=0){
   registerLate();
   p=basePoints()+extra;
  }
- p=Math.round(p);
- score+=p;
- $("score").textContent=fmt(score);
+ p=Math.round(p);score+=p;$("score").textContent=fmt(score);
 }
 
-function scoreNormal(perfect){
- points(perfect);
- stageHits++;
- checkStage();
-}
+function scoreNormal(perfect){points(perfect);stageHits++;checkStage();}
 
 function scoreLong(perfect,complete){
- points(perfect,complete?2:0);
- stageHits++;
+ points(perfect,complete?2:0);stageHits++;
  $("gameMessage").textContent=complete?"¡TECLA LARGA COMPLETADA! +2 EXTRA":"¡TECLA LARGA VÁLIDA!";
  checkStage();
 }
@@ -594,63 +531,36 @@ function spawnTile(){
  let lane=Math.floor(Math.random()*4);
  if(lane===lastLane)lane=(lane+1+Math.floor(Math.random()*3))%4;
  lastLane=lane;
-
  const lng=Math.random()<.02;
  const tile=document.createElement("div");
  tile.className="tile color"+lane+(lng?" long":"");
 
  if(lng){
-  const a=document.createElement("div");
-  a.className="long-arrows";
-  a.innerHTML="⌄<br>⌄<br>⌄";
-
-  const l=document.createElement("div");
-  l.className="long-label";
-  l.textContent="MANTÉN";
-
-  const h=document.createElement("div");
-  h.className="long-hand";
-  h.textContent="👆";
-
-  const p=document.createElement("div");
-  p.className="long-progress";
+  const a=document.createElement("div");a.className="long-arrows";a.innerHTML="⌄<br>⌄<br>⌄";
+  const l=document.createElement("div");l.className="long-label";l.textContent="MANTÉN";
+  const h=document.createElement("div");h.className="long-hand";h.textContent="👆";
+  const p=document.createElement("div");p.className="long-progress";
   tile.append(a,l,h,p);
  }
 
  lanes[lane].appendChild(tile);
  const h=tile.offsetHeight;
-
- tiles.push({
-  el:tile,lane,y:-h-10,height:h,long:lng,
-  touched:false,holding:false,holdPointer:null,
-  holdStartY:null,perfect:false,progress:0
- });
+ tiles.push({el:tile,lane,y:-h-10,height:h,long:lng,touched:false,holding:false,holdPointer:null,holdStartY:null,perfect:false,progress:0});
 }
 
 function loop(now){
  if(!running||paused)return;
-
- const dt=Math.min((now-lastTime)/1000,.04);
- lastTime=now;
+ const dt=Math.min((now-lastTime)/1000,.04);lastTime=now;
  const bh=board.clientHeight;
-
- if(now-lastSpawn>=spawnEvery){
-  spawnTile();
-  lastSpawn=now;
- }
+ if(now-lastSpawn>=spawnEvery){spawnTile();lastSpawn=now;}
 
  for(let i=tiles.length-1;i>=0;i--){
-  const t=tiles[i];
-  t.y+=speed*dt;
-  t.el.style.top=t.y+"px";
-
+  const t=tiles[i];t.y+=speed*dt;t.el.style.top=t.y+"px";
   if(t.long&&t.holding){
    if(crossing(t))t.perfect=true;
-
    t.progress=Math.max(0,Math.min(1,(t.y-t.holdStartY)/t.height));
    const p=t.el.querySelector(".long-progress");
    if(p)p.style.height=(t.progress*100)+"%";
-
    if(t.progress>=1){
     if(t.el.isConnected)t.el.remove();
     tiles.splice(i,1);
@@ -660,13 +570,8 @@ function loop(now){
     continue;
    }
   }
-
-  if(!t.touched&&t.y>=bh){
-   finishGame("¡TECLA PERDIDA!");
-   return;
-  }
+  if(!t.touched&&t.y>=bh){finishGame("¡TECLA PERDIDA!");return;}
  }
-
  animation=requestAnimationFrame(loop);
 }
 
@@ -674,36 +579,21 @@ function boardDown(e){
  if(!running||paused)return;
  e.preventDefault();
  if(activeHold)return;
-
  let chosen=null;
 
  for(const t of tiles){
   if(t.touched)continue;
   const r=t.el.getBoundingClientRect();
-
-  if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom){
-   chosen=t;
-   break;
-  }
+  if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom){chosen=t;break;}
  }
 
- if(!chosen){
-  finishGame("¡TOCASTE FUERA DE UNA TECLA!");
-  return;
- }
-
- chosen.touched=true;
- chosen.perfect=crossing(chosen);
+ if(!chosen){finishGame("¡TOCASTE FUERA DE UNA TECLA!");return;}
+ chosen.touched=true;chosen.perfect=crossing(chosen);
 
  if(chosen.long){
-  chosen.holding=true;
-  chosen.holdPointer=e.pointerId;
-  chosen.holdStartY=chosen.y;
-  chosen.el.classList.add("holding");
-  activeHold=chosen;
-
+  chosen.holding=true;chosen.holdPointer=e.pointerId;chosen.holdStartY=chosen.y;
+  chosen.el.classList.add("holding");activeHold=chosen;
   try{board.setPointerCapture(e.pointerId);}catch(err){}
-
   $("gameMessage").textContent="¡MANTÉN PRESIONADO!";
  }else{
   if(chosen.el.isConnected)chosen.el.remove();
@@ -714,7 +604,6 @@ function boardDown(e){
 
 function boardUp(e){
  if(!activeHold||activeHold.holdPointer!==e.pointerId)return;
-
  const t=activeHold;
  if(t.el.isConnected)t.el.remove();
  tiles=tiles.filter(x=>x!==t);
@@ -729,22 +618,15 @@ board.addEventListener("pointercancel",boardUp);
 function checkStage(){
  if(stageHits<12)return;
  stageHits=0;
-
  if(starsEarned<3){
   starsEarned++;
   const d=saved.songs.sunflower;
-
   if(starsEarned>d.stars)d.stars=starsEarned;
-
   if(!d.paidStars.includes(starsEarned)){
    saved.diamonds+=50;
    d.paidStars.push(starsEarned);
   }
-
-  updateStars();
-  speed+=35;
-  spawnEvery=Math.max(650,spawnEvery-60);
-
+  updateStars();speed+=35;spawnEvery=Math.max(650,spawnEvery-60);
   const n=["","PRIMERA","SEGUNDA","TERCERA"];
   $("stageLabel").textContent="⭐ "+n[starsEarned]+" ESTRELLA";
   $("gameSong").textContent="SUNFLOWER · FÁCIL";
@@ -758,16 +640,13 @@ function checkStage(){
 function finishGame(msg){
  if(!running)return;
  stopGame();
-
  const d=saved.songs.sunflower;
  if(score>d.record)d.record=score;
  save();
-
  $("resultTitle").textContent=msg||"PARTIDA TERMINADA";
  $("resultStars").textContent="★".repeat(starsEarned)+"☆".repeat(3-starsEarned);
  $("resultScore").textContent=fmt(score);
  $("resultReward").textContent="Diamantes obtenidos por estrellas: "+fmt(starsEarned*50)+" 💎";
-
  $("pauseOverlay").style.display="none";
  document.body.classList.remove("game-open");
  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
@@ -776,12 +655,10 @@ function finishGame(msg){
 
 function pauseGame(){
  if(!running||paused)return;
-
  if(activeHold){
   $("gameMessage").textContent="Puedes soltar la tecla larga cuando quieras.";
   return;
  }
-
  paused=true;
  if(animation)cancelAnimationFrame(animation);
  animation=0;
@@ -808,13 +685,8 @@ if("serviceWorker"in navigator){
  });
 }
 
-/* Bloquea la selección de texto y el menú de búsqueda de Android/Chrome. */
-document.addEventListener("contextmenu",function(e){
- e.preventDefault();
-});
-document.addEventListener("selectstart",function(e){
- e.preventDefault();
-});
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("selectstart",e=>e.preventDefault());
 </script>
 </body>
 </html>
