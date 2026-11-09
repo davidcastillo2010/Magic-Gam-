@@ -1,0 +1,24 @@
+{
+  "id": "/Magic-Gam-/",
+  "name": "MAGIC-GAM",
+  "short_name": "MAGIC-GAM",
+  "description": "Juego musical MAGIC-GAM",
+  "start_url": "/Magic-Gam-/",
+  "scope": "/Magic-Gam-/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080817",
+  "theme_color": "#080817",
+  "icons": [
+    {
+      "src": "/Magic-Gam-/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/Magic-Gam-/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
