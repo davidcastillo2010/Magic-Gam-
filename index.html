@@ -152,7 +152,7 @@ body.game-open footer{display:none!important}
  background:#ffffff45;pointer-events:none
 }
 
-/* LÍNEA DE COMBO: 10% MÁS ABAJO */
+/* LÍNEA DE COMBO */
 .combo-line{
  position:absolute;left:0;right:0;top:70%;
  height:6px;z-index:5;pointer-events:none;
@@ -209,15 +209,17 @@ body.game-open footer{display:none!important}
  z-index:7;text-align:center;color:#63eaff;
  font-size:16px;font-weight:bold;pointer-events:none
 }
-#perfect{
+#feedback{
  position:absolute;top:43%;left:0;right:0;
- z-index:8;text-align:center;color:#ff426f;
- font-size:27px;font-weight:1000;
- text-shadow:0 0 15px #ff174d;
+ z-index:9;text-align:center;
+ font-size:29px;font-weight:1000;
  pointer-events:none;opacity:0;
  transform:scale(.8);
- transition:opacity .08s,transform .08s
+ transition:opacity .08s,transform .08s;
+ text-shadow:0 0 15px currentColor
 }
+#feedback.perfect{color:#ff426f}
+#feedback.late{color:#ffd447}
 
 /* PAUSA */
 #pauseOverlay{
@@ -251,9 +253,7 @@ body.game-open footer{display:none!important}
 <section id="home" class="screen active">
  <h1>MAGIC-GAM</h1>
  <p class="subtitle">TU RITMO. TU VELOCIDAD. TU RÉCORD.</p>
-
  <div style="text-align:center;font-size:105px;margin:40px 0;text-shadow:0 0 25px #14cfff">♫</div>
-
  <div class="menu">
   <button class="neon-btn play" onclick="showScreen('songs')">▶ JUGAR</button>
   <button class="neon-btn" onclick="showScreen('records')">🏆 RÉCORDS</button>
@@ -291,7 +291,6 @@ body.game-open footer{display:none!important}
 </section>
 
 <section id="gameScreen" class="screen">
-
  <div id="gameTop">
   <button class="pause" onclick="pauseGame()">Ⅱ PAUSA</button>
   <div class="game-score" id="score">0</div>
@@ -317,7 +316,7 @@ body.game-open footer{display:none!important}
   <div class="combo-line"></div>
  </div>
 
- <div id="perfect">PERFECT!</div>
+ <div id="feedback"></div>
  <div id="gameMessage">¡Toca las teclas!</div>
 
  <div id="pauseOverlay">
@@ -328,19 +327,16 @@ body.game-open footer{display:none!important}
    <button class="neon-btn" onclick="showScreen('home')">⌂ SALIR AL MENÚ</button>
   </div>
  </div>
-
 </section>
 
 <section id="resultScreen" class="screen">
  <h1 id="resultTitle">PARTIDA TERMINADA</h1>
  <div class="result-stars" id="resultStars">☆☆☆</div>
-
  <div class="panel">
   <h2 id="resultScore">0</h2>
   <p class="small">PUNTUACIÓN FINAL</p>
   <p id="resultReward">¡Buen intento!</p>
  </div>
-
  <div class="result-buttons">
   <button class="neon-btn play" onclick="startGame()">↻ VOLVER A JUGAR</button>
   <button class="neon-btn" onclick="showScreen('home')">⌂ MENÚ PRINCIPAL</button>
@@ -350,7 +346,6 @@ body.game-open footer{display:none!important}
 <section id="records" class="screen">
  <button class="back" onclick="showScreen('home')">← VOLVER</button>
  <h1>🏆 RÉCORDS</h1>
-
  <div class="panel">
   <strong>SUNFLOWER</strong>
   <h2 id="recordPage">0</h2>
@@ -360,7 +355,6 @@ body.game-open footer{display:none!important}
 </section>
 
 <footer>MAGIC-GAM · JUEGA CON EL RITMO</footer>
-
 </main>
 
 <script>
@@ -445,10 +439,11 @@ let speed=210;
 let spawnEvery=950;
 let activeHold=null;
 let lastLane=-1;
-let perfectTimer=null;
+let feedbackTimer=null;
 
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
+const COMBO_TOLERANCE=24;
 
 /* INICIAR */
 function selectSong(song){
@@ -487,9 +482,7 @@ function startGame(){
  $("gameSong").textContent="SUNFLOWER · FÁCIL";
  $("comboDisplay").textContent="COMBO x0";
  $("gameMessage").textContent="¡Toca las teclas!";
- $("perfect").style.opacity="0";
- $("perfect").style.transform="scale(.8)";
-
+ hideFeedback();
  updateStars();
 
  running=true;
@@ -503,9 +496,7 @@ function stopGame(){
  running=false;
  paused=false;
 
- if(animation){
-  cancelAnimationFrame(animation);
- }
+ if(animation)cancelAnimationFrame(animation);
 
  animation=0;
  activeHold=null;
@@ -515,6 +506,79 @@ function updateStars(){
  for(let i=1;i<=3;i++){
   $("star"+i).classList.toggle("lit",i<=starsEarned);
  }
+}
+
+/* MENSAJES DE PRECISIÓN */
+function showFeedback(type,message){
+ const box=$("feedback");
+
+ clearTimeout(feedbackTimer);
+ box.textContent=message;
+ box.className=type;
+ box.style.opacity="1";
+ box.style.transform="scale(1.15)";
+
+ feedbackTimer=setTimeout(hideFeedback,500);
+}
+
+function hideFeedback(){
+ const box=$("feedback");
+ box.style.opacity="0";
+ box.style.transform="scale(.8)";
+}
+
+/* COMBO */
+function registerCombo(){
+ combo++;
+ $("comboDisplay").textContent="COMBO x"+combo;
+ showFeedback("perfect","PERFECT!");
+}
+
+function registerLate(){
+ combo=0;
+ $("comboDisplay").textContent="COMBO x0";
+ showFeedback("late","TARDADO");
+}
+
+/* PUNTOS DE TECLAS NORMALES */
+function scoreNormalTile(isPerfect){
+ score+=50;
+ stageHits++;
+
+ $("score").textContent=score;
+ $("gameMessage").textContent="+50 PUNTOS";
+
+ if(isPerfect){
+  registerCombo();
+ }else{
+  registerLate();
+ }
+
+ checkStage();
+}
+
+/* PUNTOS DE TECLAS LARGAS */
+function scoreLongTile(isPerfect){
+ score+=100;
+ stageHits++;
+
+ $("score").textContent=score;
+ $("gameMessage").textContent="¡TECLA LARGA COMPLETADA! +100";
+
+ if(isPerfect){
+  registerCombo();
+ }else{
+  registerLate();
+ }
+
+ checkStage();
+}
+
+/* COMPROBAR SI TOCÓ EN LA LÍNEA */
+function isTouchPerfect(clientY){
+ const rect=board.getBoundingClientRect();
+ const lineY=rect.top+rect.height*.70;
+ return Math.abs(clientY-lineY)<=COMBO_TOLERANCE;
 }
 
 /* CREAR TECLAS */
@@ -564,54 +628,9 @@ function spawnTile(){
   touched:false,
   holding:false,
   holdPointer:null,
-  startBottom:-10
+  holdStartY:null,
+  perfect:false
  });
-}
-
-/* EFECTO PERFECT INMEDIATO */
-function showPerfect(){
- const p=$("perfect");
-
- p.style.opacity="1";
- p.style.transform="scale(1.15)";
-
- clearTimeout(perfectTimer);
-
- perfectTimer=setTimeout(()=>{
-  p.style.opacity="0";
-  p.style.transform="scale(.8)";
- },450);
-}
-
-/* COMBO Y PROGRESO */
-function registerCombo(){
- combo++;
- $("comboDisplay").textContent="COMBO x"+combo;
- showPerfect();
-}
-
-/* ACIERTO NORMAL: PUNTOS INMEDIATOS */
-function scoreNormalTile(){
- score+=50;
- stageHits++;
-
- $("score").textContent=score;
- $("gameMessage").textContent="¡PERFECT! +50";
-
- registerCombo();
- checkStage();
-}
-
-/* ACIERTO DE TECLA LARGA */
-function scoreLongTile(){
- score+=100;
- stageHits++;
-
- $("score").textContent=score;
- $("gameMessage").textContent="¡TECLA LARGA COMPLETADA! +100";
-
- registerCombo();
- checkStage();
 }
 
 /* BUCLE PRINCIPAL */
@@ -622,7 +641,6 @@ function loop(now){
  lastTime=now;
 
  const boardHeight=board.clientHeight;
- const lineY=boardHeight*.70;
 
  if(now-lastSpawn>=spawnEvery){
   spawnTile();
@@ -635,42 +653,37 @@ function loop(now){
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
 
-  const bottom=t.y+t.height;
-
   /* PROGRESO DE TECLA LARGA */
   if(t.long&&t.holding){
-   const totalDistance=Math.max(1,lineY-t.startBottom);
-   const traveled=bottom-t.startBottom;
-   const percent=Math.max(0,Math.min(100,traveled/totalDistance*100));
+   const traveled=t.y-t.holdStartY;
+   const percent=Math.max(0,Math.min(100,(traveled/t.height)*100));
 
    const progress=t.el.querySelector(".long-progress");
    if(progress)progress.style.height=percent+"%";
+
+   /*
+    * LA TECLA LARGA SE COMPLETA DESPUÉS
+    * DE RECORRER UNA DISTANCIA IGUAL A SU ALTURA.
+    */
+   if(traveled>=t.height){
+    if(t.el.isConnected)t.el.remove();
+
+    tiles.splice(i,1);
+
+    if(activeHold===t)activeHold=null;
+
+    scoreLongTile(t.perfect);
+
+    if(!running)return;
+    continue;
+   }
   }
 
   /*
-   * LA LÍNEA NO ES UNA BARRERA PARA TECLAS NORMALES.
-   * LAS TECLAS NORMALES PUEDEN PASARLA.
+   * UNA TECLA SIN TOCAR QUE LLEGA AL FONDO
+   * TERMINA LA PARTIDA.
    */
-
-  /* TECLA LARGA COMPLETADA AL PASAR SU RECORRIDO */
-  if(t.long&&t.holding&&t.y>=lineY){
-   if(t.el.isConnected)t.el.remove();
-
-   tiles.splice(i,1);
-
-   if(activeHold===t)activeHold=null;
-
-   scoreLongTile();
-
-   if(!running)return;
-   continue;
-  }
-
-  /*
-   * SOLO SE PIERDE SI LA TECLA NO TOCADA
-   * LLEGA AL FONDO DE LA PANTALLA.
-   */
-  if(t.y>=boardHeight){
+  if(!t.touched&&t.y>=boardHeight){
    finishGame(false,"¡TECLA PERDIDA!");
    return;
   }
@@ -715,14 +728,16 @@ function boardDown(e){
 
  chosen.touched=true;
 
+ /* ¿TOCÓ JUSTO EN LA LÍNEA DE COMBO? */
+ chosen.perfect=isTouchPerfect(e.clientY);
+
  if(chosen.long){
   /* TECLA LARGA: MANTENER PRESIONADO */
   chosen.holding=true;
   chosen.holdPointer=e.pointerId;
-  chosen.startBottom=chosen.y+chosen.height;
+  chosen.holdStartY=chosen.y;
 
   chosen.el.classList.add("holding");
-
   activeHold=chosen;
 
   try{
@@ -730,18 +745,17 @@ function boardDown(e){
   }catch(err){}
 
   $("gameMessage").textContent="¡MANTÉN PRESIONADO!";
-  showPerfect();
-
  }else{
   /*
    * TECLA NORMAL:
+   * SE PUEDE TOCAR EN CUALQUIER PARTE.
    * DESAPARECE Y SUMA PUNTOS INMEDIATAMENTE.
    */
   if(chosen.el.isConnected)chosen.el.remove();
 
   tiles=tiles.filter(t=>t!==chosen);
 
-  scoreNormalTile();
+  scoreNormalTile(chosen.perfect);
  }
 }
 
@@ -753,6 +767,13 @@ function boardUp(e){
 
  const t=activeHold;
 
+ /*
+  * Si todavía no completó su recorrido,
+  * soltarla significa que falló.
+  *
+  * Si ya terminó, activeHold ya fue limpiado
+  * y este evento no causa una penalización.
+  */
  if(t.el.isConnected)t.el.remove();
 
  tiles=tiles.filter(x=>x!==t);
@@ -865,9 +886,7 @@ function pauseGame(){
 
  paused=true;
 
- if(animation){
-  cancelAnimationFrame(animation);
- }
+ if(animation)cancelAnimationFrame(animation);
 
  animation=0;
  $("pauseOverlay").style.display="grid";
