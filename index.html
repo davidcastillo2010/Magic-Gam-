@@ -62,9 +62,16 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 .progress-star{font-size:27px;color:#66708b;transition:.25s}
 .progress-star.lit{color:#ffd447;text-shadow:0 0 8px #ffbd24,0 0 20px #ff9d00;transform:scale(1.12)}
 #gameMessage{position:absolute;bottom:22px;left:0;right:0;z-index:7;text-align:center;color:#63eaff;font-size:16px;font-weight:bold;pointer-events:none}
-#feedback{position:absolute;top:43%;left:0;right:0;z-index:9;text-align:center;font-size:29px;font-weight:1000;pointer-events:none;opacity:0;transform:scale(.8);transition:opacity .08s,transform .08s;text-shadow:0 0 15px currentColor}
+#feedback{position:absolute;top:42%;left:0;right:0;z-index:12;text-align:center;font-size:clamp(34px,9vw,52px);font-weight:1000;letter-spacing:2px;pointer-events:none;opacity:0;transform:scale(.35) rotate(-7deg);text-shadow:0 0 8px currentColor,0 0 22px currentColor,0 0 40px currentColor}
 #feedback.perfect{color:#ff426f}
 #feedback.late{color:#ffd447}
+#feedback.pop{animation:comboPop .42s cubic-bezier(.15,.85,.25,1.35) forwards}
+@keyframes comboPop{
+ 0%{opacity:0;transform:scale(.35) rotate(-7deg);filter:blur(5px)}
+ 55%{opacity:1;transform:scale(1.25) rotate(2deg);filter:blur(0)}
+ 75%{opacity:1;transform:scale(.94) rotate(-1deg)}
+ 100%{opacity:1;transform:scale(1) rotate(0)}
+}
 #pauseOverlay{display:none;position:absolute;inset:0;z-index:30;background:#050817ef;place-items:center;padding:25px}
 .pause-card{width:100%;max-width:340px;text-align:center;background:#111a38;border:1px solid #28dfff;border-radius:24px;padding:25px;box-shadow:0 0 25px #078dff66}
 #resultScreen{text-align:center}
@@ -168,18 +175,13 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 </main>
 <script>
 const $=id=>document.getElementById(id);
+const numberFormat=new Intl.NumberFormat("en-US");
 
-const defaultSave={
- diamonds:0,
- songs:{sunflower:{stars:0,record:0,paidStars:[]}}
-};
+const defaultSave={diamonds:0,songs:{sunflower:{stars:0,record:0,paidStars:[]}}};
 
 let saved;
-try{
- saved=JSON.parse(localStorage.getItem("magicGamSave"))||defaultSave;
-}catch(e){
- saved=JSON.parse(JSON.stringify(defaultSave));
-}
+try{saved=JSON.parse(localStorage.getItem("magicGamSave"))||defaultSave;}
+catch(e){saved=JSON.parse(JSON.stringify(defaultSave));}
 
 saved.diamonds=Number(saved.diamonds)||0;
 saved.songs=saved.songs||{};
@@ -190,6 +192,10 @@ songSave.stars=Math.max(0,Math.min(3,Number(songSave.stars)||0));
 songSave.record=Number(songSave.record)||0;
 songSave.paidStars=Array.isArray(songSave.paidStars)?songSave.paidStars:[];
 
+function formatNumber(value){
+ return numberFormat.format(Math.round(value));
+}
+
 function save(){
  try{localStorage.setItem("magicGamSave",JSON.stringify(saved));}catch(e){}
  updateUI();
@@ -197,10 +203,10 @@ function save(){
 
 function updateUI(){
  const d=saved.songs.sunflower;
- $("diamondCount").textContent=saved.diamonds;
+ $("diamondCount").textContent=formatNumber(saved.diamonds);
  $("stars-sunflower").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);
- $("record-sunflower").textContent=d.record;
- $("recordPage").textContent=d.record;
+ $("record-sunflower").textContent=formatNumber(d.record);
+ $("recordPage").textContent=formatNumber(d.record);
  $("recordStars").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);
 }
 
@@ -213,33 +219,20 @@ function showScreen(id){
  updateUI();
 }
 
-let running=false;
-let paused=false;
-let tiles=[];
-let score=0;
-let combo=0;
-let starsEarned=0;
-let stageHits=0;
-let lastTime=0;
-let lastSpawn=0;
-let animation=0;
-let speed=210;
-let spawnEvery=950;
-let activeHold=null;
-let lastLane=-1;
-let feedbackTimer=null;
+let running=false,paused=false,tiles=[],score=0,combo=0,starsEarned=0,stageHits=0;
+let lastTime=0,lastSpawn=0,animation=0,speed=210,spawnEvery=950;
+let activeHold=null,lastLane=-1,feedbackTimer=null;
 
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
 
-/* PUNTOS BASE POR ESTRELLA */
+/* PUNTOS BASE FINALES: ENTEROS */
 function getBasePoints(){
- if(starsEarned===0)return 50;
- if(starsEarned===1)return 125;
- return 185;
+ if(starsEarned===0)return 13;
+ if(starsEarned===1)return 31;
+ return 46;
 }
 
-/* INICIO */
 function selectSong(song){startGame();}
 
 function startGame(){
@@ -248,20 +241,10 @@ function startGame(){
  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
  $("gameScreen").classList.add("active");
  $("pauseOverlay").style.display="none";
-
  lanes.forEach(l=>l.innerHTML="");
  tiles=[];
-
- score=0;
- combo=0;
- starsEarned=0;
- stageHits=0;
- speed=210;
- spawnEvery=950;
- activeHold=null;
- lastLane=-1;
- paused=false;
-
+ score=0;combo=0;starsEarned=0;stageHits=0;
+ speed=210;spawnEvery=950;activeHold=null;lastLane=-1;paused=false;
  $("score").textContent="0";
  $("stageLabel").textContent="⭐ PRIMERA ESTRELLA";
  $("gameSong").textContent="SUNFLOWER · FÁCIL";
@@ -269,7 +252,6 @@ function startGame(){
  $("gameMessage").textContent="";
  hideFeedback();
  updateStars();
-
  running=true;
  lastTime=performance.now();
  lastSpawn=lastTime;
@@ -277,36 +259,33 @@ function startGame(){
 }
 
 function stopGame(){
- running=false;
- paused=false;
+ running=false;paused=false;
  if(animation)cancelAnimationFrame(animation);
- animation=0;
- activeHold=null;
+ animation=0;activeHold=null;
 }
 
 function updateStars(){
- for(let i=1;i<=3;i++){
-  $("star"+i).classList.toggle("lit",i<=starsEarned);
- }
+ for(let i=1;i<=3;i++)$("star"+i).classList.toggle("lit",i<=starsEarned);
 }
 
-/* MENSAJES */
+/* ANIMACIÓN DEL TEXTO */
 function showFeedback(type,message){
  const box=$("feedback");
  clearTimeout(feedbackTimer);
+ box.className="";
  box.textContent=message;
- box.className=type;
- box.style.opacity="1";
- box.style.transform="scale(1.15)";
- feedbackTimer=setTimeout(hideFeedback,500);
+ box.classList.add(type);
+ void box.offsetWidth;
+ box.classList.add("pop");
+ feedbackTimer=setTimeout(hideFeedback,430);
 }
 
 function hideFeedback(){
- $("feedback").style.opacity="0";
- $("feedback").style.transform="scale(.8)";
+ const box=$("feedback");
+ box.classList.remove("pop");
+ box.style.opacity="0";
 }
 
-/* COMBO PROGRESIVO */
 function registerCombo(){
  combo++;
  $("comboDisplay").textContent="COMBO x"+combo;
@@ -319,60 +298,49 @@ function registerLate(){
  showFeedback("late","TARDADO");
 }
 
-/* LA TECLA DEBE ESTAR CRUZANDO LA LÍNEA DEL 70%.
-   NO IMPORTA EN QUÉ PARTE DE LA TECLA TOQUE EL JUGADOR. */
+/* LA TECLA DEBE ESTAR CRUZANDO LA LÍNEA DEL 70% */
 function isTileCrossingLine(t){
  const lineY=board.clientHeight*.70;
- const tileTop=t.y;
- const tileBottom=t.y+t.height;
- return tileTop<=lineY && tileBottom>=lineY;
+ return t.y<=lineY && t.y+t.height>=lineY;
 }
 
-/* PUNTUACIÓN: CADA COMBO MULTIPLICA POR 3 */
+/* COMBO PROGRESIVO: X3, X9, X27... */
 function calculatePoints(perfect,extra=0){
  const base=getBasePoints();
  let points;
 
  if(perfect){
   registerCombo();
-  points=Math.round(base*Math.pow(3,combo))+extra;
+  points=base*Math.pow(3,combo)+extra;
  }else{
   registerLate();
   points=base+extra;
  }
 
+ points=Math.round(points);
  score+=points;
- $("score").textContent=score;
+ $("score").textContent=formatNumber(score);
  return points;
 }
 
-/* TECLA NORMAL */
 function scoreNormalTile(perfect){
  calculatePoints(perfect,0);
  stageHits++;
  checkStage();
 }
 
-/* TECLA LARGA */
+/* TECLA LARGA: BONO +25 */
 function scoreLongTile(perfect,completed){
- const extra=completed?100:0;
+ const extra=completed?25:0;
  calculatePoints(perfect,extra);
  stageHits++;
-
- $("gameMessage").textContent=completed
-  ?"¡TECLA LARGA COMPLETADA! +100 EXTRA"
-  :"¡TECLA LARGA VÁLIDA!";
-
+ $("gameMessage").textContent=completed?"¡TECLA LARGA COMPLETADA! +25 EXTRA":"¡TECLA LARGA VÁLIDA!";
  checkStage();
 }
 
-/* CREAR TECLAS */
 function spawnTile(){
  let lane=Math.floor(Math.random()*4);
-
- if(lane===lastLane){
-  lane=(lane+1+Math.floor(Math.random()*3))%4;
- }
+ if(lane===lastLane)lane=(lane+1+Math.floor(Math.random()*3))%4;
  lastLane=lane;
 
  const isLong=Math.random()<.20;
@@ -383,66 +351,39 @@ function spawnTile(){
   const arrows=document.createElement("div");
   arrows.className="long-arrows";
   arrows.innerHTML="⌄<br>⌄<br>⌄";
-
   const label=document.createElement("div");
   label.className="long-label";
   label.textContent="MANTÉN";
-
   const hand=document.createElement("div");
   hand.className="long-hand";
   hand.textContent="👆";
-
   const progress=document.createElement("div");
   progress.className="long-progress";
-
   tile.append(arrows,label,hand,progress);
  }
 
  lanes[lane].appendChild(tile);
  const h=tile.offsetHeight;
-
- tiles.push({
-  el:tile,
-  lane:lane,
-  y:-h-10,
-  height:h,
-  long:isLong,
-  touched:false,
-  holding:false,
-  holdPointer:null,
-  holdStartY:null,
-  perfect:false,
-  progress:0
- });
+ tiles.push({el:tile,lane,y:-h-10,height:h,long:isLong,touched:false,holding:false,holdPointer:null,holdStartY:null,perfect:false,progress:0});
 }
 
-/* BUCLE */
 function loop(now){
  if(!running||paused)return;
-
  const dt=Math.min((now-lastTime)/1000,.04);
  lastTime=now;
  const boardHeight=board.clientHeight;
 
- if(now-lastSpawn>=spawnEvery){
-  spawnTile();
-  lastSpawn=now;
- }
+ if(now-lastSpawn>=spawnEvery){spawnTile();lastSpawn=now;}
 
  for(let i=tiles.length-1;i>=0;i--){
   const t=tiles[i];
-
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
 
-  /* UNA TECLA LARGA PUEDE CONSEGUIR PERFECTO
-     SI CRUZA LA LÍNEA MIENTRAS SE MANTIENE PRESIONADA. */
   if(t.long&&t.holding){
    if(isTileCrossingLine(t))t.perfect=true;
-
    const traveled=t.y-t.holdStartY;
    t.progress=Math.max(0,Math.min(1,traveled/t.height));
-
    const progress=t.el.querySelector(".long-progress");
    if(progress)progress.style.height=(t.progress*100)+"%";
 
@@ -456,45 +397,27 @@ function loop(now){
    }
   }
 
-  if(!t.touched&&t.y>=boardHeight){
-   finishGame("¡TECLA PERDIDA!");
-   return;
-  }
+  if(!t.touched&&t.y>=boardHeight){finishGame("¡TECLA PERDIDA!");return;}
  }
-
  animation=requestAnimationFrame(loop);
 }
 
-/* DETECTAR TOQUE */
 function boardDown(e){
  if(!running||paused)return;
  e.preventDefault();
-
  if(activeHold)return;
 
  let chosen=null;
-
  for(const t of tiles){
   if(t.touched)continue;
-
   const r=t.el.getBoundingClientRect();
   const inside=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
-
-  if(inside){
-   chosen=t;
-   break;
-  }
+  if(inside){chosen=t;break;}
  }
 
- if(!chosen){
-  finishGame("¡TOCASTE FUERA DE UNA TECLA!");
-  return;
- }
+ if(!chosen){finishGame("¡TOCASTE FUERA DE UNA TECLA!");return;}
 
  chosen.touched=true;
-
- /* PERFECTO DEPENDE DE LA POSICIÓN DE LA TECLA,
-    NO DEL LUGAR DONDE SE TOCA LA PANTALLA. */
  chosen.perfect=isTileCrossingLine(chosen);
 
  if(chosen.long){
@@ -503,9 +426,7 @@ function boardDown(e){
   chosen.holdStartY=chosen.y;
   chosen.el.classList.add("holding");
   activeHold=chosen;
-
   try{board.setPointerCapture(e.pointerId);}catch(err){}
-
   $("gameMessage").textContent="¡MANTÉN PRESIONADO!";
  }else{
   if(chosen.el.isConnected)chosen.el.remove();
@@ -514,17 +435,12 @@ function boardDown(e){
  }
 }
 
-/* SOLTAR TECLA LARGA: CUALQUIER DURACIÓN ES VÁLIDA */
 function boardUp(e){
- if(!activeHold)return;
- if(activeHold.holdPointer!==e.pointerId)return;
-
+ if(!activeHold||activeHold.holdPointer!==e.pointerId)return;
  const t=activeHold;
-
  if(t.el.isConnected)t.el.remove();
  tiles=tiles.filter(x=>x!==t);
  activeHold=null;
-
  scoreLongTile(t.perfect,false);
 }
 
@@ -532,14 +448,13 @@ board.addEventListener("pointerdown",boardDown,{passive:false});
 board.addEventListener("pointerup",boardUp);
 board.addEventListener("pointercancel",boardUp);
 
-/* ESTRELLAS: 12 ACIERTOS POR ESTRELLA */
+/* 12 ACIERTOS POR ESTRELLA */
 function checkStage(){
  if(stageHits<12)return;
  stageHits=0;
 
  if(starsEarned<3){
   starsEarned++;
-
   const data=saved.songs.sunflower;
   if(starsEarned>data.stars)data.stars=starsEarned;
 
@@ -551,47 +466,38 @@ function checkStage(){
   updateStars();
   speed+=35;
   spawnEvery=Math.max(650,spawnEvery-60);
-
   const names=["","PRIMERA","SEGUNDA","TERCERA"];
   $("stageLabel").textContent="⭐ "+names[starsEarned]+" ESTRELLA";
   $("gameSong").textContent="SUNFLOWER · FÁCIL";
   $("gameMessage").textContent="¡ESTRELLA CONSEGUIDA! +50 💎";
-
   save();
  }else{
   $("gameMessage").textContent="¡SIGUE JUGANDO!";
  }
 }
 
-/* TERMINAR PARTIDA */
 function finishGame(message){
  if(!running)return;
  stopGame();
-
  const data=saved.songs.sunflower;
  if(score>data.record)data.record=score;
  save();
-
  $("resultTitle").textContent=message||"PARTIDA TERMINADA";
  $("resultStars").textContent="★".repeat(starsEarned)+"☆".repeat(3-starsEarned);
- $("resultScore").textContent=score;
- $("resultReward").textContent="Diamantes obtenidos durante la partida: "+(starsEarned*50)+" 💎";
-
+ $("resultScore").textContent=formatNumber(score);
+ $("resultReward").textContent="Diamantes obtenidos durante la partida: "+formatNumber(starsEarned*50)+" 💎";
  $("pauseOverlay").style.display="none";
  document.body.classList.remove("game-open");
  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
  $("resultScreen").classList.add("active");
 }
 
-/* PAUSA */
 function pauseGame(){
  if(!running||paused)return;
-
  if(activeHold){
   $("gameMessage").textContent="¡PUEDES SOLTAR LA TECLA LARGA CUANDO QUIERAS!";
   return;
  }
-
  paused=true;
  if(animation)cancelAnimationFrame(animation);
  animation=0;
