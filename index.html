@@ -204,7 +204,7 @@ import {
  onAuthStateChanged, signOut, setPersistence, browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import {
- getFirestore, doc, getDoc, setDoc, serverTimestamp
+ getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -337,8 +337,58 @@ window.copyPlayerId = async function() {
  }
 };
 
+async function syncGameSaveWithCloud(){
+ const user=auth.currentUser;
+ if(!user)return;
+ const playerRef=doc(db,"players",user.uid);
+ const snapshot=await getDoc(playerRef);
+ if(!snapshot.exists())return;
+
+ let local={};
+ try{
+  local=JSON.parse(localStorage.getItem("magicGamSave"))||{};
+ }catch(error){
+  local={};
+ }
+
+ const localSong=local.songs?.sunflower||{};
+ const cloudSave=snapshot.data().gameSave||null;
+
+ const merged={
+  diamonds:Math.max(0,Number(local.diamonds)||0,Number(cloudSave?.diamonds)||0),
+  songs:{
+   sunflower:{
+    stars:Math.min(3,Math.max(0,Number(localSong.stars)||0,Number(cloudSave?.songs?.sunflower?.stars)||0)),
+    record:Math.max(0,Number(localSong.record)||0,Number(cloudSave?.songs?.sunflower?.record)||0),
+    paidStars:[...new Set([
+     ...(Array.isArray(localSong.paidStars)?localSong.paidStars:[]),
+     ...(Array.isArray(cloudSave?.songs?.sunflower?.paidStars)?cloudSave.songs.sunflower.paidStars:[])
+    ].map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=3))]
+   }
+  }
+ };
+
+ localStorage.setItem("magicGamSave",JSON.stringify(merged));
+ await updateDoc(playerRef,{gameSave:merged});
+ window.dispatchEvent(new CustomEvent("magicgam-cloud-loaded",{detail:merged}));
+}
+
+window.magicGamCloudSync=async function(gameSave){
+ if(!auth.currentUser)return;
+ await updateDoc(doc(db,"players",auth.currentUser.uid),{gameSave});
+};
+
 onAuthStateChanged(auth,async(user)=>{
  await displayPlayer(user);
+ if(user){
+  try{
+   await syncGameSaveWithCloud();
+   message("Tu cuenta y tu progreso están sincronizados.");
+  }catch(error){
+   console.error("Error al sincronizar MAGIC-GAM:",error);
+   message("Tu cuenta está conectada. No se pudo sincronizar el progreso; tu partida local sigue guardada.");
+  }
+ }
 });
 </script>
 
@@ -368,6 +418,16 @@ songSave.stars=Math.max(0,Math.min(3,Number(songSave.stars)||0));
 songSave.record=Number(songSave.record)||0;
 songSave.paidStars=Array.isArray(songSave.paidStars)?songSave.paidStars:[];
 
+window.addEventListener("magicgam-cloud-loaded",event=>{
+ const cloud=event.detail;
+ if(!cloud)return;
+
+ saved.diamonds=Number(cloud.diamonds)||0;
+ saved.songs=saved.songs||{};
+ saved.songs.sunflower=cloud.songs?.sunflower||{stars:0,record:0,paidStars:[]};
+ updateUI();
+});
+
 function formatNumber(value){
  return numberFormat.format(Math.round(value));
 }
@@ -394,7 +454,14 @@ function save(){
  try{
   localStorage.setItem("magicGamSave",JSON.stringify(saved));
  }catch(e){}
+
  updateUI();
+
+ if(window.magicGamCloudSync){
+  window.magicGamCloudSync(saved).catch(error=>{
+   console.error("No se pudo sincronizar MAGIC-GAM:",error);
+  });
+ }
 }
 
 function updateUI(){
