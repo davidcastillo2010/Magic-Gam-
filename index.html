@@ -11,7 +11,7 @@
 body{margin:0;background:#080817;color:white;font-family:Arial,sans-serif;min-height:100vh}
 body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 10% 20%,#ed174b35,transparent 35%),radial-gradient(circle at 90% 30%,#087bff45,transparent 40%),radial-gradient(circle at 50% 100%,#8b22ff35,transparent 45%)}
 button{font:inherit;color:white;cursor:pointer}
-header{display:flex;justify-content:space-between;align-items:center;padding:17px 15px}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px}
 .logo{font-size:25px;font-weight:1000;font-style:italic;background:linear-gradient(90deg,#20eaff,#fff,#ff315e);background-clip:text;color:transparent}
 .diamonds{border:1px solid #21cfff;border-radius:25px;padding:10px 14px;background:#07172c;color:#5deaff;font-weight:bold}
 main{width:min(100% - 28px,460px);margin:auto}
@@ -20,10 +20,10 @@ main{width:min(100% - 28px,460px);margin:auto}
 h1{text-align:center;font-size:34px;font-style:italic}
 .subtitle{text-align:center;color:#aab8d9;font-size:13px}
 .menu{display:grid;gap:14px;margin:28px 0}
-.neon-btn{width:100%;padding:17px;border-radius:22px;border:2px solid #19d9ff;background:linear-gradient(100deg,#10275b,#17102e,#44102c);font-size:18px;font-weight:bold;box-shadow:0 0 13px #078dff66;margin:5px 0}
+.neon-btn{width:100%;padding:16px;border-radius:22px;border:2px solid #19d9ff;background:linear-gradient(100deg,#10275b,#17102e,#44102c);font-size:17px;font-weight:bold;box-shadow:0 0 13px #078dff66;margin:5px 0}
 .play{border-color:#ff3c80;background:linear-gradient(100deg,#092e69,#30104d,#a40d49);box-shadow:0 0 20px #f12c8177}
 .back{background:transparent;border:1px solid #22cfff;color:#6beaff;border-radius:15px;padding:10px 18px;margin:10px 0}
-.panel{background:#10152d;border:1px solid #344b82;border-radius:18px;padding:13px;margin:12px 0}
+.panel{background:#10152d;border:1px solid #344b82;border-radius:18px;padding:15px;margin:12px 0}
 .song{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:1px solid #267ac0;background:linear-gradient(110deg,#101d40,#21102e);border-radius:17px;padding:10px;margin:12px 0}
 .cover{width:76px;height:76px;flex-shrink:0;border-radius:13px;display:grid;place-items:center;font-size:34px;background:linear-gradient(135deg,#f22b76,#2924a7,#08c9e8)}
 .song-info{flex:1;min-width:0}
@@ -33,6 +33,9 @@ h1{text-align:center;font-size:34px;font-style:italic}
 .song-status{font-size:11px;color:#54dcff}
 .notice{color:#a9badb;font-size:12px;line-height:1.5;text-align:center;margin:15px 0}
 footer{text-align:center;color:#60749c;font-size:11px;margin:30px 0}
+.account-id{font-size:20px;color:#55eaff;font-weight:bold;overflow-wrap:anywhere}
+.account-label{color:#aab8d9;font-size:12px}
+.status{font-size:12px;color:#65eaff;text-align:center;margin:12px 0;min-height:18px}
 #gameScreen.active{display:block;position:fixed;inset:0;z-index:20;width:100%;height:100vh;height:100dvh;max-width:none;margin:0;padding:0;overflow:hidden;background:radial-gradient(circle at 10% 15%,#e8175430,transparent 40%),radial-gradient(circle at 90% 85%,#087bff45,transparent 45%),#080817}
 body.game-open header,body.game-open main>section:not(#gameScreen),body.game-open footer{display:none!important}
 #gameBoard{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;border:2px solid #244c91;background:radial-gradient(ellipse at 50% 100%,#31104d,#080d25 70%);box-shadow:inset 0 0 35px #087bff33;touch-action:none}
@@ -86,8 +89,31 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
  <div class="menu">
   <button class="neon-btn play" onclick="showScreen('songs')">▶ JUGAR</button>
   <button class="neon-btn" onclick="showScreen('records')">🏆 RÉCORDS</button>
+  <button class="neon-btn" onclick="showScreen('account')">👤 MI CUENTA</button>
  </div>
+ <p class="notice">Puedes jugar como invitado o iniciar sesión con Google.</p>
 </section>
+
+<section id="account" class="screen">
+ <button class="back" onclick="showScreen('home')">← VOLVER</button>
+ <h1>MI CUENTA</h1>
+ <div class="panel">
+  <div id="accountState" class="status">No has iniciado sesión.</div>
+  <div id="accountDetails" style="display:none">
+   <p class="account-label">NOMBRE DEL JUGADOR</p>
+   <h2 id="accountName">Jugador</h2>
+   <p class="account-label">TU ID DE JUGADOR</p>
+   <p class="account-id" id="playerId">MG-...</p>
+   <button class="neon-btn" onclick="copyPlayerId()">📋 COPIAR ID</button>
+   <p class="account-label">Tu cuenta está vinculada a Google.</p>
+  </div>
+  <button id="googleLogin" class="neon-btn play" onclick="loginGoogle()">🔐 CONTINUAR CON GOOGLE</button>
+  <button id="googleLogout" class="neon-btn" style="display:none" onclick="logoutGoogle()">CERRAR SESIÓN</button>
+  <p class="notice">También puedes jugar como invitado. Tu partida local seguirá disponible.</p>
+ </div>
+ <div id="accountMessage" class="status"></div>
+</section>
+
 <section id="songs" class="screen">
  <button class="back" onclick="showScreen('home')">← VOLVER</button>
  <h1>CANCIONES</h1>
@@ -103,13 +129,14 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
   </div>
   <span class="song-status">GRATIS</span>
  </button>
- <p class="notice">La primera canción está desbloqueada gratis. Las demás canciones costarán 500 💎 cada una. La grabación original de Sunflower se añadirá cuando tengamos permiso para utilizarla.</p>
+ <p class="notice">La primera canción está desbloqueada gratis. Las demás canciones costarán 500 💎 cada una. La grabación original se añadirá cuando tengamos permiso para utilizarla.</p>
  <div class="panel">
   <strong>PRÓXIMAMENTE</strong>
   <p class="small">Aquí aparecerán las nuevas canciones de MAGIC-GAM.</p>
   <p class="song-status">🔒 Canciones por desbloquear: 500 💎</p>
  </div>
 </section>
+
 <section id="gameScreen" class="screen">
  <div id="gameTop">
   <button class="pause" onclick="pauseGame()">Ⅱ PAUSA</button>
@@ -141,6 +168,7 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
   </div>
  </div>
 </section>
+
 <section id="resultScreen" class="screen">
  <h1 id="resultTitle">PARTIDA TERMINADA</h1>
  <div class="result-stars" id="resultStars">☆☆☆</div>
@@ -154,6 +182,7 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
   <button class="neon-btn" onclick="showScreen('home')">⌂ MENÚ PRINCIPAL</button>
  </div>
 </section>
+
 <section id="records" class="screen">
  <button class="back" onclick="showScreen('home')">← VOLVER</button>
  <h1>🏆 RÉCORDS</h1>
@@ -166,33 +195,168 @@ body.game-open header,body.game-open main>section:not(#gameScreen),body.game-ope
 </section>
 <footer>MAGIC-GAM · JUEGA CON EL RITMO</footer>
 </main>
+
+<!-- Firebase Authentication y Firestore -->
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+import {
+ getAuth,GoogleAuthProvider,signInWithRedirect,getRedirectResult,
+ onAuthStateChanged,signOut
+} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import {
+ getFirestore,doc,getDoc,setDoc,serverTimestamp
+} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv40iIzwRZg",
+ authDomain:"magic-gam.firebaseapp.com",
+ projectId:"magic-gam",
+ storageBucket:"magic-gam.firebasestorage.app",
+ messagingSenderId:"751178083554",
+ appId:"1:751178083554:web:bc52c2bf8167eaeadcc2bb"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const provider=new GoogleAuthProvider();
+let currentUser=null;
+
+const message=(text)=>{
+ const el=document.getElementById("accountMessage");
+ if(el)el.textContent=text;
+};
+
+async function createOrLoadPlayer(user){
+ const playerRef=doc(db,"players",user.uid);
+ const existing=await getDoc(playerRef);
+
+ if(!existing.exists()){
+  const playerId="MG-"+user.uid;
+  await setDoc(playerRef,{
+   playerId:playerId,
+   displayName:user.displayName||"Jugador",
+   createdAt:serverTimestamp(),
+   accountType:"google"
+  });
+  return {
+   playerId,
+   displayName:user.displayName||"Jugador"
+  };
+ }
+
+ const data=existing.data();
+ return {
+  playerId:data.playerId,
+  displayName:data.displayName||user.displayName||"Jugador"
+ };
+}
+
+window.loginGoogle=async function(){
+ message("Conectando con Google...");
+ try{
+  await signInWithRedirect(auth,provider);
+ }catch(error){
+  console.error(error);
+  message("No se pudo iniciar sesión. Comprueba tu conexión e inténtalo de nuevo.");
+ }
+};
+
+window.logoutGoogle=async function(){
+ try{
+  await signOut(auth);
+  message("Sesión cerrada.");
+ }catch(error){
+  console.error(error);
+  message("No se pudo cerrar la sesión.");
+ }
+};
+
+window.copyPlayerId=async function(){
+ const id=document.getElementById("playerId").textContent;
+ try{
+  await navigator.clipboard.writeText(id);
+  message("¡ID copiado!");
+ }catch(error){
+  message("No se pudo copiar. Puedes seleccionar el ID manualmente.");
+ }
+};
+
+onAuthStateChanged(auth,async(user)=>{
+ currentUser=user;
+ const login=document.getElementById("googleLogin");
+ const logout=document.getElementById("googleLogout");
+ const details=document.getElementById("accountDetails");
+ const state=document.getElementById("accountState");
+
+ if(!user){
+  login.style.display="block";
+  logout.style.display="none";
+  details.style.display="none";
+  state.textContent="Modo invitado. No has iniciado sesión.";
+  return;
+ }
+
+ login.style.display="none";
+ logout.style.display="block";
+ state.textContent="Verificando tu cuenta...";
+
+ try{
+  const player=await createOrLoadPlayer(user);
+  document.getElementById("accountName").textContent=player.displayName;
+  document.getElementById("playerId").textContent=player.playerId;
+  details.style.display="block";
+  state.textContent="✓ Cuenta conectada con Google";
+  message("Tu cuenta MAGIC-GAM está lista.");
+ }catch(error){
+  console.error(error);
+  state.textContent="No se pudo cargar tu perfil.";
+  message("Revisa las reglas de Firestore y tu conexión.");
+ }
+});
+
+getRedirectResult(auth).catch(error=>{
+ console.error(error);
+ message("No se pudo completar el inicio de sesión.");
+});
+</script>
+
 <script>
 const $=id=>document.getElementById(id);
 const numberFormat=new Intl.NumberFormat("en-US");
+
 const defaultSave={
  diamonds:0,
  songs:{sunflower:{stars:0,record:0,paidStars:[]}}
 };
+
 let saved;
 try{
  saved=JSON.parse(localStorage.getItem("magicGamSave"))||defaultSave;
 }catch(e){
  saved=JSON.parse(JSON.stringify(defaultSave));
 }
+
 saved.diamonds=Number(saved.diamonds)||0;
 saved.songs=saved.songs||{};
 saved.songs.sunflower=saved.songs.sunflower||{stars:0,record:0,paidStars:[]};
+
 const songSave=saved.songs.sunflower;
 songSave.stars=Math.max(0,Math.min(3,Number(songSave.stars)||0));
 songSave.record=Number(songSave.record)||0;
 songSave.paidStars=Array.isArray(songSave.paidStars)?songSave.paidStars:[];
+
 function formatNumber(value){
  return numberFormat.format(Math.round(value));
 }
+
 function save(){
- try{localStorage.setItem("magicGamSave",JSON.stringify(saved));}catch(e){}
+ try{
+  localStorage.setItem("magicGamSave",JSON.stringify(saved));
+ }catch(e){}
  updateUI();
 }
+
 function updateUI(){
  const d=saved.songs.sunflower;
  $("diamondCount").textContent=formatNumber(saved.diamonds);
@@ -201,6 +365,7 @@ function updateUI(){
  $("recordPage").textContent=formatNumber(d.record);
  $("recordStars").textContent="★".repeat(d.stars)+"☆".repeat(3-d.stars);
 }
+
 function showScreen(id){
  stopGame();
  $("pauseOverlay").style.display="none";
@@ -209,19 +374,23 @@ function showScreen(id){
  $(id).classList.add("active");
  updateUI();
 }
+
 let running=false,paused=false,tiles=[],score=0,combo=0,starsEarned=0,stageHits=0;
 let lastTime=0,lastSpawn=0,animation=0,speed=210,spawnEvery=950;
 let activeHold=null,lastLane=-1,feedbackTimer=null;
 const board=$("gameBoard");
 const lanes=[...document.querySelectorAll(".lane")];
+
 function getBasePoints(){
  if(starsEarned===0)return 13;
  if(starsEarned===1)return 31;
  return 46;
 }
+
 function selectSong(song){
  startGame();
 }
+
 function startGame(){
  stopGame();
  document.body.classList.add("game-open");
@@ -251,6 +420,7 @@ function startGame(){
  lastSpawn=lastTime;
  animation=requestAnimationFrame(loop);
 }
+
 function stopGame(){
  running=false;
  paused=false;
@@ -258,11 +428,13 @@ function stopGame(){
  animation=0;
  activeHold=null;
 }
+
 function updateStars(){
  for(let i=1;i<=3;i++){
   $("star"+i).classList.toggle("lit",i<=starsEarned);
  }
 }
+
 function showFeedback(type,message){
  const box=$("feedback");
  clearTimeout(feedbackTimer);
@@ -272,23 +444,28 @@ function showFeedback(type,message){
  box.style.opacity="1";
  feedbackTimer=setTimeout(hideFeedback,350);
 }
+
 function hideFeedback(){
  $("feedback").style.opacity="0";
 }
+
 function registerCombo(){
  combo++;
  $("comboDisplay").textContent="COMBO x"+combo;
  showFeedback("perfect","¡PERFECTO!");
 }
+
 function registerLate(){
  combo=0;
  $("comboDisplay").textContent="COMBO x0";
  showFeedback("late","TARDADO");
 }
+
 function isTileCrossingLine(t){
  const lineY=board.clientHeight*.70;
  return t.y<=lineY && t.y+t.height>=lineY;
 }
+
 function calculatePoints(perfect,extra=0){
  const base=getBasePoints();
  let points;
@@ -304,11 +481,13 @@ function calculatePoints(perfect,extra=0){
  $("score").textContent=formatNumber(score);
  return points;
 }
+
 function scoreNormalTile(perfect){
  calculatePoints(perfect,0);
  stageHits++;
  checkStage();
 }
+
 function scoreLongTile(perfect,completed){
  const extra=completed?25:0;
  calculatePoints(perfect,extra);
@@ -318,6 +497,7 @@ function scoreLongTile(perfect,completed){
   :"¡TECLA LARGA VÁLIDA!";
  checkStage();
 }
+
 function spawnTile(){
  let lane=Math.floor(Math.random()*4);
  if(lane===lastLane){
@@ -327,6 +507,7 @@ function spawnTile(){
  const isLong=Math.random()<0.02;
  const tile=document.createElement("div");
  tile.className="tile color"+lane+(isLong?" long":"");
+
  if(isLong){
   const arrows=document.createElement("div");
   arrows.className="long-arrows";
@@ -341,6 +522,7 @@ function spawnTile(){
   progress.className="long-progress";
   tile.append(arrows,label,hand,progress);
  }
+
  lanes[lane].appendChild(tile);
  const h=tile.offsetHeight;
  tiles.push({
@@ -349,25 +531,30 @@ function spawnTile(){
   holdStartY:null,perfect:false,progress:0
  });
 }
+
 function loop(now){
  if(!running||paused)return;
  const dt=Math.min((now-lastTime)/1000,.04);
  lastTime=now;
  const boardHeight=board.clientHeight;
+
  if(now-lastSpawn>=spawnEvery){
   spawnTile();
   lastSpawn=now;
  }
+
  for(let i=tiles.length-1;i>=0;i--){
   const t=tiles[i];
   t.y+=speed*dt;
   t.el.style.top=t.y+"px";
+
   if(t.long&&t.holding){
    if(isTileCrossingLine(t))t.perfect=true;
    const traveled=t.y-t.holdStartY;
    t.progress=Math.max(0,Math.min(1,traveled/t.height));
    const progress=t.el.querySelector(".long-progress");
    if(progress)progress.style.height=(t.progress*100)+"%";
+
    if(t.progress>=1){
     if(t.el.isConnected)t.el.remove();
     tiles.splice(i,1);
@@ -377,6 +564,7 @@ function loop(now){
     continue;
    }
   }
+
   if(!t.touched&&t.y>=boardHeight){
    finishGame("¡TECLA PERDIDA!");
    return;
@@ -384,10 +572,12 @@ function loop(now){
  }
  animation=requestAnimationFrame(loop);
 }
+
 function boardDown(e){
  if(!running||paused)return;
  e.preventDefault();
  if(activeHold)return;
+
  let chosen=null;
  for(const t of tiles){
   if(t.touched)continue;
@@ -395,12 +585,15 @@ function boardDown(e){
   const inside=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
   if(inside){chosen=t;break;}
  }
+
  if(!chosen){
   finishGame("¡TOCASTE FUERA DE UNA TECLA!");
   return;
  }
+
  chosen.touched=true;
  chosen.perfect=isTileCrossingLine(chosen);
+
  if(chosen.long){
   chosen.holding=true;
   chosen.holdPointer=e.pointerId;
@@ -415,6 +608,7 @@ function boardDown(e){
   scoreNormalTile(chosen.perfect);
  }
 }
+
 function boardUp(e){
  if(!activeHold)return;
  if(activeHold.holdPointer!==e.pointerId)return;
@@ -424,23 +618,29 @@ function boardUp(e){
  activeHold=null;
  scoreLongTile(t.perfect,false);
 }
+
 board.addEventListener("pointerdown",boardDown,{passive:false});
 board.addEventListener("pointerup",boardUp);
 board.addEventListener("pointercancel",boardUp);
+
 function checkStage(){
  if(stageHits<12)return;
  stageHits=0;
+
  if(starsEarned<3){
   starsEarned++;
   const data=saved.songs.sunflower;
   if(starsEarned>data.stars)data.stars=starsEarned;
+
   if(!data.paidStars.includes(starsEarned)){
    saved.diamonds+=50;
    data.paidStars.push(starsEarned);
   }
+
   updateStars();
   speed+=35;
   spawnEvery=Math.max(650,spawnEvery-60);
+
   const names=["","PRIMERA","SEGUNDA","TERCERA"];
   $("stageLabel").textContent="⭐ "+names[starsEarned]+" ESTRELLA";
   $("gameSong").textContent="SUNFLOWER · FÁCIL";
@@ -450,12 +650,14 @@ function checkStage(){
   $("gameMessage").textContent="¡SIGUE JUGANDO!";
  }
 }
+
 function finishGame(message){
  if(!running)return;
  stopGame();
  const data=saved.songs.sunflower;
  if(score>data.record)data.record=score;
  save();
+
  $("resultTitle").textContent=message||"PARTIDA TERMINADA";
  $("resultStars").textContent="★".repeat(starsEarned)+"☆".repeat(3-starsEarned);
  $("resultScore").textContent=formatNumber(score);
@@ -465,6 +667,7 @@ function finishGame(message){
  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
  $("resultScreen").classList.add("active");
 }
+
 function pauseGame(){
  if(!running||paused)return;
  if(activeHold){
@@ -476,6 +679,7 @@ function pauseGame(){
  animation=0;
  $("pauseOverlay").style.display="grid";
 }
+
 function resumeGame(){
  if(!paused)return;
  paused=false;
@@ -484,14 +688,16 @@ function resumeGame(){
  lastSpawn=performance.now();
  animation=requestAnimationFrame(loop);
 }
+
 updateUI();
 </script>
+
 <script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/Magic-Gam-/service-worker.js")
-      .catch(error => console.error("Error al registrar la aplicación:", error));
-  });
+if("serviceWorker" in navigator){
+ window.addEventListener("load",()=>{
+  navigator.serviceWorker.register("/Magic-Gam-/service-worker.js")
+   .catch(error=>console.error("Error al registrar la aplicación:",error));
+ });
 }
 </script>
 </body>
