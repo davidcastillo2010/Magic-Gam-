@@ -2,23 +2,35 @@
   "id": "/Magic-Gam-/",
   "name": "MAGIC-GAM",
   "short_name": "MAGIC-GAM",
-  "description": "Juego musical MAGIC-GAM",
-  "start_url": "/Magic-Gam-/",
+  "description": "MAGIC-GAM: juego musical de ritmo y velocidad",
+  "start_url": "/Magic-Gam-/?source=pwa",
   "scope": "/Magic-Gam-/",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "fullscreen"
+  ],
   "orientation": "portrait",
   "background_color": "#080817",
   "theme_color": "#080817",
+  "prefer_related_applications": false,
+  "categories": [
+    "games",
+    "music",
+    "entertainment"
+  ],
   "icons": [
     {
       "src": "/Magic-Gam-/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/Magic-Gam-/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
