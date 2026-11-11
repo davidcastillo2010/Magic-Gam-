@@ -2,7 +2,7 @@
   "id": "/Magic-Gam-/",
   "name": "MAGIC-GAM",
   "short_name": "MAGIC-GAM",
-  "description": "MAGIC-GAM: juego musical de ritmo y velocidad",
+  "description": "MAGIC-GAM: juego de estrategia, batallas y construcción de un reino fantástico.",
   "start_url": "/Magic-Gam-/?source=pwa",
   "scope": "/Magic-Gam-/",
   "display": "standalone",
@@ -12,11 +12,11 @@
   ],
   "orientation": "portrait",
   "background_color": "#080817",
-  "theme_color": "#080817",
+  "theme_color": "#171044",
   "prefer_related_applications": false,
   "categories": [
     "games",
-    "music",
+    "strategy",
     "entertainment"
   ],
   "icons": [
