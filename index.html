@@ -6,15 +6,9 @@
 <meta name="theme-color" content="#17134b">
 <link rel="manifest" href="/Magic-Gam-/manifest.json">
 <title>MAGIC-GAM</title>
-
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;color:white;font-family:Arial,sans-serif;
- background:radial-gradient(ellipse at 50% 0,#5140a8,transparent 50%),
- linear-gradient(#19164a,#11102f 70%,#080d25);
- min-height:100vh
-}
+body{margin:0;color:white;font-family:Arial,sans-serif;background:radial-gradient(ellipse at 50% 0,#5140a8,transparent 50%),linear-gradient(#19164a,#11102f 70%,#080d25);min-height:100vh}
 button{font:inherit;color:inherit;cursor:pointer}
 button:disabled{opacity:.5;cursor:wait}
 .app{max-width:520px;min-height:100vh;margin:auto;padding:12px 10px 22px}
@@ -77,6 +71,7 @@ button:disabled{opacity:.5;cursor:wait}
 .unit-stats b{color:white;font-size:10px}
 .unit-upgrade{width:100%;padding:7px 1px;border:1px solid #fff0a8;border-radius:8px;background:linear-gradient(#ffe77d,#f5a92e);color:#51310c;font-weight:1000;font-size:9px;margin-top:6px}
 .empty-category{text-align:center;padding:20px 8px;color:#c3c9ed;font-size:12px}
+#battleContainer{width:100%;min-height:300px}
 @media(max-width:360px){
  .app{padding-left:7px;padding-right:7px}
  .card-list{gap:4px}
@@ -87,8 +82,8 @@ button:disabled{opacity:.5;cursor:wait}
 }
 </style>
 </head>
-
 <body>
+
 <div id="authGate">
  <div class="auth-card">
   <div class="auth-logo">MAGIC-GAM</div>
@@ -136,7 +131,7 @@ button:disabled{opacity:.5;cursor:wait}
   <button class="unit" onclick="openCategory('Campeones')"><span class="emoji">🦸</span><strong>CAMPEONES</strong><small>NVL 1</small></button>
   <button class="unit" onclick="openCategory('Superpoderes')"><span class="emoji">✨</span><strong>SUPERPODERES</strong><small>NVL 1</small></button>
  </div>
- <button class="battle" onclick="battleComingSoon()">⚔️ BATALLA</button>
+ <button class="battle" onclick="openBattle()">⚔️ BATALLA</button>
  <nav class="nav">
   <button onclick="openScreen('cards')"><b>🃏</b>CARTAS</button>
   <button onclick="openScreen('chat')"><b>💬</b>CHAT</button>
@@ -145,10 +140,18 @@ button:disabled{opacity:.5;cursor:wait}
  <div class="status" id="homeStatus"></div>
 </section>
 
+<section id="battle" class="screen">
+ <button class="back" onclick="closeBattle()">← VOLVER</button>
+ <h2>⚔️ BATALLA</h2>
+ <p class="info">Mueve el cañón horizontalmente y dirige tus MOBS hacia la fortaleza enemiga.</p>
+ <div id="battleContainer" class="panel"></div>
+ <div class="status" id="battleStatus"></div>
+</section>
+
 <section id="cards" class="screen">
  <button class="back" onclick="openScreen('home')">← VOLVER</button>
  <h2>🃏 CARTAS</h2>
- <p class="info">Elige una categoría para ver sus personajes y unidades.</p>
+ <p class="info">Elige una categoría para ver tus personajes y unidades.</p>
  <div class="category-grid">
   <button class="category" onclick="showCategory('Mobs')"><span>🔵</span><strong>MOBS</strong></button>
   <button class="category" onclick="showCategory('Cañones')"><span>💥</span><strong>CAÑONES</strong></button>
@@ -197,9 +200,10 @@ import{
 
 import{mobs,obtenerEstadisticas}from"./personajes/mobs.js";
 import{canones,obtenerEstadisticasCanon}from"./personajes/canones.js";
+import{iniciarBatalla}from"./js/batalla.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv40iIzwRZg",
+ apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv0IIZwRZg",
  authDomain:"magic-gam.firebaseapp.com",
  projectId:"magic-gam",
  storageBucket:"magic-gam.firebasestorage.app",
@@ -219,15 +223,15 @@ const gateStatus=document.getElementById("gateStatus");
 let cloudReady=false;
 let playerRef=null;
 let legacySave={};
-
 let state={diamonds:0,globalStars:0,castleLevel:1};
 let characterLevels={};
+let battleInstance=null;
+let battleClaimed=false;
 
 function num(value,fallback=0){
  const n=Number(value);
  return Number.isFinite(n)?Math.max(0,Math.floor(n)):fallback;
 }
-
 function castlePrice(level){return 2000+(level-1)*250;}
 function upgradePrice(level){return level*60;}
 function requiredStars(level){return level*2;}
@@ -272,9 +276,7 @@ async function ensurePlayer(user){
 }
 
 async function saveProgress(){
- if(!auth.currentUser||!cloudReady||!playerRef){
-  throw new Error("La cuenta todavía no está lista para guardar.");
- }
+ if(!auth.currentUser||!cloudReady||!playerRef)throw new Error("La cuenta todavía no está lista.");
  const updatedSave={
   ...legacySave,
   diamonds:state.diamonds,
@@ -291,23 +293,18 @@ async function loadAccount(user){
  playerRef=null;
  gate.style.display="grid";
  gateStatus.textContent="Cargando tu cuenta y tu progreso...";
-
  const result=await ensurePlayer(user);
  playerRef=result.ref;
  const data=result.data;
  legacySave=data.gameSave&&typeof data.gameSave==="object"?data.gameSave:{};
-
  state.diamonds=num(legacySave.diamonds);
  state.globalStars=num(legacySave.globalStars);
  state.castleLevel=Math.max(1,num(legacySave.castleLevel,1));
- characterLevels=legacySave.characterLevels&&typeof legacySave.characterLevels==="object"
-  ?{...legacySave.characterLevels}:{};
-
+ characterLevels=legacySave.characterLevels&&typeof legacySave.characterLevels==="object"?{...legacySave.characterLevels}:{};
  document.getElementById("playerName").textContent=(user.displayName||"JUGADOR").toUpperCase();
  document.getElementById("profileName").textContent=user.displayName||"Jugador";
  document.getElementById("playerId").textContent=data.playerId||"MG-"+user.uid;
  updateUI();
-
  cloudReady=true;
  if(!data.gameSave)await saveProgress();
  gate.style.display="none";
@@ -323,10 +320,7 @@ window.loginGoogle=async function(){
   await setPersistence(auth,browserLocalPersistence);
   await signInWithPopup(auth,provider);
  }catch(error){showError(error);}
- finally{
-  button.disabled=false;
-  button.textContent="🔐 CONTINUAR CON GOOGLE";
- }
+ finally{button.disabled=false;button.textContent="🔐 CONTINUAR CON GOOGLE";}
 };
 
 window.logoutGoogle=async function(){
@@ -369,34 +363,19 @@ window.upgradeCastle=async function(){
 };
 
 async function upgradeCharacter(category,item){
- if(!cloudReady){
-  alert("Espera a que tu cuenta termine de cargar.");
-  return;
- }
-
+ if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return;}
  const key=category+"_"+item.id;
  const currentLevel=Math.max(1,num(characterLevels[key],item.nivel||1));
  const price=upgradePrice(currentLevel);
  const stars=requiredStars(currentLevel);
-
- if(state.globalStars<stars){
-  alert("Necesitas "+stars+" estrellas globales para mejorar. Tienes "+state.globalStars+".");
-  return;
- }
- if(state.diamonds<price){
-  alert("Necesitas "+price+" diamantes para mejorar. Tienes "+state.diamonds+".");
-  return;
- }
-
+ if(state.globalStars<stars){alert("Necesitas "+stars+" estrellas globales. Tienes "+state.globalStars+".");return;}
+ if(state.diamonds<price){alert("Necesitas "+price+" diamantes. Tienes "+state.diamonds+".");return;}
  if(!confirm("¿Mejorar "+item.nombre+" al nivel "+(currentLevel+1)+"?\n\nCoste: "+price+" diamantes\nRequisito: "+stars+" estrellas\n\nLas estrellas no se gastan."))return;
-
  const oldDiamonds=state.diamonds;
  const oldLevel=characterLevels[key];
-
  state.diamonds-=price;
  characterLevels[key]=currentLevel+1;
  updateUI();
-
  try{
   await saveProgress();
   showCategory(category);
@@ -407,83 +386,46 @@ async function upgradeCharacter(category,item){
   else characterLevels[key]=oldLevel;
   updateUI();
   showCategory(category);
-  alert("No se pudo guardar la mejora. No se confirmó el cambio.");
+  alert("No se pudo guardar la mejora.");
   console.error(error);
  }
 }
 
 function renderMob(item){
- const key="Mobs_"+item.id;
- const level=Math.max(1,num(characterLevels[key],item.nivel||1));
+ const level=Math.max(1,num(characterLevels["Mobs_"+item.id],item.nivel||1));
  const stats=obtenerEstadisticas(item,level);
- const price=upgradePrice(level);
- const stars=requiredStars(level);
+ const price=upgradePrice(level),stars=requiredStars(level);
  const safeName=String(item.nombre).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  const safeImage=String(item.imagen).replace(/"/g,"%22");
-
- return `
- <article class="unit-card">
-  <div class="unit-art">
-   <img src="${safeImage}" alt="${safeName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-   <span class="unit-placeholder" style="display:none">🐯</span>
-  </div>
-  <div class="unit-name">${safeName}</div>
-  <div class="unit-level">NIVEL ${level}</div>
-  <div class="unit-stats">
-   ❤️ <b>${stats.salud}</b><br>
-   ⚔️ <b>${stats.ataque}</b><br>
-   ⚡ <b>${stats.velocidad}</b>
-  </div>
-  <button class="unit-upgrade" data-upgrade-category="Mobs" data-upgrade-id="${item.id}">
-   MEJORAR<br>${price} 💎 · ${stars} ⭐
-  </button>
- </article>`;
+ return `<article class="unit-card">
+ <div class="unit-art"><img src="${safeImage}" alt="${safeName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="unit-placeholder" style="display:none">🐯</span></div>
+ <div class="unit-name">${safeName}</div><div class="unit-level">NIVEL ${level}</div>
+ <div class="unit-stats">❤️ <b>${stats.salud}</b><br>⚔️ <b>${stats.ataque}</b><br>⚡ <b>${stats.velocidad}</b></div>
+ <button class="unit-upgrade" data-upgrade-category="Mobs" data-upgrade-id="${item.id}">MEJORAR<br>${price} 💎 · ${stars} ⭐</button></article>`;
 }
 
 function renderCannon(item){
- const key="Cañones_"+item.id;
- const level=Math.max(1,num(characterLevels[key],item.nivel||1));
+ const level=Math.max(1,num(characterLevels["Cañones_"+item.id],item.nivel||1));
  const stats=obtenerEstadisticasCanon(item,level);
- const price=upgradePrice(level);
- const stars=requiredStars(level);
+ const price=upgradePrice(level),stars=requiredStars(level);
  const safeName=String(item.nombre).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  const safeImage=String(item.imagen).replace(/"/g,"%22");
-
- return `
- <article class="unit-card">
-  <div class="unit-art">
-   <img src="${safeImage}" alt="${safeName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-   <span class="unit-placeholder" style="display:none">💥</span>
-  </div>
-  <div class="unit-name">${safeName}</div>
-  <div class="unit-level">NIVEL ${level}</div>
-  <div class="unit-stats">
-   💥 MOBS POR SEGUNDO<br>
-   <b>${stats.mobsPorSegundo}</b>
-  </div>
-  <button class="unit-upgrade" data-upgrade-category="Cañones" data-upgrade-id="${item.id}">
-   MEJORAR<br>${price} 💎 · ${stars} ⭐
-  </button>
- </article>`;
+ return `<article class="unit-card">
+ <div class="unit-art"><img src="${safeImage}" alt="${safeName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="unit-placeholder" style="display:none">💥</span></div>
+ <div class="unit-name">${safeName}</div><div class="unit-level">NIVEL ${level}</div>
+ <div class="unit-stats">💥 MOBS POR SEGUNDO<br><b>${stats.mobsPorSegundo}</b></div>
+ <button class="unit-upgrade" data-upgrade-category="Cañones" data-upgrade-id="${item.id}">MEJORAR<br>${price} 💎 · ${stars} ⭐</button></article>`;
 }
 
 function renderCategory(category,items){
  const box=document.getElementById("categoryInfo");
  const icons={"Mobs":"🔵","Cañones":"💥","Campeones":"🦸","Superpoderes":"✨"};
-
  if(!items||items.length===0){
-  box.innerHTML=`<h3>${icons[category]} ${category.toUpperCase()}</h3>
-   <div class="empty-category">Todavía no hemos creado unidades para esta categoría.</div>`;
+  box.innerHTML=`<h3>${icons[category]} ${category.toUpperCase()}</h3><div class="empty-category">Todavía no hemos creado unidades para esta categoría.</div>`;
   return;
  }
-
  const renderer=category==="Cañones"?renderCannon:renderMob;
-
- box.innerHTML=`
-  <h3>${icons[category]} ${category.toUpperCase()}</h3>
-  <p class="info">Mejoras: estrellas globales como requisito y diamantes como coste.</p>
-  <div class="card-list">${items.map(renderer).join("")}</div>`;
-
+ box.innerHTML=`<h3>${icons[category]} ${category.toUpperCase()}</h3><p class="info">Estrellas globales como requisito y diamantes como coste.</p><div class="card-list">${items.map(renderer).join("")}</div>`;
  box.querySelectorAll("[data-upgrade-id]").forEach(button=>{
   button.addEventListener("click",()=>{
    const item=items.find(x=>x.id===button.dataset.upgradeId);
@@ -498,8 +440,39 @@ window.showCategory=function(name){
  else renderCategory(name,[]);
 };
 
-window.battleComingSoon=function(){
- document.getElementById("homeStatus").textContent="El sistema de batallas se añadirá después de diseñar las cartas.";
+window.openBattle=function(){
+ if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return;}
+ openScreen("battle");
+ const container=document.getElementById("battleContainer");
+ if(battleInstance)battleInstance.destruir();
+ battleClaimed=false;
+ const cannonLevel=Math.max(1,num(characterLevels["Cañones_propulsion-cannon"],1));
+ const cannon=canones.find(item=>item.id==="propulsion-cannon");
+ const production=cannon?obtenerEstadisticasCanon(cannon,cannonLevel).mobsPorSegundo:3;
+
+ battleInstance=iniciarBatalla(container,{
+  mobsPorSegundo:production,
+  onVictory:async function(){
+   if(battleClaimed)return;
+   battleClaimed=true;
+   state.globalStars+=1;
+   updateUI();
+   try{
+    await saveProgress();
+    document.getElementById("battleStatus").textContent="¡Victoria! Ganaste 1 estrella global. Total: "+state.globalStars;
+   }catch(error){
+    state.globalStars-=1;
+    updateUI();
+    document.getElementById("battleStatus").textContent="No se pudo guardar la estrella. Inténtalo de nuevo.";
+    console.error(error);
+   }
+  }
+ });
+};
+
+window.closeBattle=function(){
+ if(battleInstance){battleInstance.destruir();battleInstance=null;}
+ openScreen("home");
 };
 
 onAuthStateChanged(auth,async user=>{
@@ -511,11 +484,7 @@ onAuthStateChanged(auth,async user=>{
   return;
  }
  try{await loadAccount(user);}
- catch(error){
-  cloudReady=false;
-  gate.style.display="grid";
-  showError(error);
- }
+ catch(error){cloudReady=false;gate.style.display="grid";showError(error);}
 });
 
 updateUI();
