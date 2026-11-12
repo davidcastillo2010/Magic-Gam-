@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -186,7 +185,7 @@ import{canones,obtenerEstadisticasCanon}from"./personajes/canones.js";
 import{iniciarBatalla}from"./batalla.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv4IiwRZg",
+ apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv40iIzwRZg",
  authDomain:"magic-gam.firebaseapp.com",
  projectId:"magic-gam",
  storageBucket:"magic-gam.firebasestorage.app",
@@ -292,13 +291,17 @@ window.loginGoogle=async function(){
  try{
   await setPersistence(auth,browserLocalPersistence);
   await signInWithPopup(auth,provider);
- }catch(error){showError(error)}
- finally{button.disabled=false;button.textContent="🔐 CONTINUAR CON GOOGLE"}
+ }catch(error){
+  showError(error);
+ }finally{
+  button.disabled=false;
+  button.textContent="🔐 CONTINUAR CON GOOGLE";
+ }
 };
 
 window.logoutGoogle=async function(){
- try{cloudReady=false;await signOut(auth)}
- catch(error){showError(error)}
+ try{cloudReady=false;await signOut(auth);}
+ catch(error){showError(error);}
 };
 
 window.openScreen=function(id){
@@ -336,13 +339,13 @@ window.upgradeCastle=async function(){
 };
 
 async function upgradeCharacter(category,item){
- if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return}
+ if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return;}
  const key=category+"_"+item.id;
  const currentLevel=Math.max(1,num(characterLevels[key],item.nivel||1));
  const price=upgradePrice(currentLevel);
  const stars=requiredStars(currentLevel);
- if(state.globalStars<stars){alert("Necesitas "+stars+" estrellas globales. Tienes "+state.globalStars+".");return}
- if(state.diamonds<price){alert("Necesitas "+price+" diamantes. Tienes "+state.diamonds+".");return}
+ if(state.globalStars<stars){alert("Necesitas "+stars+" estrellas globales. Tienes "+state.globalStars+".");return;}
+ if(state.diamonds<price){alert("Necesitas "+price+" diamantes. Tienes "+state.diamonds+".");return;}
  if(!confirm("¿Mejorar "+item.nombre+" al nivel "+(currentLevel+1)+"?\n\nCoste: "+price+" diamantes\nRequisito: "+stars+" estrellas\n\nLas estrellas no se gastan."))return;
  const oldDiamonds=state.diamonds;
  const oldLevel=characterLevels[key];
@@ -406,7 +409,7 @@ window.showCategory=function(name){
 };
 
 window.openBattle=function(){
- if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return}
+ if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return;}
  openScreen("battle");
  const container=document.getElementById("battleContainer");
  if(battleInstance)battleInstance.destruir();
@@ -440,7 +443,7 @@ window.openBattle=function(){
 };
 
 window.closeBattle=function(){
- if(battleInstance){battleInstance.destruir();battleInstance=null}
+ if(battleInstance){battleInstance.destruir();battleInstance=null;}
  openScreen("home");
 };
 
@@ -452,8 +455,8 @@ onAuthStateChanged(auth,async user=>{
   gateStatus.textContent="Inicia sesión con Google para entrar a MAGIC-GAM.";
   return;
  }
- try{await loadAccount(user)}
- catch(error){cloudReady=false;gate.style.display="grid";showError(error)}
+ try{await loadAccount(user);}
+ catch(error){cloudReady=false;gate.style.display="grid";showError(error);}
 });
 
 updateUI();
