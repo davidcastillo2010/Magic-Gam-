@@ -6,9 +6,14 @@
 <meta name="theme-color" content="#17134b">
 <link rel="manifest" href="/Magic-Gam-/manifest.json">
 <title>MAGIC-GAM</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;color:white;font-family:Arial,sans-serif;background:radial-gradient(ellipse at 50% 0,#5140a8,transparent 50%),linear-gradient(#19164a,#11102f 70%,#080d25);min-height:100vh}
+body{
+ margin:0;color:white;font-family:Arial,sans-serif;
+ background:radial-gradient(ellipse at 50% 0,#5140a8,transparent 50%),linear-gradient(#19164a,#11102f 70%,#080d25);
+ min-height:100vh
+}
 button{font:inherit;color:inherit;cursor:pointer}
 button:disabled{opacity:.5;cursor:wait}
 .app{max-width:520px;min-height:100vh;margin:auto;padding:12px 10px 22px}
@@ -22,6 +27,7 @@ button:disabled{opacity:.5;cursor:wait}
 .settings{width:38px;height:38px;border-radius:13px;border:2px solid #7669ca;background:#27205e;font-size:19px}
 .brand{text-align:center;margin:14px 0 10px;font-weight:1000;font-size:27px;letter-spacing:1px;font-style:italic;text-shadow:0 3px 0 #5133a5,0 0 16px #62dfff}
 .brand span{color:#ffe47c}
+
 .world{height:365px;position:relative;overflow:hidden;border-radius:25px;background:linear-gradient(#5b9ee9 0%,#9bd8fa 42%,#5b9c74 43%,#28704c 100%);border:2px solid #7ddaff;box-shadow:0 8px 0 #26205f}
 .cloud{position:absolute;color:#fff9;font-size:34px}
 .c1{top:20px;left:22px}.c2{top:50px;right:22px}
@@ -36,6 +42,7 @@ button:disabled{opacity:.5;cursor:wait}
 .lv{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:1000;background:#1d2863;border:1px solid #ffe17a;padding:2px 5px;border-radius:8px;white-space:nowrap}
 .castle-info{position:absolute;top:10px;right:10px;z-index:5;background:#1a246dcc;border:1px solid #a8dfff;border-radius:12px;padding:7px 9px;font-size:10px;font-weight:bold}
 .castle-upgrade{position:absolute;z-index:5;bottom:30px;left:50%;transform:translateX(-50%);background:linear-gradient(#ffe77d,#f5a92e);color:#51310c;border:2px solid #fff0a8;border-radius:12px;padding:7px 12px;font-size:10px;font-weight:1000;white-space:nowrap}
+
 .section-title{font-size:12px;font-weight:1000;color:#b8caff;letter-spacing:1px;margin:16px 2px 8px}
 .team{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .unit{background:linear-gradient(160deg,#353078,#171944);border:2px solid #766be0;border-radius:13px;padding:8px 2px;text-align:center;box-shadow:0 4px 0 #0a0b27;min-width:0}
@@ -56,10 +63,12 @@ button:disabled{opacity:.5;cursor:wait}
 .info{font-size:12px;color:#c3c9ed;line-height:1.5}
 .primary{width:100%;padding:10px 5px;border:0;border-radius:10px;background:linear-gradient(#ffe77d,#f5a92e);color:#51310c;font-weight:1000;margin-top:8px;font-size:11px}
 .status{text-align:center;color:#8ceeff;font-size:12px;min-height:18px;margin:10px 0}
+
 #authGate{position:fixed;inset:0;z-index:100;background:#080817;display:grid;place-items:center;padding:22px}
 .auth-card{width:min(100%,390px);background:#171944;border:1px solid #21cfff;border-radius:22px;padding:24px;text-align:center}
 .auth-logo{font-size:30px;font-weight:1000;margin:8px}
 .login{width:100%;padding:14px;border:2px solid #4de5ff;border-radius:14px;background:#202b68;font-weight:bold}
+
 .card-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
 .unit-card{min-width:0;overflow:hidden;background:linear-gradient(155deg,#173c91,#111536);border:1px solid #45cfff;border-radius:12px;padding:5px 4px 7px;text-align:center;box-shadow:0 3px 0 #090e2a}
 .unit-art{width:100%;height:76px;border-radius:8px;background:radial-gradient(circle,#286ddc,#101a48 70%);display:grid;place-items:center;overflow:hidden}
@@ -82,8 +91,8 @@ button:disabled{opacity:.5;cursor:wait}
 }
 </style>
 </head>
-<body>
 
+<body>
 <div id="authGate">
  <div class="auth-card">
   <div class="auth-logo">MAGIC-GAM</div>
@@ -143,7 +152,7 @@ button:disabled{opacity:.5;cursor:wait}
 <section id="battle" class="screen">
  <button class="back" onclick="closeBattle()">← VOLVER</button>
  <h2>⚔️ BATALLA</h2>
- <p class="info">Mueve el cañón horizontalmente y dirige tus MOBS hacia la fortaleza enemiga.</p>
+ <p class="info">Arrastra el cañón de izquierda a derecha para dirigir tus MOBS hacia la fortaleza enemiga.</p>
  <div id="battleContainer" class="panel"></div>
  <div class="status" id="battleStatus"></div>
 </section>
@@ -200,10 +209,10 @@ import{
 
 import{mobs,obtenerEstadisticas}from"./personajes/mobs.js";
 import{canones,obtenerEstadisticasCanon}from"./personajes/canones.js";
-import{iniciarBatalla}from"./js/batalla.js";
+import{iniciarBatalla}from"./batalla.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv0IIZwRZg",
+ apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv0IIZRZg",
  authDomain:"magic-gam.firebaseapp.com",
  projectId:"magic-gam",
  storageBucket:"magic-gam.firebasestorage.app",
@@ -320,7 +329,10 @@ window.loginGoogle=async function(){
   await setPersistence(auth,browserLocalPersistence);
   await signInWithPopup(auth,provider);
  }catch(error){showError(error);}
- finally{button.disabled=false;button.textContent="🔐 CONTINUAR CON GOOGLE";}
+ finally{
+  button.disabled=false;
+  button.textContent="🔐 CONTINUAR CON GOOGLE";
+ }
 };
 
 window.logoutGoogle=async function(){
@@ -446,28 +458,34 @@ window.openBattle=function(){
  const container=document.getElementById("battleContainer");
  if(battleInstance)battleInstance.destruir();
  battleClaimed=false;
+
  const cannonLevel=Math.max(1,num(characterLevels["Cañones_propulsion-cannon"],1));
  const cannon=canones.find(item=>item.id==="propulsion-cannon");
  const production=cannon?obtenerEstadisticasCanon(cannon,cannonLevel).mobsPorSegundo:3;
 
- battleInstance=iniciarBatalla(container,{
-  mobsPorSegundo:production,
-  onVictory:async function(){
-   if(battleClaimed)return;
-   battleClaimed=true;
-   state.globalStars+=1;
-   updateUI();
-   try{
-    await saveProgress();
-    document.getElementById("battleStatus").textContent="¡Victoria! Ganaste 1 estrella global. Total: "+state.globalStars;
-   }catch(error){
-    state.globalStars-=1;
+ try{
+  battleInstance=iniciarBatalla(container,{
+   mobsPorSegundo:production,
+   onVictory:async function(){
+    if(battleClaimed)return;
+    battleClaimed=true;
+    state.globalStars+=1;
     updateUI();
-    document.getElementById("battleStatus").textContent="No se pudo guardar la estrella. Inténtalo de nuevo.";
-    console.error(error);
+    try{
+     await saveProgress();
+     document.getElementById("battleStatus").textContent="¡Victoria! Ganaste 1 estrella global.";
+    }catch(error){
+     state.globalStars-=1;
+     updateUI();
+     document.getElementById("battleStatus").textContent="No se pudo guardar la estrella.";
+     console.error(error);
+    }
    }
-  }
- });
+  });
+ }catch(error){
+  console.error("Error al iniciar batalla:",error);
+  document.getElementById("battleStatus").textContent="No se pudo cargar la batalla. Revisa batalla.js.";
+ }
 };
 
 window.closeBattle=function(){
