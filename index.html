@@ -194,7 +194,9 @@ import{
 import{
  getFirestore,doc,getDoc,setDoc,updateDoc,serverTimestamp
 }from"https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+
 import{mobs,obtenerEstadisticas}from"./personajes/mobs.js";
+import{canones,obtenerEstadisticasCanon}from"./personajes/canones.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv40iIzwRZg",
@@ -217,7 +219,6 @@ const gateStatus=document.getElementById("gateStatus");
 let cloudReady=false;
 let playerRef=null;
 let legacySave={};
-let currentUid=null;
 
 let state={diamonds:0,globalStars:0,castleLevel:1};
 let characterLevels={};
@@ -226,6 +227,7 @@ function num(value,fallback=0){
  const n=Number(value);
  return Number.isFinite(n)?Math.max(0,Math.floor(n)):fallback;
 }
+
 function castlePrice(level){return 2000+(level-1)*250;}
 function upgradePrice(level){return level*60;}
 function requiredStars(level){return level*2;}
@@ -287,7 +289,6 @@ async function saveProgress(){
 async function loadAccount(user){
  cloudReady=false;
  playerRef=null;
- currentUid=user.uid;
  gate.style.display="grid";
  gateStatus.textContent="Cargando tu cuenta y tu progreso...";
 
@@ -372,17 +373,18 @@ async function upgradeCharacter(category,item){
   alert("Espera a que tu cuenta termine de cargar.");
   return;
  }
+
  const key=category+"_"+item.id;
  const currentLevel=Math.max(1,num(characterLevels[key],item.nivel||1));
  const price=upgradePrice(currentLevel);
  const stars=requiredStars(currentLevel);
 
  if(state.globalStars<stars){
-  alert("Necesitas "+stars+" estrellas globales para mejorar este personaje. Tienes "+state.globalStars+".");
+  alert("Necesitas "+stars+" estrellas globales para mejorar. Tienes "+state.globalStars+".");
   return;
  }
  if(state.diamonds<price){
-  alert("Necesitas "+price+" diamantes para mejorar este personaje. Tienes "+state.diamonds+".");
+  alert("Necesitas "+price+" diamantes para mejorar. Tienes "+state.diamonds+".");
   return;
  }
 
@@ -390,6 +392,7 @@ async function upgradeCharacter(category,item){
 
  const oldDiamonds=state.diamonds;
  const oldLevel=characterLevels[key];
+
  state.diamonds-=price;
  characterLevels[key]=currentLevel+1;
  updateUI();
@@ -437,18 +440,50 @@ function renderMob(item){
  </article>`;
 }
 
+function renderCannon(item){
+ const key="Cañones_"+item.id;
+ const level=Math.max(1,num(characterLevels[key],item.nivel||1));
+ const stats=obtenerEstadisticasCanon(item,level);
+ const price=upgradePrice(level);
+ const stars=requiredStars(level);
+ const safeName=String(item.nombre).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const safeImage=String(item.imagen).replace(/"/g,"%22");
+
+ return `
+ <article class="unit-card">
+  <div class="unit-art">
+   <img src="${safeImage}" alt="${safeName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+   <span class="unit-placeholder" style="display:none">💥</span>
+  </div>
+  <div class="unit-name">${safeName}</div>
+  <div class="unit-level">NIVEL ${level}</div>
+  <div class="unit-stats">
+   💥 MOBS POR SEGUNDO<br>
+   <b>${stats.mobsPorSegundo}</b>
+  </div>
+  <button class="unit-upgrade" data-upgrade-category="Cañones" data-upgrade-id="${item.id}">
+   MEJORAR<br>${price} 💎 · ${stars} ⭐
+  </button>
+ </article>`;
+}
+
 function renderCategory(category,items){
  const box=document.getElementById("categoryInfo");
  const icons={"Mobs":"🔵","Cañones":"💥","Campeones":"🦸","Superpoderes":"✨"};
+
  if(!items||items.length===0){
   box.innerHTML=`<h3>${icons[category]} ${category.toUpperCase()}</h3>
    <div class="empty-category">Todavía no hemos creado unidades para esta categoría.</div>`;
   return;
  }
+
+ const renderer=category==="Cañones"?renderCannon:renderMob;
+
  box.innerHTML=`
   <h3>${icons[category]} ${category.toUpperCase()}</h3>
   <p class="info">Mejoras: estrellas globales como requisito y diamantes como coste.</p>
-  <div class="card-list">${items.map(renderMob).join("")}</div>`;
+  <div class="card-list">${items.map(renderer).join("")}</div>`;
+
  box.querySelectorAll("[data-upgrade-id]").forEach(button=>{
   button.addEventListener("click",()=>{
    const item=items.find(x=>x.id===button.dataset.upgradeId);
@@ -459,6 +494,7 @@ function renderCategory(category,items){
 
 window.showCategory=function(name){
  if(name==="Mobs")renderCategory("Mobs",mobs);
+ else if(name==="Cañones")renderCategory("Cañones",canones);
  else renderCategory(name,[]);
 };
 
@@ -469,7 +505,6 @@ window.battleComingSoon=function(){
 onAuthStateChanged(auth,async user=>{
  if(!user){
   cloudReady=false;
-  currentUid=null;
   playerRef=null;
   gate.style.display="grid";
   gateStatus.textContent="Inicia sesión con Google para entrar a MAGIC-GAM.";
