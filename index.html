@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,14 +7,9 @@
 <meta name="theme-color" content="#17134b">
 <link rel="manifest" href="/Magic-Gam-/manifest.json">
 <title>MAGIC-GAM</title>
-
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;color:white;font-family:Arial,sans-serif;
- background:radial-gradient(ellipse at 50% 0,#5140a8,transparent 50%),linear-gradient(#19164a,#11102f 70%,#080d25);
- min-height:100vh
-}
+body{margin:0;color:white;font-family:Arial,sans-serif;background:radial-gradient(ellipse at 50% 0,#5140a8,transparent 50%),linear-gradient(#19164a,#11102f 70%,#080d25);min-height:100vh}
 button{font:inherit;color:inherit;cursor:pointer}
 button:disabled{opacity:.5;cursor:wait}
 .app{max-width:520px;min-height:100vh;margin:auto;padding:12px 10px 22px}
@@ -27,7 +23,6 @@ button:disabled{opacity:.5;cursor:wait}
 .settings{width:38px;height:38px;border-radius:13px;border:2px solid #7669ca;background:#27205e;font-size:19px}
 .brand{text-align:center;margin:14px 0 10px;font-weight:1000;font-size:27px;letter-spacing:1px;font-style:italic;text-shadow:0 3px 0 #5133a5,0 0 16px #62dfff}
 .brand span{color:#ffe47c}
-
 .world{height:365px;position:relative;overflow:hidden;border-radius:25px;background:linear-gradient(#5b9ee9 0%,#9bd8fa 42%,#5b9c74 43%,#28704c 100%);border:2px solid #7ddaff;box-shadow:0 8px 0 #26205f}
 .cloud{position:absolute;color:#fff9;font-size:34px}
 .c1{top:20px;left:22px}.c2{top:50px;right:22px}
@@ -42,7 +37,6 @@ button:disabled{opacity:.5;cursor:wait}
 .lv{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:1000;background:#1d2863;border:1px solid #ffe17a;padding:2px 5px;border-radius:8px;white-space:nowrap}
 .castle-info{position:absolute;top:10px;right:10px;z-index:5;background:#1a246dcc;border:1px solid #a8dfff;border-radius:12px;padding:7px 9px;font-size:10px;font-weight:bold}
 .castle-upgrade{position:absolute;z-index:5;bottom:30px;left:50%;transform:translateX(-50%);background:linear-gradient(#ffe77d,#f5a92e);color:#51310c;border:2px solid #fff0a8;border-radius:12px;padding:7px 12px;font-size:10px;font-weight:1000;white-space:nowrap}
-
 .section-title{font-size:12px;font-weight:1000;color:#b8caff;letter-spacing:1px;margin:16px 2px 8px}
 .team{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .unit{background:linear-gradient(160deg,#353078,#171944);border:2px solid #766be0;border-radius:13px;padding:8px 2px;text-align:center;box-shadow:0 4px 0 #0a0b27;min-width:0}
@@ -63,12 +57,10 @@ button:disabled{opacity:.5;cursor:wait}
 .info{font-size:12px;color:#c3c9ed;line-height:1.5}
 .primary{width:100%;padding:10px 5px;border:0;border-radius:10px;background:linear-gradient(#ffe77d,#f5a92e);color:#51310c;font-weight:1000;margin-top:8px;font-size:11px}
 .status{text-align:center;color:#8ceeff;font-size:12px;min-height:18px;margin:10px 0}
-
 #authGate{position:fixed;inset:0;z-index:100;background:#080817;display:grid;place-items:center;padding:22px}
 .auth-card{width:min(100%,390px);background:#171944;border:1px solid #21cfff;border-radius:22px;padding:24px;text-align:center}
 .auth-logo{font-size:30px;font-weight:1000;margin:8px}
 .login{width:100%;padding:14px;border:2px solid #4de5ff;border-radius:14px;background:#202b68;font-weight:bold}
-
 .card-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
 .unit-card{min-width:0;overflow:hidden;background:linear-gradient(155deg,#173c91,#111536);border:1px solid #45cfff;border-radius:12px;padding:5px 4px 7px;text-align:center;box-shadow:0 3px 0 #090e2a}
 .unit-art{width:100%;height:76px;border-radius:8px;background:radial-gradient(circle,#286ddc,#101a48 70%);display:grid;place-items:center;overflow:hidden}
@@ -81,17 +73,9 @@ button:disabled{opacity:.5;cursor:wait}
 .unit-upgrade{width:100%;padding:7px 1px;border:1px solid #fff0a8;border-radius:8px;background:linear-gradient(#ffe77d,#f5a92e);color:#51310c;font-weight:1000;font-size:9px;margin-top:6px}
 .empty-category{text-align:center;padding:20px 8px;color:#c3c9ed;font-size:12px}
 #battleContainer{width:100%;min-height:300px}
-@media(max-width:360px){
- .app{padding-left:7px;padding-right:7px}
- .card-list{gap:4px}
- .unit-art{height:62px}
- .unit-name{font-size:10px}
- .unit-stats{font-size:8px}
- .unit-upgrade{font-size:8px}
-}
+@media(max-width:360px){.app{padding-left:7px;padding-right:7px}.card-list{gap:4px}.unit-art{height:62px}.unit-name{font-size:10px}.unit-stats{font-size:8px}.unit-upgrade{font-size:8px}}
 </style>
 </head>
-
 <body>
 <div id="authGate">
  <div class="auth-card">
@@ -132,7 +116,6 @@ button:disabled{opacity:.5;cursor:wait}
   <div class="castle-info">🛡️ ESCUDO: <span id="shield">100</span></div>
   <button class="castle-upgrade" onclick="upgradeCastle()">MEJORAR CASTILLO · <span id="castlePrice">2,000</span> 💎</button>
  </div>
-
  <div class="section-title">TU EQUIPO INICIAL · NIVEL 1</div>
  <div class="team">
   <button class="unit" onclick="openCategory('Mobs')"><span class="emoji">🔵</span><strong>MOBS</strong><small>NVL 1</small></button>
@@ -167,10 +150,7 @@ button:disabled{opacity:.5;cursor:wait}
   <button class="category" onclick="showCategory('Campeones')"><span>🦸</span><strong>CAMPEONES</strong></button>
   <button class="category" onclick="showCategory('Superpoderes')"><span>✨</span><strong>SUPERPODERES</strong></button>
  </div>
- <div id="categoryInfo" class="panel">
-  <strong>ELIGE UNA CATEGORÍA</strong>
-  <p class="info">Aquí aparecerán tus personajes y unidades.</p>
- </div>
+ <div id="categoryInfo" class="panel"><strong>ELIGE UNA CATEGORÍA</strong><p class="info">Aquí aparecerán tus personajes y unidades.</p></div>
 </section>
 
 <section id="chat" class="screen">
@@ -199,20 +179,14 @@ button:disabled{opacity:.5;cursor:wait}
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-import{
- getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,
- signOut,setPersistence,browserLocalPersistence
-}from"https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-import{
- getFirestore,doc,getDoc,setDoc,updateDoc,serverTimestamp
-}from"https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
-
+import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from"https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,updateDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 import{mobs,obtenerEstadisticas}from"./personajes/mobs.js";
 import{canones,obtenerEstadisticasCanon}from"./personajes/canones.js";
 import{iniciarBatalla}from"./batalla.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv0IIZRZg",
+ apiKey:"AIzaSyAO0ydbJe-EGSgmEpgkuLWxwv4IiwRZg",
  authDomain:"magic-gam.firebaseapp.com",
  projectId:"magic-gam",
  storageBucket:"magic-gam.firebasestorage.app",
@@ -241,9 +215,9 @@ function num(value,fallback=0){
  const n=Number(value);
  return Number.isFinite(n)?Math.max(0,Math.floor(n)):fallback;
 }
-function castlePrice(level){return 2000+(level-1)*250;}
-function upgradePrice(level){return level*60;}
-function requiredStars(level){return level*2;}
+function castlePrice(level){return 2000+(level-1)*250}
+function upgradePrice(level){return level*60}
+function requiredStars(level){return level*2}
 
 function updateUI(){
  document.getElementById("diamonds").textContent=state.diamonds.toLocaleString("es-MX");
@@ -257,6 +231,7 @@ function showError(error){
  console.error("MAGIC-GAM Firebase:",error);
  const code=error?.code||"error";
  const messages={
+  "auth/api-key-not-valid":"La clave API de Firebase no es válida. Comprueba la configuración del proyecto.",
   "auth/unauthorized-domain":"Este dominio no está autorizado en Firebase Authentication.",
   "auth/operation-not-allowed":"Google no está activado en Firebase.",
   "auth/popup-blocked":"El navegador bloqueó la ventana de Google.",
@@ -272,12 +247,7 @@ async function ensurePlayer(user){
  const ref=doc(db,"players",user.uid);
  const snapshot=await getDoc(ref);
  if(!snapshot.exists()){
-  const data={
-   playerId:"MG-"+user.uid,
-   displayName:user.displayName||"Jugador",
-   createdAt:serverTimestamp(),
-   accountType:"google"
-  };
+  const data={playerId:"MG-"+user.uid,displayName:user.displayName||"Jugador",createdAt:serverTimestamp(),accountType:"google"};
   await setDoc(ref,data);
   return{ref,data};
  }
@@ -286,13 +256,7 @@ async function ensurePlayer(user){
 
 async function saveProgress(){
  if(!auth.currentUser||!cloudReady||!playerRef)throw new Error("La cuenta todavía no está lista.");
- const updatedSave={
-  ...legacySave,
-  diamonds:state.diamonds,
-  globalStars:state.globalStars,
-  castleLevel:state.castleLevel,
-  characterLevels
- };
+ const updatedSave={...legacySave,diamonds:state.diamonds,globalStars:state.globalStars,castleLevel:state.castleLevel,characterLevels};
  await updateDoc(playerRef,{gameSave:updatedSave});
  legacySave=updatedSave;
 }
@@ -328,16 +292,13 @@ window.loginGoogle=async function(){
  try{
   await setPersistence(auth,browserLocalPersistence);
   await signInWithPopup(auth,provider);
- }catch(error){showError(error);}
- finally{
-  button.disabled=false;
-  button.textContent="🔐 CONTINUAR CON GOOGLE";
- }
+ }catch(error){showError(error)}
+ finally{button.disabled=false;button.textContent="🔐 CONTINUAR CON GOOGLE"}
 };
 
 window.logoutGoogle=async function(){
- try{cloudReady=false;await signOut(auth);}
- catch(error){showError(error);}
+ try{cloudReady=false;await signOut(auth)}
+ catch(error){showError(error)}
 };
 
 window.openScreen=function(id){
@@ -375,13 +336,13 @@ window.upgradeCastle=async function(){
 };
 
 async function upgradeCharacter(category,item){
- if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return;}
+ if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return}
  const key=category+"_"+item.id;
  const currentLevel=Math.max(1,num(characterLevels[key],item.nivel||1));
  const price=upgradePrice(currentLevel);
  const stars=requiredStars(currentLevel);
- if(state.globalStars<stars){alert("Necesitas "+stars+" estrellas globales. Tienes "+state.globalStars+".");return;}
- if(state.diamonds<price){alert("Necesitas "+price+" diamantes. Tienes "+state.diamonds+".");return;}
+ if(state.globalStars<stars){alert("Necesitas "+stars+" estrellas globales. Tienes "+state.globalStars+".");return}
+ if(state.diamonds<price){alert("Necesitas "+price+" diamantes. Tienes "+state.diamonds+".");return}
  if(!confirm("¿Mejorar "+item.nombre+" al nivel "+(currentLevel+1)+"?\n\nCoste: "+price+" diamantes\nRequisito: "+stars+" estrellas\n\nLas estrellas no se gastan."))return;
  const oldDiamonds=state.diamonds;
  const oldLevel=characterLevels[key];
@@ -409,11 +370,7 @@ function renderMob(item){
  const price=upgradePrice(level),stars=requiredStars(level);
  const safeName=String(item.nombre).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  const safeImage=String(item.imagen).replace(/"/g,"%22");
- return `<article class="unit-card">
- <div class="unit-art"><img src="${safeImage}" alt="${safeName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="unit-placeholder" style="display:none">🐯</span></div>
- <div class="unit-name">${safeName}</div><div class="unit-level">NIVEL ${level}</div>
- <div class="unit-stats">❤️ <b>${stats.salud}</b><br>⚔️ <b>${stats.ataque}</b><br>⚡ <b>${stats.velocidad}</b></div>
- <button class="unit-upgrade" data-upgrade-category="Mobs" data-upgrade-id="${item.id}">MEJORAR<br>${price} 💎 · ${stars} ⭐</button></article>`;
+ return `<article class="unit-card"><div class="unit-art"><img src="${safeImage}" alt="${safeName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="unit-placeholder" style="display:none">🐯</span></div><div class="unit-name">${safeName}</div><div class="unit-level">NIVEL ${level}</div><div class="unit-stats">❤️ <b>${stats.salud}</b><br>⚔️ <b>${stats.ataque}</b><br>⚡ <b>${stats.velocidad}</b></div><button class="unit-upgrade" data-upgrade-category="Mobs" data-upgrade-id="${item.id}">MEJORAR<br>${price} 💎 · ${stars} ⭐</button></article>`;
 }
 
 function renderCannon(item){
@@ -422,11 +379,7 @@ function renderCannon(item){
  const price=upgradePrice(level),stars=requiredStars(level);
  const safeName=String(item.nombre).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  const safeImage=String(item.imagen).replace(/"/g,"%22");
- return `<article class="unit-card">
- <div class="unit-art"><img src="${safeImage}" alt="${safeName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="unit-placeholder" style="display:none">💥</span></div>
- <div class="unit-name">${safeName}</div><div class="unit-level">NIVEL ${level}</div>
- <div class="unit-stats">💥 MOBS POR SEGUNDO<br><b>${stats.mobsPorSegundo}</b></div>
- <button class="unit-upgrade" data-upgrade-category="Cañones" data-upgrade-id="${item.id}">MEJORAR<br>${price} 💎 · ${stars} ⭐</button></article>`;
+ return `<article class="unit-card"><div class="unit-art"><img src="${safeImage}" alt="${safeName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="unit-placeholder" style="display:none">💥</span></div><div class="unit-name">${safeName}</div><div class="unit-level">NIVEL ${level}</div><div class="unit-stats">💥 MOBS POR SEGUNDO<br><b>${stats.mobsPorSegundo}</b></div><button class="unit-upgrade" data-upgrade-category="Cañones" data-upgrade-id="${item.id}">MEJORAR<br>${price} 💎 · ${stars} ⭐</button></article>`;
 }
 
 function renderCategory(category,items){
@@ -453,16 +406,14 @@ window.showCategory=function(name){
 };
 
 window.openBattle=function(){
- if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return;}
+ if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return}
  openScreen("battle");
  const container=document.getElementById("battleContainer");
  if(battleInstance)battleInstance.destruir();
  battleClaimed=false;
-
  const cannonLevel=Math.max(1,num(characterLevels["Cañones_propulsion-cannon"],1));
  const cannon=canones.find(item=>item.id==="propulsion-cannon");
  const production=cannon?obtenerEstadisticasCanon(cannon,cannonLevel).mobsPorSegundo:3;
-
  try{
   battleInstance=iniciarBatalla(container,{
    mobsPorSegundo:production,
@@ -489,7 +440,7 @@ window.openBattle=function(){
 };
 
 window.closeBattle=function(){
- if(battleInstance){battleInstance.destruir();battleInstance=null;}
+ if(battleInstance){battleInstance.destruir();battleInstance=null}
  openScreen("home");
 };
 
@@ -501,8 +452,8 @@ onAuthStateChanged(auth,async user=>{
   gateStatus.textContent="Inicia sesión con Google para entrar a MAGIC-GAM.";
   return;
  }
- try{await loadAccount(user);}
- catch(error){cloudReady=false;gate.style.display="grid";showError(error);}
+ try{await loadAccount(user)}
+ catch(error){cloudReady=false;gate.style.display="grid";showError(error)}
 });
 
 updateUI();
