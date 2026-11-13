@@ -1,19 +1,19 @@
+
 export function iniciarBatalla(contenedor, opciones = {}) {
   contenedor.innerHTML = "";
 
   const juego = document.createElement("div");
-  juego.style.cssText = `
-    width:100%;
-    color:white;
-    font-family:Arial,sans-serif;
-    text-align:center;
-  `;
+  juego.style.cssText = "width:100%;color:white;font-family:Arial,sans-serif;text-align:center";
 
   juego.innerHTML = `
-    <div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:8px">
-      <div>⭐ RONDA <b id="round">1</b></div>
-      <div>🔵 MOBS <b id="mobCount">0</b></div>
-      <div>🏰 BASE <b id="baseHealth">100</b></div>
+    <div style="display:flex;justify-content:space-between;gap:5px;font-size:12px;margin-bottom:8px">
+      <span>⭐ RONDA <b id="round">1</b></span>
+      <span>🔵 MOBS <b id="mobCount">0</b></span>
+      <span>🏰 ENEMIGO <b id="enemyHealth">100</b></span>
+    </div>
+
+    <div style="height:9px;background:#451d38;border-radius:10px;overflow:hidden;margin-bottom:9px">
+      <div id="enemyBar" style="height:100%;width:100%;background:#ff526d"></div>
     </div>
 
     <canvas id="battleCanvas"
@@ -25,7 +25,7 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     </p>
 
     <button id="fireButton"
-      style="width:100%;padding:13px;border:2px solid #d7ffad;border-radius:14px;background:linear-gradient(#8bea50,#269c3d);color:#103b20;font-weight:900;font-size:17px">
+      style="width:100%;padding:13px;border:2px solid #d7ffad;border-radius:14px;background:linear-gradient(#8bea50,#269c3d);color:#103b20;font-weight:900;font-size:16px">
       INICIAR BATALLA
     </button>
   `;
@@ -35,7 +35,8 @@ export function iniciarBatalla(contenedor, opciones = {}) {
   const canvas = juego.querySelector("#battleCanvas");
   const ctx = canvas.getContext("2d");
   const mobCount = juego.querySelector("#mobCount");
-  const baseHealth = juego.querySelector("#baseHealth");
+  const enemyHealthLabel = juego.querySelector("#enemyHealth");
+  const enemyBar = juego.querySelector("#enemyBar");
   const message = juego.querySelector("#battleMessage");
   const fireButton = juego.querySelector("#fireButton");
   const roundLabel = juego.querySelector("#round");
@@ -48,7 +49,7 @@ export function iniciarBatalla(contenedor, opciones = {}) {
   let cannonX = W / 2;
   let dragging = false;
   let running = false;
-  let finished = false;
+  let destroyed = false;
   let mobs = [];
   let bullets = [];
   let enemies = [];
@@ -57,138 +58,161 @@ export function iniciarBatalla(contenedor, opciones = {}) {
   let playerHealth = 100;
   let produced = 0;
   let lastShot = 0;
-  let animation = 0;
   let round = 1;
   let lastTime = 0;
+  let elapsed = 0;
+  let animationId = 0;
 
-  const productionRate = Math.max(
-    1,
-    Number(opciones.mobsPorSegundo) || 3
-  );
+  const productionRate = Math.max(1, Number(opciones.mobsPorSegundo) || 3);
+
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function createGates() {
+    const choices = [
+      [{x:180,y:445,value:2},{x:520,y:445,value:3}],
+      [{x:230,y:430,value:3},{x:470,y:430,value:2}],
+      [{x:150,y:440,value:2},{x:350,y:365,value:4},{x:550,y:440,value:2}],
+      [{x:250,y:430,value:5},{x:500,y:350,value:2}]
+    ];
+
+    gates = choices[Math.floor(Math.random() * choices.length)]
+      .map(g => ({...g, hit:new Set()}));
+  }
+
+  function drawCloud(x,y) {
+    ctx.beginPath();
+    ctx.arc(x,y,24,0,Math.PI*2);
+    ctx.arc(x+25,y-10,30,0,Math.PI*2);
+    ctx.arc(x+52,y,23,0,Math.PI*2);
+    ctx.fill();
+  }
 
   function drawIsland() {
-    ctx.clearRect(0, 0, W, H);
+    ctx.clearRect(0,0,W,H);
 
-    // Cielo
-    const sky = ctx.createLinearGradient(0, 0, 0, H);
-    sky.addColorStop(0, "#65b9f2");
-    sky.addColorStop(1, "#c2edff");
+    const sky = ctx.createLinearGradient(0,0,0,H);
+    sky.addColorStop(0,"#58b6f5");
+    sky.addColorStop(1,"#d4f1ff");
     ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0,0,W,H);
 
-    // Nubes
     ctx.fillStyle = "#ffffffaa";
-    for (let i = 0; i < 5; i++) {
-      const x = (i * 173 + 60) % W;
-      const y = 65 + (i % 3) * 35;
-      ctx.beginPath();
-      ctx.arc(x, y, 25, 0, Math.PI * 2);
-      ctx.arc(x + 24, y - 10, 30, 0, Math.PI * 2);
-      ctx.arc(x + 48, y, 23, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    drawCloud(65,75);
+    drawCloud(480,105);
+
+    // Montañas del fondo
+    ctx.fillStyle = "#6274a9";
+    ctx.beginPath();
+    ctx.moveTo(0,250);
+    ctx.lineTo(130,95);
+    ctx.lineTo(270,250);
+    ctx.fill();
+
+    ctx.fillStyle = "#7885b7";
+    ctx.beginPath();
+    ctx.moveTo(420,245);
+    ctx.lineTo(570,80);
+    ctx.lineTo(700,245);
+    ctx.fill();
 
     // Isla flotante
     ctx.beginPath();
-    ctx.moveTo(80, 180);
-    ctx.lineTo(620, 180);
-    ctx.lineTo(675, 660);
-    ctx.lineTo(350, 850);
-    ctx.lineTo(25, 660);
+    ctx.moveTo(80,180);
+    ctx.lineTo(620,180);
+    ctx.lineTo(675,660);
+    ctx.lineTo(350,850);
+    ctx.lineTo(25,660);
     ctx.closePath();
     ctx.fillStyle = "#398e50";
     ctx.fill();
 
-    ctx.beginPath();
-    ctx.moveTo(80, 180);
-    ctx.lineTo(620, 180);
-    ctx.lineTo(675, 660);
-    ctx.lineTo(350, 850);
-    ctx.lineTo(25, 660);
-    ctx.closePath();
     ctx.strokeStyle = "#a5ef77";
     ctx.lineWidth = 15;
     ctx.stroke();
 
     // Camino
     ctx.beginPath();
-    ctx.moveTo(350, 250);
-    ctx.lineTo(350, 730);
-    ctx.strokeStyle = "#d9c28c";
-    ctx.lineWidth = 115;
+    ctx.moveTo(350,270);
+    ctx.lineTo(350,730);
+    ctx.strokeStyle = "#a27b53";
+    ctx.lineWidth = 120;
     ctx.lineCap = "round";
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(350, 250);
-    ctx.lineTo(350, 730);
-    ctx.strokeStyle = "#f1d9a2";
-    ctx.lineWidth = 90;
+    ctx.moveTo(350,270);
+    ctx.lineTo(350,730);
+    ctx.strokeStyle = "#e7ce96";
+    ctx.lineWidth = 94;
     ctx.stroke();
 
     // Fortaleza enemiga
     ctx.fillStyle = "#873d55";
-    ctx.fillRect(275, 195, 150, 75);
+    ctx.fillRect(275,195,150,75);
     ctx.fillStyle = "#c46c79";
-    ctx.fillRect(260, 175, 35, 65);
-    ctx.fillRect(405, 175, 35, 65);
+    ctx.fillRect(260,175,35,65);
+    ctx.fillRect(405,175,35,65);
     ctx.fillStyle = "#ffe28a";
-    ctx.fillRect(325, 220, 50, 50);
+    ctx.fillRect(325,220,50,50);
+
     ctx.fillStyle = "white";
     ctx.font = "bold 20px Arial";
-    ctx.fillText("ENEMIGO", 300, 155);
+    ctx.textAlign = "center";
+    ctx.fillText("FORTALEZA ENEMIGA",350,155);
 
     // Base del jugador
     ctx.fillStyle = "#3157a5";
-    ctx.fillRect(275, 700, 150, 75);
+    ctx.fillRect(275,700,150,75);
     ctx.fillStyle = "#5f8fe0";
-    ctx.fillRect(260, 680, 35, 65);
-    ctx.fillRect(405, 680, 35, 65);
+    ctx.fillRect(260,680,35,65);
+    ctx.fillRect(405,680,35,65);
     ctx.fillStyle = "#ffe28a";
-    ctx.fillRect(325, 725, 50, 50);
+    ctx.fillRect(325,725,50,50);
 
     ctx.fillStyle = "white";
-    ctx.font = "bold 20px Arial";
-    ctx.fillText("TU BASE", 305, 810);
+    ctx.font = "bold 19px Arial";
+    ctx.fillText("TU BASE",350,810);
 
-    // Puertas multiplicadoras
+    // Multiplicadores
     gates.forEach(gate => {
       ctx.fillStyle = "#172e68";
-      ctx.fillRect(gate.x - 48, gate.y - 24, 96, 48);
+      ctx.fillRect(gate.x-48,gate.y-25,96,50);
+
       ctx.strokeStyle = "#ffe37b";
       ctx.lineWidth = 5;
-      ctx.strokeRect(gate.x - 48, gate.y - 24, 96, 48);
+      ctx.strokeRect(gate.x-48,gate.y-25,96,50);
+
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 24px Arial";
-      ctx.textAlign = "center";
-      ctx.fillText("×" + gate.value, gate.x, gate.y + 8);
+      ctx.font = "bold 25px Arial";
+      ctx.fillText("×"+gate.value,gate.x,gate.y+8);
     });
 
-    ctx.textAlign = "left";
-
-    // Cañón
+    // Cañón móvil
     ctx.save();
-    ctx.translate(cannonX, 625);
+    ctx.translate(cannonX,625);
+
     ctx.fillStyle = "#273f75";
     ctx.beginPath();
-    ctx.ellipse(0, 25, 57, 27, 0, 0, Math.PI * 2);
+    ctx.ellipse(0,25,57,27,0,0,Math.PI*2);
     ctx.fill();
 
     ctx.fillStyle = "#c7d4e8";
-    ctx.fillRect(-17, -48, 34, 70);
+    ctx.fillRect(-19,-48,38,70);
 
     ctx.fillStyle = "#2878d9";
-    ctx.fillRect(-22, -93, 44, 65);
+    ctx.fillRect(-25,-95,50,65);
 
     ctx.fillStyle = "#ffd76a";
-    ctx.fillRect(-27, -101, 54, 15);
+    ctx.fillRect(-29,-103,58,15);
 
     ctx.restore();
 
     // MOBS
     mobs.forEach(mob => {
       ctx.beginPath();
-      ctx.arc(mob.x, mob.y, 12, 0, Math.PI * 2);
+      ctx.arc(mob.x,mob.y,12,0,Math.PI*2);
       ctx.fillStyle = "#36c8ff";
       ctx.fill();
       ctx.strokeStyle = "#ffffff";
@@ -199,141 +223,160 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     // Disparos
     bullets.forEach(bullet => {
       ctx.beginPath();
-      ctx.arc(bullet.x, bullet.y, 8, 0, Math.PI * 2);
+      ctx.arc(bullet.x,bullet.y,8,0,Math.PI*2);
       ctx.fillStyle = "#ffe36b";
       ctx.fill();
     });
 
     // Enemigos
     enemies.forEach(enemy => {
-      ctx.fillStyle = "#e94c65";
       ctx.beginPath();
-      ctx.arc(enemy.x, enemy.y, 15, 0, Math.PI * 2);
+      ctx.arc(enemy.x,enemy.y,15,0,Math.PI*2);
+      ctx.fillStyle = "#e94c65";
       ctx.fill();
+      ctx.strokeStyle = "#ffd2d9";
+      ctx.lineWidth = 2;
+      ctx.stroke();
     });
 
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 16px Arial";
     ctx.textAlign = "center";
-    ctx.fillText("ARRASTRA EL CAÑÓN", 350, 590);
+    ctx.fillStyle = "white";
+    ctx.font = "bold 16px Arial";
+    ctx.fillText("MUEVE EL CAÑÓN",350,590);
     ctx.textAlign = "left";
+  }
+
+  function updateHealth() {
+    enemyHealthLabel.textContent = Math.max(0,Math.ceil(enemyHealth));
+    enemyBar.style.width = Math.max(0,enemyHealth)+"%";
   }
 
   function pointerX(event) {
     const rect = canvas.getBoundingClientRect();
-    return (event.clientX - rect.left) * W / rect.width;
+    return (event.clientX-rect.left)*W/rect.width;
   }
 
-  canvas.addEventListener("pointerdown", event => {
+  canvas.addEventListener("pointerdown",event => {
+    if (!running) return;
     dragging = true;
-    cannonX = Math.max(95, Math.min(605, pointerX(event)));
+    cannonX = Math.max(85,Math.min(615,pointerX(event)));
     canvas.setPointerCapture(event.pointerId);
   });
 
-  canvas.addEventListener("pointermove", event => {
-    if (!dragging) return;
-    cannonX = Math.max(95, Math.min(605, pointerX(event)));
+  canvas.addEventListener("pointermove",event => {
+    if (!dragging || !running) return;
+    cannonX = Math.max(85,Math.min(615,pointerX(event)));
   });
 
-  canvas.addEventListener("pointerup", () => dragging = false);
-  canvas.addEventListener("pointercancel", () => dragging = false);
-
-  function createGates() {
-    gates = [
-      {x:210, y:430, value:2},
-      {x:490, y:430, value:3},
-      {x:350, y:330, value:5}
-    ];
-  }
+  canvas.addEventListener("pointerup",() => dragging = false);
+  canvas.addEventListener("pointercancel",() => dragging = false);
 
   function startBattle() {
-    if (running) return;
+    if (running || destroyed) return;
 
     running = true;
-    finished = false;
-    produced = 0;
     enemyHealth = 100;
     playerHealth = 100;
+    produced = 0;
+    elapsed = 0;
+    lastShot = 0;
     mobs = [];
     bullets = [];
     enemies = [];
+
     createGates();
+    updateHealth();
 
     fireButton.textContent = "BATALLA EN CURSO";
     fireButton.disabled = true;
     message.textContent = "¡Mueve el cañón y atraviesa los multiplicadores!";
-    lastTime = performance.now();
 
-    requestAnimationFrame(loop);
+    lastTime = performance.now();
+    animationId = requestAnimationFrame(loop);
   }
 
   function loop(time) {
-    if (!running) return;
+    if (!running || destroyed) return;
 
-    const delta = Math.min((time - lastTime) / 1000, 0.05);
+    const delta = Math.min((time-lastTime)/1000,0.05);
     lastTime = time;
-    animation += delta;
+    elapsed += delta;
 
-    // Producción automática de MOBS
-    if (time - lastShot >= 1000 / productionRate) {
+    // Producción automática
+    if (time-lastShot >= 1000/productionRate) {
       lastShot = time;
-      bullets.push({x:cannonX, y:590});
+      bullets.push({x:cannonX,y:590});
       produced++;
     }
 
-    // Movimiento de disparos
-    bullets.forEach(bullet => bullet.y -= 480 * delta);
+    // Los disparos se convierten en MOBS
+    bullets.forEach(bullet => bullet.y -= 480*delta);
 
-    bullets = bullets.filter(bullet => {
-      if (bullet.y < 600) {
-        mobs.push({x:bullet.x, y:bullet.y, speed:115, multiplied:false});
-        return false;
+    const remainingBullets = [];
+    bullets.forEach(bullet => {
+      if (bullet.y < 590) {
+        mobs.push({
+          id:produced+"-"+Math.random(),
+          x:bullet.x,
+          y:bullet.y,
+          speed:115
+        });
+      } else {
+        remainingBullets.push(bullet);
       }
-      return true;
     });
+    bullets = remainingBullets;
 
-    // Movimiento de MOBS
+    // Movimiento y multiplicadores
+    const newMobs = [];
+
     mobs.forEach(mob => {
-      mob.y -= mob.speed * delta;
+      mob.y -= mob.speed*delta;
 
       gates.forEach(gate => {
         if (
-          !mob.multiplied &&
-          Math.abs(mob.x - gate.x) < 48 &&
-          Math.abs(mob.y - gate.y) < 25
+          mob.y <= gate.y+25 &&
+          mob.y >= gate.y-25 &&
+          mob.x >= gate.x-48 &&
+          mob.x <= gate.x+48
         ) {
-          mob.multiplied = true;
-          for (let i = 1; i < gate.value; i++) {
-            mobs.push({
-              x:mob.x + (Math.random() * 30 - 15),
-              y:mob.y + (Math.random() * 15),
-              speed:mob.speed,
-              multiplied:true
-            });
+          const count = gate.hit.has(mob.id);
+          if (!count) {
+            gate.hit.add(mob.id);
+
+            for (let i=1;i<gate.value;i++) {
+              newMobs.push({
+                id:mob.id+"-"+i,
+                x:mob.x+random(-22,22),
+                y:mob.y+random(-8,8),
+                speed:mob.speed
+              });
+            }
           }
         }
       });
 
-      if (mob.y < 275) {
+      if (mob.y < 285) {
         enemyHealth -= 1;
-        mob.y = -100;
+      } else {
+        newMobs.push(mob);
       }
     });
 
-    mobs = mobs.filter(mob => mob.y > -50);
+    mobs = newMobs;
 
-    // Enemigos
-    if (animation > 4 && Math.random() < delta * 0.7) {
+    // Enemigos que avanzan hacia tu base
+    if (elapsed > 3 && Math.random() < delta*0.65) {
       enemies.push({
-        x:350 + (Math.random() * 100 - 50),
-        y:270,
-        speed:35
+        x:350+random(-75,75),
+        y:280,
+        speed:random(30,48)
       });
     }
 
     enemies.forEach(enemy => {
-      enemy.y += enemy.speed * delta;
-      if (enemy.y > 650) {
+      enemy.y += enemy.speed*delta;
+      if (enemy.y > 665) {
         playerHealth -= 5;
         enemy.y = 1000;
       }
@@ -341,8 +384,8 @@ export function iniciarBatalla(contenedor, opciones = {}) {
 
     enemies = enemies.filter(enemy => enemy.y < 900);
 
-    mobCount.textContent = mobs.length + produced;
-    baseHealth.textContent = Math.max(0, playerHealth);
+    mobCount.textContent = mobs.length;
+    updateHealth();
 
     if (enemyHealth <= 0) {
       finish(true);
@@ -355,35 +398,53 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     }
 
     drawIsland();
-    requestAnimationFrame(loop);
+    animationId = requestAnimationFrame(loop);
   }
 
   function finish(won) {
     running = false;
-    finished = true;
+    dragging = false;
+    cancelAnimationFrame(animationId);
+
     fireButton.disabled = false;
-    fireButton.textContent = "JUGAR OTRA VEZ";
+    fireButton.textContent = won ? "SIGUIENTE RONDA" : "REINTENTAR";
 
     if (won) {
-      message.textContent = "¡Victoria! Has conquistado la fortaleza.";
+      message.textContent = "¡VICTORIA! Has conquistado la fortaleza. Ganaste 1 estrella.";
       if (typeof opciones.onVictory === "function") {
         opciones.onVictory();
       }
     } else {
-      message.textContent = "La base necesita más defensas. ¡Inténtalo otra vez!";
+      message.textContent = "¡Tu base ha caído! Puedes intentarlo de nuevo.";
     }
 
     drawIsland();
   }
 
-  fireButton.addEventListener("click", startBattle);
+  fireButton.addEventListener("click",() => {
+    if (destroyed) return;
+
+    if (!running && enemyHealth <= 0) {
+      round++;
+      roundLabel.textContent = round;
+      enemyHealth = 100+((round-1)*15);
+      playerHealth = 100+((round-1)*5);
+      enemyHealth = Math.min(enemyHealth,100+round*20);
+      enemyBar.style.width = "100%";
+      enemyHealthLabel.textContent = enemyHealth;
+    }
+
+    startBattle();
+  });
 
   createGates();
   drawIsland();
 
   return {
     destruir() {
+      destroyed = true;
       running = false;
+      cancelAnimationFrame(animationId);
       contenedor.innerHTML = "";
     }
   };
