@@ -2,7 +2,7 @@ export function iniciarBatalla(contenedor, opciones = {}) {
   contenedor.innerHTML = "";
 
   const juego = document.createElement("div");
-  juego.style.cssText = "width:100%;color:white;font-family:Arial,sans-serif;text-align:center";
+  juego.style.cssText = "width:100%;height:100%;color:white;font-family:Arial,sans-serif;text-align:center";
 
   juego.innerHTML = `
     <div style="display:flex;justify-content:space-between;gap:5px;font-size:12px;margin-bottom:8px">
@@ -14,10 +14,10 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     <div style="height:9px;background:#451d38;border-radius:10px;overflow:hidden;margin-bottom:9px">
       <div id="enemyBar" style="height:100%;width:100%;background:#ff526d"></div>
     </div>
-    <canvas id="battleCanvas" style="width:100%;display:block;border:2px solid #60dfff;border-radius:16px;touch-action:none"></canvas>
-    <p id="battleMessage" style="font-size:12px;color:#9deaff">Arrastra el cañón de izquierda a derecha.</p>
+    <canvas id="battleCanvas" style="width:100%;height:auto;display:block;border:2px solid #60dfff;border-radius:16px;touch-action:none"></canvas>
+    <p id="battleMessage" style="font-size:12px;color:#9deaff">Arrastra el cañón para moverlo.</p>
     <button id="fireButton" style="width:100%;padding:13px;border:2px solid #d7ffad;border-radius:14px;background:linear-gradient(#8bea50,#269c3d);color:#103b20;font-weight:900;font-size:16px">
-      INICIAR BATALLA
+      BATALLA EN CURSO
     </button>
   `;
 
@@ -80,7 +80,7 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     ];
 
     const selected = positions[Math.floor(Math.random() * positions.length)];
-    gates = selected.map(g => ({...g, used:new Set()}));
+    gates = selected.map(g => ({...g}));
   }
 
   function drawTree(x, y, scale = 1) {
@@ -110,14 +110,12 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     ctx.fillStyle = "#398c49";
     ctx.fillRect(0,150,W,700);
 
-    // Bosque de los lados
     for (let i=0;i<9;i++) {
       const y = 160 + i*78;
       drawTree(35 + (i%2)*28,y,1.1);
       drawTree(635 - (i%2)*28,y,1.1);
     }
 
-    // Camino central
     ctx.fillStyle = "#92704a";
     ctx.beginPath();
     ctx.moveTo(260,170);
@@ -136,7 +134,6 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     ctx.closePath();
     ctx.fill();
 
-    // Arbustos y piedras
     for(let i=0;i<10;i++){
       const y=230+i*55;
       ctx.fillStyle="#216b3c";
@@ -153,7 +150,6 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     ctx.fillStyle = sky;
     ctx.fillRect(0,0,W,H);
 
-    // Montañas lejanas
     ctx.fillStyle="#6d719d";
     ctx.beginPath();
     ctx.moveTo(0,270);
@@ -167,11 +163,9 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     ctx.lineTo(700,260);
     ctx.fill();
 
-    // Plataforma de piedra
     ctx.fillStyle="#77758b";
     ctx.fillRect(55,150,590,700);
 
-    // Camino de la torre
     ctx.fillStyle="#b6a9a0";
     ctx.fillRect(270,150,160,700);
 
@@ -179,7 +173,6 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     ctx.lineWidth=8;
     ctx.strokeRect(270,150,160,700);
 
-    // Torres laterales
     for(const x of [85,520]){
       ctx.fillStyle="#6c536e";
       ctx.fillRect(x,235,90,390);
@@ -191,7 +184,6 @@ export function iniciarBatalla(contenedor, opciones = {}) {
       ctx.fillRect(x+30,300,28,70);
     }
 
-    // Escalones
     ctx.strokeStyle="#8e8290";
     ctx.lineWidth=5;
     for(let y=300;y<800;y+=65){
@@ -222,9 +214,11 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     gates.forEach(g => {
       ctx.fillStyle="#152c67";
       ctx.fillRect(g.x-49,g.y-27,98,54);
+
       ctx.strokeStyle="#ffe37b";
       ctx.lineWidth=5;
       ctx.strokeRect(g.x-49,g.y-27,98,54);
+
       ctx.fillStyle="white";
       ctx.font="bold 26px Arial";
       ctx.textAlign="center";
@@ -316,19 +310,36 @@ export function iniciarBatalla(contenedor, opciones = {}) {
   }
 
   canvas.addEventListener("pointerdown",event=>{
+    if(destroyed)return;
+
+    if(!running) startBattle();
+
     if(!running)return;
+
     dragging=true;
     cannonX=Math.max(85,Math.min(615,getPointerX(event)));
-    canvas.setPointerCapture(event.pointerId);
+
+    if(canvas.setPointerCapture){
+      canvas.setPointerCapture(event.pointerId);
+    }
+
+    event.preventDefault();
   });
 
   canvas.addEventListener("pointermove",event=>{
     if(!dragging||!running)return;
+
     cannonX=Math.max(85,Math.min(615,getPointerX(event)));
+    event.preventDefault();
   });
 
-  canvas.addEventListener("pointerup",()=>dragging=false);
-  canvas.addEventListener("pointercancel",()=>dragging=false);
+  canvas.addEventListener("pointerup",()=>{
+    dragging=false;
+  });
+
+  canvas.addEventListener("pointercancel",()=>{
+    dragging=false;
+  });
 
   function startBattle() {
     if(running||destroyed)return;
@@ -347,7 +358,7 @@ export function iniciarBatalla(contenedor, opciones = {}) {
 
     fireButton.textContent="BATALLA EN CURSO";
     fireButton.disabled=true;
-    message.textContent="¡Mueve el cañón para atravesar los multiplicadores!";
+    message.textContent="¡Arrastra el cañón de izquierda a derecha!";
 
     lastTime=performance.now();
     animationId=requestAnimationFrame(loop);
@@ -361,9 +372,10 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     elapsed+=delta;
     spawnTimer+=delta;
 
-    // Producción de MOBS desde el cañón
+    // Producción automática de MOBS
     while(spawnTimer>=1/productionRate){
       spawnTimer-=1/productionRate;
+
       mobs.push({
         id:Math.random().toString(36).slice(2),
         x:cannonX,
@@ -419,6 +431,7 @@ export function iniciarBatalla(contenedor, opciones = {}) {
 
     enemies.forEach(e=>{
       e.y+=e.speed*delta;
+
       if(e.y>675){
         playerHealth-=10;
         e.y=1000;
@@ -447,17 +460,20 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     running=false;
     dragging=false;
     cancelAnimationFrame(animationId);
+
     fireButton.disabled=false;
     fireButton.textContent=won?"SIGUIENTE RONDA":"REINTENTAR";
 
     if(won){
       message.textContent="¡VICTORIA! Has conquistado la fortaleza. Ganaste 1 estrella.";
+
       if(typeof opciones.onVictory==="function"){
         opciones.onVictory();
       }
     }else{
       message.textContent="¡Tu base ha caído! Puedes intentarlo de nuevo.";
     }
+
     drawMap();
   }
 
@@ -472,14 +488,17 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     startBattle();
   });
 
+  // Preparar y comenzar automáticamente
   chooseMap();
   createGates();
   drawMap();
+  startBattle();
 
   return {
     destruir(){
       destroyed=true;
       running=false;
+      dragging=false;
       cancelAnimationFrame(animationId);
       contenedor.innerHTML="";
     }
