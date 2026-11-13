@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -73,9 +74,39 @@ button:disabled{opacity:.5;cursor:wait}
 .empty-category{text-align:center;padding:20px 8px;color:#c3c9ed;font-size:12px}
 #battleContainer{width:100%;min-height:300px}
 @media(max-width:360px){.app{padding-left:7px;padding-right:7px}.card-list{gap:4px}.unit-art{height:62px}.unit-name{font-size:10px}.unit-stats{font-size:8px}.unit-upgrade{font-size:8px}}
+
+/* MODO DE BATALLA A PANTALLA COMPLETA */
+body.battle-fullscreen{overflow:hidden}
+body.battle-fullscreen .app{width:100%;max-width:none;min-height:100dvh;padding:0}
+body.battle-fullscreen .top,
+body.battle-fullscreen .brand{display:none}
+body.battle-fullscreen #battle{
+ display:block!important;
+ position:fixed;
+ inset:0;
+ z-index:999;
+ width:100%;
+ height:100dvh;
+ overflow:auto;
+ background:#10133d;
+ padding:12px 8px;
+ padding-bottom:max(12px,env(safe-area-inset-bottom))
+}
+body.battle-fullscreen #battle h2{margin:5px 0 8px}
+body.battle-fullscreen #battle>p{margin:6px 0}
+body.battle-fullscreen #battleContainer{width:100%;min-height:0;margin:5px 0}
+body.battle-fullscreen #battleCanvas{
+ width:100%!important;
+ height:calc(100dvh - 230px)!important;
+ min-height:350px;
+ max-height:none;
+ object-fit:fill
+}
+body.battle-fullscreen #battle .back{margin:0 0 6px}
 </style>
 </head>
 <body>
+
 <div id="authGate">
  <div class="auth-card">
   <div class="auth-logo">MAGIC-GAM</div>
@@ -410,6 +441,7 @@ window.showCategory=function(name){
 
 window.openBattle=function(){
  if(!cloudReady){alert("Espera a que tu cuenta termine de cargar.");return;}
+ document.body.classList.add("battle-fullscreen");
  openScreen("battle");
  const container=document.getElementById("battleContainer");
  if(battleInstance)battleInstance.destruir();
@@ -443,6 +475,7 @@ window.openBattle=function(){
 };
 
 window.closeBattle=function(){
+ document.body.classList.remove("battle-fullscreen");
  if(battleInstance){battleInstance.destruir();battleInstance=null;}
  openScreen("home");
 };
