@@ -8,7 +8,7 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px">
       <span>⭐ RONDA <b id="round">1</b></span>
       <span>🔵 MOBS <b id="mobCount">0</b></span>
-      <span>👾 ENEMIGOS <b id="enemyCount">0</b></span>
+      <span>🔴 ENEMIGOS <b id="enemyCount">0</b></span>
     </div>
 
     <div style="display:flex;justify-content:space-between;font-size:11px">
@@ -42,10 +42,9 @@ export function iniciarBatalla(contenedor, opciones = {}) {
 
   contenedor.appendChild(juego);
 
-  const canvas = juego.querySelector("#battleCanvas");
-  const ctx = canvas.getContext("2d");
-
   const $ = id => juego.querySelector("#" + id);
+  const canvas = $("battleCanvas");
+  const ctx = canvas.getContext("2d");
 
   const W = 700;
   const H = 900;
@@ -70,7 +69,6 @@ export function iniciarBatalla(contenedor, opciones = {}) {
   let spawnTimer = 0;
   let enemyTimer = 0;
   let animationId = 0;
-
   let currentMap = "bosque";
 
   const productionRate = Math.max(
@@ -84,8 +82,11 @@ export function iniciarBatalla(contenedor, opciones = {}) {
 
   function chooseMap() {
     currentMap = Math.random() < 0.5 ? "bosque" : "torre";
+
     $("mapName").textContent =
-      currentMap === "bosque" ? "🌲 MAPA BOSQUE" : "🏰 MAPA TORRE";
+      currentMap === "bosque"
+        ? "🌲 MAPA BOSQUE"
+        : "🏰 MAPA TORRE";
   }
 
   function createGates() {
@@ -102,32 +103,32 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     ].map(g => ({...g}));
   }
 
-  function drawTree(x, y, scale = 1) {
-    ctx.fillStyle = "#70452c";
+  function drawTree(x,y,scale=1) {
+    ctx.fillStyle="#70452c";
     ctx.fillRect(x-9*scale,y,18*scale,45*scale);
 
-    ctx.fillStyle = "#155b36";
+    ctx.fillStyle="#155b36";
     ctx.beginPath();
     ctx.arc(x,y-10*scale,32*scale,0,Math.PI*2);
     ctx.arc(x-19*scale,y+4*scale,23*scale,0,Math.PI*2);
     ctx.arc(x+19*scale,y+4*scale,23*scale,0,Math.PI*2);
     ctx.fill();
 
-    ctx.fillStyle = "#29834b";
+    ctx.fillStyle="#29834b";
     ctx.beginPath();
     ctx.arc(x-8*scale,y-17*scale,14*scale,0,Math.PI*2);
     ctx.fill();
   }
 
   function drawForest() {
-    const sky = ctx.createLinearGradient(0,0,0,H);
+    const sky=ctx.createLinearGradient(0,0,0,H);
     sky.addColorStop(0,"#8bd9f5");
     sky.addColorStop(1,"#d2f3c2");
 
-    ctx.fillStyle = sky;
+    ctx.fillStyle=sky;
     ctx.fillRect(0,0,W,H);
 
-    ctx.fillStyle = "#398c49";
+    ctx.fillStyle="#398c49";
     ctx.fillRect(0,150,W,700);
 
     for(let i=0;i<9;i++){
@@ -250,6 +251,53 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     });
   }
 
+  function drawHealthBar(x,y,width,hp,maxHp,color) {
+    ctx.fillStyle="#292929";
+    ctx.fillRect(x-width/2,y,width,5);
+
+    ctx.fillStyle=color;
+    ctx.fillRect(x-width/2,y,width*Math.max(0,hp/maxHp),5);
+  }
+
+  function drawUnits() {
+    mobs.forEach(m=>{
+      ctx.beginPath();
+      ctx.arc(m.x,m.y,12,0,Math.PI*2);
+      ctx.fillStyle="#36c8ff";
+      ctx.fill();
+
+      ctx.strokeStyle="white";
+      ctx.lineWidth=3;
+      ctx.stroke();
+
+      if(m.hp<2){
+        drawHealthBar(m.x,m.y-19,22,m.hp,2,"#64ffb0");
+      }
+    });
+
+    enemies.forEach(e=>{
+      ctx.beginPath();
+      ctx.arc(e.x,e.y,e.radius,0,Math.PI*2);
+      ctx.fillStyle=e.type==="fuerte"?"#9e45dc":"#ed4c65";
+      ctx.fill();
+
+      ctx.strokeStyle=e.type==="fuerte"?"#e9baff":"#ffd2d9";
+      ctx.lineWidth=2;
+      ctx.stroke();
+
+      drawHealthBar(
+        e.x,e.y-23,e.radius*2.5,e.hp,e.maxHp,"#ffdf63"
+      );
+
+      if(e.type==="fuerte"){
+        ctx.fillStyle="white";
+        ctx.font="bold 11px Arial";
+        ctx.textAlign="center";
+        ctx.fillText("★",e.x,e.y+4);
+      }
+    });
+  }
+
   function drawCannon() {
     ctx.save();
     ctx.translate(cannonX,680);
@@ -269,30 +317,6 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     ctx.fillRect(-30,-113,60,15);
 
     ctx.restore();
-  }
-
-  function drawUnits() {
-    mobs.forEach(m=>{
-      ctx.beginPath();
-      ctx.arc(m.x,m.y,12,0,Math.PI*2);
-      ctx.fillStyle="#36c8ff";
-      ctx.fill();
-
-      ctx.strokeStyle="white";
-      ctx.lineWidth=3;
-      ctx.stroke();
-    });
-
-    enemies.forEach(e=>{
-      ctx.beginPath();
-      ctx.arc(e.x,e.y,14,0,Math.PI*2);
-      ctx.fillStyle="#ed4c65";
-      ctx.fill();
-
-      ctx.strokeStyle="#ffd2d9";
-      ctx.lineWidth=2;
-      ctx.stroke();
-    });
   }
 
   function drawMap() {
@@ -368,6 +392,35 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     dragging=false;
   });
 
+  function createMob(x,y) {
+    return {
+      x,
+      y,
+      hp:2,
+      maxHp:2,
+      speed:125,
+      attackCooldown:0,
+      multiplied:new Set()
+    };
+  }
+
+  function createEnemy() {
+    const strong = round>=3 && Math.random()<0.25;
+    const hp = strong ? 7+round : 3+Math.floor(round/2);
+
+    return {
+      x:random(285,415),
+      y:265,
+      hp,
+      maxHp:hp,
+      speed:strong?random(38,48):random(48,62),
+      radius:strong?19:14,
+      damage:strong?15:10,
+      attackCooldown:0,
+      type:strong?"fuerte":"normal"
+    };
+  }
+
   function startBattle() {
     if(running || destroyed) return;
 
@@ -385,15 +438,33 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     updateUI();
 
     $("round").textContent=round;
-
     $("fireButton").textContent="BATALLA EN CURSO";
     $("fireButton").disabled=true;
 
     $("battleMessage").textContent=
-      "¡Defiende tu base y conquista la fortaleza enemiga!";
+      "¡Tus MOBS deben defenderse de los enemigos!";
 
     lastTime=performance.now();
     animationId=requestAnimationFrame(loop);
+  }
+
+  // Busca el MOB más cercano para perseguirlo.
+  function nearestMob(enemy) {
+    let target=null;
+    let shortest=Infinity;
+
+    mobs.forEach(m=>{
+      const dx=m.x-enemy.x;
+      const dy=m.y-enemy.y;
+      const distance=Math.hypot(dx,dy);
+
+      if(distance<shortest){
+        shortest=distance;
+        target=m;
+      }
+    });
+
+    return target;
   }
 
   function loop(time) {
@@ -405,25 +476,19 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     spawnTimer+=delta;
     enemyTimer+=delta;
 
-    // PRODUCCIÓN DE MOBS
+    // PRODUCCIÓN AUTOMÁTICA DE MOBS
     while(spawnTimer>=1/productionRate){
       spawnTimer-=1/productionRate;
-
-      mobs.push({
-        x:cannonX,
-        y:575,
-        speed:125,
-        multiplied:new Set()
-      });
+      mobs.push(createMob(cannonX,575));
     }
 
-    // MOVIMIENTO DE MOBS
+    // MULTIPLICADORES
     const extra=[];
 
     mobs.forEach(m=>{
       m.y-=m.speed*delta;
+      m.attackCooldown=Math.max(0,m.attackCooldown-delta);
 
-      // MULTIPLICADORES
       gates.forEach(g=>{
         if(
           m.y<=g.y+25 &&
@@ -435,12 +500,13 @@ export function iniciarBatalla(contenedor, opciones = {}) {
           m.multiplied.add(g);
 
           for(let i=1;i<g.value;i++){
-            extra.push({
-              x:Math.max(80,Math.min(620,m.x+random(-25,25))),
-              y:m.y+random(-8,8),
-              speed:m.speed,
-              multiplied:new Set(m.multiplied)
-            });
+            const copy=createMob(
+              Math.max(80,Math.min(620,m.x+random(-25,25))),
+              m.y+random(-8,8)
+            );
+
+            copy.multiplied=new Set(m.multiplied);
+            extra.push(copy);
           }
         }
       });
@@ -448,45 +514,65 @@ export function iniciarBatalla(contenedor, opciones = {}) {
 
     mobs.push(...extra);
 
-    // APARICIÓN DE ENEMIGOS
-    const enemySpawnTime=Math.max(1.3,3.5-round*0.12);
+    // APARICIÓN PROGRESIVA DE ENEMIGOS
+    const enemySpawnTime=Math.max(1.5,3.5-round*0.12);
 
     while(enemyTimer>=enemySpawnTime){
       enemyTimer-=enemySpawnTime;
-
-      enemies.push({
-        x:random(285,415),
-        y:265,
-        speed:random(35,50)
-      });
+      enemies.push(createEnemy());
     }
 
-    // MOVIMIENTO DE ENEMIGOS
+    // INTELIGENCIA ARTIFICIAL DE LOS ENEMIGOS
     enemies.forEach(e=>{
-      e.y+=e.speed*delta;
+      e.attackCooldown=Math.max(0,e.attackCooldown-delta);
+
+      const target=nearestMob(e);
+
+      if(target){
+        const dx=target.x-e.x;
+        const dy=target.y-e.y;
+        const distance=Math.hypot(dx,dy);
+
+        if(distance>27){
+          const step=Math.min(e.speed*delta,distance-27);
+
+          e.x+=(dx/distance)*step;
+          e.y+=(dy/distance)*step;
+        }else if(e.attackCooldown<=0){
+          target.hp-=e.type==="fuerte"?1.5:1;
+          e.attackCooldown=e.type==="fuerte"?0.7:0.9;
+        }
+      }else{
+        // Si no hay MOBS, avanza hacia la base.
+        e.y+=e.speed*delta;
+      }
     });
 
-    // COLISIONES ENTRE MOBS Y ENEMIGOS
-    const removedMobs=new Set();
-    const removedEnemies=new Set();
+    // ATAQUE AUTOMÁTICO DE LOS MOBS
+    mobs.forEach(m=>{
+      if(m.attackCooldown>0) return;
 
-    mobs.forEach((m,mi)=>{
-      enemies.forEach((e,ei)=>{
-        if(removedEnemies.has(ei)) return;
+      let target=null;
+      let shortest=Infinity;
 
-        const dx=m.x-e.x;
-        const dy=m.y-e.y;
-        const distance=Math.sqrt(dx*dx+dy*dy);
+      enemies.forEach(e=>{
+        const distance=Math.hypot(e.x-m.x,e.y-m.y);
 
-        if(distance<26){
-          removedMobs.add(mi);
-          removedEnemies.add(ei);
+        if(distance<shortest){
+          shortest=distance;
+          target=e;
         }
       });
+
+      if(target && shortest<34){
+        target.hp-=1;
+        m.attackCooldown=0.8;
+      }
     });
 
-    mobs=mobs.filter((m,i)=>!removedMobs.has(i));
-    enemies=enemies.filter((e,i)=>!removedEnemies.has(i));
+    // ELIMINACIÓN DE UNIDADES
+    mobs=mobs.filter(m=>m.hp>0);
+    enemies=enemies.filter(e=>e.hp>0);
 
     // DAÑO A LA FORTALEZA ENEMIGA
     const survivors=[];
@@ -506,7 +592,7 @@ export function iniciarBatalla(contenedor, opciones = {}) {
 
     enemies.forEach(e=>{
       if(e.y>=755){
-        playerHealth-=10;
+        playerHealth-=e.damage;
       }else{
         remainingEnemies.push(e);
       }
@@ -516,7 +602,6 @@ export function iniciarBatalla(contenedor, opciones = {}) {
 
     updateUI();
 
-    // FIN DE LA PARTIDA
     if(enemyHealth<=0){
       finish(true);
       return;
@@ -528,7 +613,6 @@ export function iniciarBatalla(contenedor, opciones = {}) {
     }
 
     drawMap();
-
     animationId=requestAnimationFrame(loop);
   }
 
